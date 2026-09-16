@@ -127,7 +127,7 @@ h2.sec{font-size:15px;margin:22px 18px 8px}
 </div>
 <div class="concl"><b>결론</b><ul>
 <li><b>표 검출</b>: 원문 10개 → GPT-4.1-mini 10개, MinerU 10개, PyMuPDF4LLM 10개.</li>
-<li><b>그림</b>: 위치는 셋 다 잡는다(GPT-4.1-mini 21, MinerU 57, PyMuPDF4LLM 24). 내용 서술은 GPT-4.1-mini만 한다.</li>
+<li><b>그림</b>: 위치는 셋 다 잡는다(GPT-4.1-mini 21, MinerU 57, PyMuPDF4LLM 24). MinerU는 여러 패널로 된 그림을 패널마다 따로 잡아 수가 많다. 내용 서술은 GPT-4.1-mini만 한다.</li>
 <li><b>본문 글자</b>: PyMuPDF4LLM 88,884자 · MinerU 76,007자 · GPT-4.1-mini 73,720자. GPT-4.1-mini는 머리글·각주·참고문헌을 줄인다.</li>
 <li><b>좌표</b>: MinerU와 PyMuPDF4LLM은 검출 모델이 준 실제 좌표이고, GPT-4.1-mini는 추정값이라 글자층으로 재정렬해야 했다.</li>
 <li><b>시간</b>: MinerU 편당 4~5분(34쪽, 쪽당 약 8초, 시작 비용 포함). PyMuPDF4LLM은 쪽당 1초 미만.</li>
