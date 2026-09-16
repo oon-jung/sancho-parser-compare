@@ -34,7 +34,7 @@ ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:8px;line-height:1.65}
 footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule)}
 code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;border-radius:4px}
 </style></head><body>
-<nav class="top"><b>산초 파서 비교</b><a href="parsers.html">① 파서 3종 비교</a><a href="chunking.html">② 청킹</a><a href="tables.html">③ 표 정확도</a><a class="on" href="parserchoice.html">④ 파서 선택</a><a href="e2e.html">⑤ 완주 실험</a><span style="margin-left:auto;opacity:.6">골드 45문항 · 논문 12편</span></nav>
+<nav class="top"><b>산초 파서 비교</b><a href="parsers.html">① 파서 3종 비교</a><a href="chunking.html">② 청킹</a><a href="tables.html">③ 표 정확도</a><a class="on" href="parserchoice.html">④ 파서 선택</a><a href="e2e.html">⑤ 완주 실험</a><a href="chunkviz.html">⑥ 청킹 시각화</a><span style="margin-left:auto;opacity:.6">골드 45문항 · 논문 12편</span></nav>
 <main>
 <h1>파서 선택 — docling 기준 + 예외 라우팅</h1>
 <p class="lede">본문 파싱에 어떤 파서 구성을 쓸지 정한다. 후보 네 가지 중 두 가지는 앞 화면의 결과로 판정이 끝났고, 남은 두 가지(docling 단독, docling 구조 + pymupdf 텍스트 결합)를 검색 회수율로 비교했다. 결과는 차이 1문항으로, 구성이 단순한 <b>docling</b>을 기준 파서로 채택한다. 글자층이 없는 문서, 그림, 행 경계가 깨진 표는 VLM으로 넘기는 <b>예외 라우팅</b>을 함께 둔다. "docling 단독"은 pymupdf 텍스트를 결합하지 않는다는 뜻이며, VLM을 배제한다는 뜻이 아니다.</p>

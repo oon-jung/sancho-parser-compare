@@ -1,0 +1,178 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>산초 파서 비교 · ⑥ 청킹 시각화 — 제목 보존·표 처리·제목 삽입 효과</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;
+--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--bad:#a3232b;--ok:#1f6f5c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.6 "IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;font-variant-numeric:tabular-nums}
+nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+nav.top b{font-size:14px}nav.top a{color:#fff;opacity:.62;text-decoration:none}nav.top a:hover{opacity:1}nav.top a.on{background:#fff;color:var(--ink);padding:2px 10px;border-radius:999px;opacity:1}
+main{max-width:1180px;margin:0 auto;padding:18px 18px 40px}
+h1{font-size:20px;margin:8px 0 6px}
+h2{font-size:16px;margin:30px 0 6px;display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint);letter-spacing:.06em}
+p.lede{color:var(--soft);margin:0 0 12px;max-width:84ch}
+.box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:16px 18px}
+.wrap{overflow-x:auto}
+table.t{border-collapse:collapse;width:100%;font-size:13px;background:var(--lift);border:1px solid var(--rule)}
+table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}
+table.t td{padding:7px 10px;border-top:1px solid var(--rule2);vertical-align:top}table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap}table.t td.k{font-weight:600;white-space:nowrap}
+.good{color:var(--ok);font-weight:600}.off{color:var(--bad);font-weight:600}.win{background:#e4efeb;border-radius:4px;padding:0 6px;font-weight:600}
+.note{font-size:12.5px;color:var(--faint);line-height:1.55}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:12px 0 10px}
+button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule);background:var(--lift);color:var(--soft);border-radius:999px;cursor:pointer}button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}select{border-radius:8px}
+.grid{display:grid;grid-template-columns:minmax(420px,700px) minmax(380px,1fr);gap:16px;align-items:start}@media (max-width:1000px){.grid{grid-template-columns:1fr}}
+.stage{position:relative;background:var(--lift);border:1px solid var(--rule);box-shadow:0 1px 4px rgba(0,0,0,.08);line-height:0;max-width:700px}.stage img{width:100%;height:auto;display:block}.ov{position:absolute;inset:0}
+.cb{position:absolute;cursor:pointer;border:1.5px solid;border-radius:2px}.cb.table{border:4px double var(--tbl)!important;background:rgba(122,79,181,.14)!important}.cb.reference{border-style:dotted}
+.cb .n{position:absolute;left:-1px;top:-14px;font:10px/12px "IBM Plex Mono",monospace;color:#fff;padding:0 4px;border-radius:2px 2px 0 0}
+.hi{outline:3px solid #ffcc00;outline-offset:1px;z-index:2}
+.panel{background:var(--lift);border:1px solid var(--rule);border-radius:8px;max-height:720px;overflow:auto}
+.it{padding:8px 10px;border-radius:6px;margin:8px 10px;border-left:4px solid transparent;font-size:13px}
+.it .k{font:600 11px "IBM Plex Mono",monospace;color:var(--faint);display:block;margin-bottom:2px}
+.it .path{font-weight:600;margin-bottom:3px}.it .txt{white-space:pre-wrap;word-break:break-word;color:var(--soft);font-size:12.5px;max-height:150px;overflow:auto}
+.it.hi{background:#fff6cc}
+.flag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--sunk);color:var(--soft);margin:2px 4px 2px 0}.flag.bad{background:#f6e4e5;color:var(--bad)}.flag.ok{background:#e4efeb;color:var(--ok)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--soft)}.legend i{display:inline-block;width:13px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+pre.tb{background:var(--sunk);border-radius:8px;padding:10px 12px;font:12px/1.5 "IBM Plex Mono",monospace;white-space:pre-wrap;word-break:break-word;margin:0;max-height:260px;overflow:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:900px){.two{grid-template-columns:1fr}}
+ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:8px;line-height:1.65}
+.verdict{background:var(--lift);border:1px solid var(--rule);border-left:4px solid var(--dl);border-radius:0 10px 10px 0;padding:14px 18px}
+.warn{background:var(--lift);border:1px solid var(--rule);border-left:4px solid var(--mu);border-radius:0 10px 10px 0;padding:14px 18px}
+footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule)}
+code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;border-radius:4px}
+</style></head><body>
+<nav class="top"><b>산초 파서 비교</b><a href="parsers.html">① 파서 3종 비교</a><a href="chunking.html">② 청킹</a><a href="tables.html">③ 표 정확도</a><a href="parserchoice.html">④ 파서 선택</a><a href="e2e.html">⑤ 완주 실험</a><a class="on" href="chunkviz.html">⑥ 청킹 시각화</a><span style="margin-left:auto;opacity:.6">docling 절 청킹 · 논문 12편 · 골드 45문항 · BGE-M3</span></nav>
+<main>
+<h1>청킹 시각화와 제목 삽입 효과 — docling 절 청킹</h1>
+<p class="lede">docling으로 파싱한 논문 12편을 현행 규칙으로 청킹해 지면 위에 청크 경계를 그리고, 제목·부제와 본문이 한 청크에 보존되는지와 표가 어떤 형태로 들어가는지를 확인했다. 이어서 청크 앞에 제목을 붙이는 방식 세 가지의 검색 회수율을 비교했다.</p>
+
+<h2><span class="no">01</span>현행 파이프라인</h2>
+<div class="wrap"><table class="t"><tbody>
+<tr><td class="k">파싱</td><td>docling 2.118 (OCR 끔). 항목마다 label(text · section_header · list_item · caption · table · picture · footnote), 쪽, 좌표(0~1), 텍스트, 표는 HTML.</td></tr>
+<tr><td class="k">절 나누기</td><td>section_header 항목이 나올 때마다 새 절을 시작한다. docling은 제목 계층을 주지 않으므로(모든 제목이 level 1) 절 경로는 한 단계다.</td></tr>
+<tr><td class="k">청크 규칙</td><td>한 청크는 한 절에만 속한다. 문단을 순서대로 모아 <b>목표 900토큰</b>을 넘기면 끊고, <b>바닥 120토큰</b> 미만 청크는 같은 절의 앞 청크에 합친다. <b>상한 7,000토큰</b>을 넘는 한 문단만 문장 단위로 강제 분할하며, <b>겹침 100토큰</b>은 이때만 쓴다. 절 경계를 넘는 겹침은 없다.</td></tr>
+<tr><td class="k">청크 종류</td><td><code>body</code> 본문 · <code>table</code> 표(통째로 한 청크, 상한을 넘으면 머리 행을 반복하며 분할) · <code>reference</code> 참고문헌(항목마다 한 청크)</td></tr>
+<tr><td class="k">제목 삽입</td><td>본문 청크 앞에 <code>## 부제</code> 한 줄을 붙인다(현행). 상위 제목은 붙지 않는다.</td></tr>
+<tr><td class="k">표 표현</td><td>HTML 표를 행마다 <code>셀 | 셀 | 셀</code>로 바꿔 넣는다. 캡션은 표 청크가 아니라 앞 본문 청크에 남는다.</td></tr>
+</tbody></table></div>
+
+<h2><span class="no">02</span>지면 위 청크 보기</h2>
+<p class="lede">청크마다 색을 바꿔 그 청크에 든 docling 항목을 표시한다. 표 청크는 보라 이중선, 참고문헌은 점선이다. 오른쪽 목록에서 절 경로·종류·토큰 수와 검증 표시를 볼 수 있고, 상자나 항목에 마우스를 올리면 서로 강조된다.</p>
+<div class="ctl">
+  <select id="doc"></select>
+  <div class="grp"><button id="prev" type="button">◀</button><select id="page"></select><button id="next" type="button">▶</button></div>
+  <div class="legend"><span><i style="border:1.5px solid var(--pm);background:rgba(42,120,214,.12)"></i>본문 청크 (색은 청크마다 순환)</span><span><i style="border:4px double var(--tbl);background:rgba(122,79,181,.14)"></i>표 청크</span><span><i style="border:1.5px dotted var(--pm)"></i>참고문헌 청크</span></div>
+  <div class="note" id="pstat"></div>
+</div>
+<div class="grid">
+  <div class="stage"><img id="pg" alt="지면"><div class="ov" id="ov"></div></div>
+  <aside class="panel" id="items"></aside>
+</div>
+
+<h2><span class="no">03</span>검증 1 — 제목·부제와 본문이 한 청크에 보존되는가</h2>
+<div class="wrap"><table class="t" id="stats"></table></div>
+<div class="warn" style="margin-top:12px"><b>보존되지 않는 경우와 원인</b>
+<ul class="pts" style="margin-top:4px">
+<li><b>상위 제목이 청크에서 사라진다.</b> "2. Materials and Methods"처럼 본문 없이 부제만 거느린 제목은 절이 비어 청크를 만들지 않고, 부제 절의 청크에는 <code>## 2.1 …</code>만 붙는다. docling이 제목 계층(level)을 주지 않으므로 규칙만으로는 상위 제목을 알 수 없다. 위 표의 "본문 없는 제목"이 그 수다.</li>
+<li><b>긴 절은 여러 청크로 나뉜다.</b> 목표 900토큰을 넘는 절은 문단 경계에서 끊기며, 뒤쪽 청크에도 같은 <code>## 부제</code>가 붙어 제목은 유지되지만 본문은 흩어진다. "여러 청크로 나뉜 절"이 그 수다.</li>
+<li><b>제목 오검출.</b> docling이 저자명·소속·"Edited by:" 같은 앞부분 줄을 section_header로 잡아 짧은 절이 생긴다(en_01 제목 47개, en_03 33개). 이 절들은 바닥 규칙으로 앞 청크에 합쳐지거나 독립 청크로 남는다.</li>
+<li><b>개선안.</b> ① 제목 번호 패턴(1. / 1.1 / Ⅰ. / 1))으로 계층을 복원해 상위 제목 경로를 청크에 붙인다(아래 C2 조건이 이것이다). ② 본문 없는 제목은 다음 절의 첫 청크에 흡수한다. ③ 앞부분(초록 이전)의 section_header는 제목으로 쓰지 않는다.</li>
+</ul></div>
+
+<h2><span class="no">04</span>검증 2 — 표는 어떤 형태로 들어가는가</h2>
+<p class="lede">현행 청커는 docling 표를 <code>table</code> 청크로 따로 두고 HTML을 행 단위 <code>셀 | 셀</code> 텍스트로 바꾼다. 아래는 en_02의 표 1이 청크에 들어간 실제 모습과, 비교를 위해 앞선 ② 청킹 실험에서 쓴 청크 집합(DV)에서 같은 표가 본문 청크에 녹아 있던 모습이다.</p>
+<div class="two" id="tables"></div>
+<div class="box" style="margin-top:12px"><ul class="pts" style="margin:0">
+<li><b>구조 유지</b>: 행·열 구분이 <code>|</code>로 남아 셀 관계를 읽을 수 있다. 병합 셀은 docling이 준 대로이며 표 정확도 화면 ③의 한계(큰 표의 행 경계)가 그대로 따라온다.</li>
+<li><b>분리·깨짐</b>: 12편의 docling 표 28개 중 24개가 표 청크가 되었다. 빠진 4개는 스캔 문서 ko_03의 표 3개(글자층이 없어 내용이 비었다)와 zh_03의 표 1개(HTML이 비어 있음)다. 상한 7,000토큰을 넘는 표는 없어 분할된 표는 없다.</li>
+<li><b>캡션 분리</b>: 캡션("Table 1. Composition…")은 표 청크가 아니라 바로 앞 본문 청크에 있다. 표 값 질문이 캡션 단어로 검색될 때 표 청크가 아니라 본문 청크가 잡힐 수 있다. 개선안: 캡션을 표 청크의 첫 줄로 옮긴다.</li>
+<li><b>이전 실험(DV)의 문제</b>: 그 청크 집합은 표 셀이 한 줄에 하나씩 본문에 녹아 있어 행 구분이 없었다. ② 청킹 화면의 "표 값" 결과는 이 상태에서 잰 값이다.</li>
+</ul></div>
+
+<h2><span class="no">05</span>제목 삽입 유무 성능 비교</h2>
+<p class="lede">청크 경계는 세 조건이 같고, 청크 텍스트 앞에 붙이는 줄만 다르다. C0은 아무것도 붙이지 않고, C1은 현행대로 <code>## 부제</code>, C2는 제목 번호로 복원한 경로 <code>## 2. Materials and Methods &gt; 2.1 Preparation of FP-MD</code>를 붙인다. 임베딩 BGE-M3, 논문 12편 한 풀, 골드 45문항. 순위는 정답 발췌를 공백·따옴표·하이픈 무시로 포함하는 첫 청크의 위치다.</p>
+<div class="wrap"><table class="t" id="ret"></table></div>
+<h2 style="font-size:14px;margin-top:16px">조건 사이에 순위가 바뀐 문항</h2>
+<div class="wrap"><table class="t" id="flips"></table></div>
+
+<h2><span class="no">06</span>결론</h2>
+<div class="verdict"><ul class="pts" id="concl"></ul></div>
+
+<h2><span class="no">07</span>발견된 문제점과 개선 제안</h2>
+<div class="box"><ul class="pts" id="issues"></ul></div>
+<footer>청크 좌표는 청크에 든 docling 항목의 좌표를 그대로 그린 것이다. 지면 이미지는 ko_01·en_02·zh_02 세 편만 있어 시각화는 이 세 편에 한한다. 통계와 회수율은 12편 전체다. 스캔 문서 ko_03은 docling 텍스트가 없어 앞선 실험의 VLM 폴백 청크를 세 조건에 동일하게 넣었다. 이 페이지는 논문 본문을 담지 않는다.</footer>
+</main>
+<script src="chunkviz/data.js?v=1"></script>
+<script>
+const $=s=>document.querySelector(s); const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const PAL=['#2a78d6','#1f6f5c','#eb6834','#b4531c','#4a3aa7','#0b7285','#a3232b','#5c7cfa','#2b8a3e','#e67700'];
+const TITLE={ko_01:'ko_01 · 한국식품과학회지 2020 (한국어, 10쪽)',en_02:'en_02 · Nutrients 2020 (영어, 15쪽)',zh_02:'zh_02 · 화초 중국어 논문 (중국어, 9쪽)'};
+const DOCS=Object.keys(CV.docs); let doc=DOCS[0], cur=1;
+const dsel=$('#doc'), psel=$('#page');
+DOCS.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=TITLE[d]||d;dsel.appendChild(o);});
+function pages(){return CV.docs[doc].pages;}
+function fillPages(){psel.innerHTML='';for(let i=1;i<=pages();i++){const o=document.createElement('option');o.value=i;o.textContent=`${i} / ${pages()} 쪽`;psel.appendChild(o);}}
+function splitCounts(chs){const m={};chs.forEach(c=>{if(c.kind==='body'){const k=c.path.join('>');m[k]=(m[k]||0)+1;}});return m;}
+function draw(){const D=CV.docs[doc]; psel.value=cur; $('#pg').src=`e2e_pages/${doc}_p${String(cur).padStart(2,'0')}.png`;
+ const sc=splitCounts(D.chunks); let o='', it=''; let n=0;
+ D.chunks.forEach((c,ci)=>{const bs=c.boxes.filter(b=>b.page===cur); if(!bs.length)return; n++;
+  const col=PAL[ci%PAL.length];
+  bs.forEach((b,bi)=>{const[x0,y0,x1,y1]=b.bbox; o+=`<div class="cb ${c.kind}" data-id="c${ci}" style="left:${(x0*100).toFixed(2)}%;top:${(y0*100).toFixed(2)}%;width:${(Math.max(x1-x0,.004)*100).toFixed(2)}%;height:${(Math.max(y1-y0,.003)*100).toFixed(2)}%;border-color:${col};background:${c.kind==='table'?'':col+'22'}">${bi===0?`<span class="n" style="background:${col}">${ci}</span>`:''}</div>`;});
+  const flags=[]; const k=c.path.join('>');
+  if(c.kind==='body'&&c.path.length>1) flags.push(`<span class="flag bad">상위 제목 유실: ${esc(c.path.slice(0,-1).join(' > '))}</span>`);
+  if(c.kind==='body'&&sc[k]>1) flags.push(`<span class="flag">절이 ${sc[k]}개 청크로 나뉨</span>`);
+  if(c.kind==='table') flags.push(`<span class="flag ok">표 청크 · 행 | 셀 형식</span>`);
+  if(c.kind==='reference') flags.push(`<span class="flag">참고문헌 항목</span>`);
+  if(c.pages.length>1) flags.push(`<span class="flag">${c.pages.join('·')}쪽에 걸침</span>`);
+  it+=`<div class="it" data-id="c${ci}" style="border-left-color:${col}"><span class="k">청크 ${ci} · ${c.kind} · ${c.tokens} 토큰</span><div class="path">${esc(c.path.join(' > '))||'(front)'}</div>${flags.join('')}<div class="txt">${esc(c.body)}</div></div>`;});
+ $('#ov').innerHTML=o; $('#items').innerHTML=it||'<div class="it">이 쪽에 청크 없음</div>';
+ $('#pstat').textContent=`이 쪽 청크 ${n}개 · 문서 전체 ${D.chunks.length}개 (본문 ${D.chunks.filter(c=>c.kind==='body').length} · 표 ${D.chunks.filter(c=>c.kind==='table').length} · 참고문헌 ${D.chunks.filter(c=>c.kind==='reference').length})`;}
+function hi(id,on){document.querySelectorAll(`[data-id="${id}"]`).forEach(el=>el.classList.toggle('hi',on)); if(on){const t=document.querySelector(`.it[data-id="${id}"]`); if(t) t.scrollIntoView({block:'nearest'});}}
+function wire(r){r.addEventListener('mouseover',e=>{const el=e.target.closest('[data-id]'); if(el) hi(el.dataset.id,true);}); r.addEventListener('mouseout',e=>{const el=e.target.closest('[data-id]'); if(el) hi(el.dataset.id,false);});}
+wire($('#ov')); wire($('#items'));
+dsel.addEventListener('change',()=>{doc=dsel.value;cur=1;fillPages();draw();});
+psel.addEventListener('change',()=>{cur=+psel.value;draw();});
+$('#prev').addEventListener('click',()=>{cur=(cur+pages()-2)%pages()+1;draw();}); $('#next').addEventListener('click',()=>{cur=cur%pages()+1;draw();});
+fillPages(); draw();
+
+// 03 통계표
+(function(){const S=CV.stats; const docs=Object.keys(S);
+ let h=`<thead><tr><th>논문</th><th>쪽</th><th>docling 제목</th><th>계층(번호로 복원)</th><th>본문 없는 제목</th><th>본문 있는 절</th><th>여러 청크로 나뉜 절</th><th>청크 (본문·표·참고문헌)</th><th>docling 표 → 표 청크</th><th>토큰 중앙값 / 최대</th></tr></thead><tbody>`;
+ const tot={heads:0,empty:0,sec:0,split:0,chunks:0,body:0,table:0,ref:0,ti:0,tc:0};
+ docs.forEach(d=>{const s=S[d]; const depth=Object.keys(s.depth).sort().map(k=>`${k}단계 ${s.depth[k]}`).join(' · ')||'—';
+  tot.heads+=s.headings;tot.empty+=s.empty_heading_sections.length;tot.sec+=s.sections_with_body;tot.split+=s.sections_split;tot.chunks+=s.chunks;tot.body+=s.body;tot.table+=s.table_chunks;tot.ref+=s.reference;tot.ti+=s.table_items;tot.tc+=s.table_chunks;
+  h+=`<tr><td class="k">${d}</td><td class="v">${s.pages}</td><td class="v">${s.headings}</td><td>${depth}</td><td class="v ${s.empty_heading_sections.length?'off':''}" title="${esc(s.empty_heading_sections.join(' / '))}">${s.empty_heading_sections.length}</td><td class="v">${s.sections_with_body}</td><td class="v">${s.sections_split}</td><td class="v">${s.chunks} (${s.body}·${s.table_chunks}·${s.reference})</td><td class="v ${s.table_items===s.table_chunks?'good':'off'}">${s.table_items} → ${s.table_chunks}</td><td class="v">${s.tok_p50} / ${s.tok_max}</td></tr>`;});
+ h+=`<tr style="background:var(--sunk)"><td class="k">합계 (12편)</td><td></td><td class="v">${tot.heads}</td><td></td><td class="v">${tot.empty}</td><td class="v">${tot.sec}</td><td class="v">${tot.split}</td><td class="v">${tot.chunks} (${tot.body}·${tot.table}·${tot.ref})</td><td class="v">${tot.ti} → ${tot.tc}</td><td></td></tr></tbody>`;
+ $('#stats').innerHTML=h;})();
+
+// 04 표 처리 예
+(function(){const en=CV.docs.en_02; const t=en.chunks.find(c=>c.kind==='table');
+ const dv=`USP) and Korean Pharmacopoeia (KP), respectively.\nTable 1. Composition of FlexPro MD®.\nIngredient\nAmount (mg)\nRatio (%)\nAntarctic krill oil\n321\n70\nHaematococcus pluvialis extract\n(to deliver 2 mg astaxanthin)\n25–35\n5.5–7.5\nSodium hyaluronate\n33\n7.1\nExcipients\n73–83 1\n15.4–17.4\nTotal\n462\n100`;
+ $('#tables').innerHTML=`<div><div class="note" style="margin-bottom:6px"><b>현행 청커 · en_02 표 청크</b> (${t?t.tokens:'—'} 토큰 · ${t?t.pages.join(','):''}쪽)</div><pre class="tb">${esc(t?t.body:'(표 청크 없음)')}</pre></div>
+ <div><div class="note" style="margin-bottom:6px"><b>이전 청크 집합(DV) · 같은 표가 본문 청크에 녹은 모습</b></div><pre class="tb">${esc(dv)}</pre></div>`;})();
+
+// 05 회수율
+(function(){const R=CV.retrieval, C=['C0','C1','C2'], N=CV.conds; const TN={methods:'실험 방법',table:'표 값',reference:'참고문헌',body:'본문 서술'};
+ const best=k=>Math.max(...C.map(c=>R[c].summary[k]));
+ let h=`<thead><tr><th>조건</th><th>recall@1</th><th>recall@6</th><th>recall@10</th><th>MRR</th><th>평균 순위</th><th>도달 불가</th>`+Object.keys(TN).map(t=>`<th>${TN[t]}</th>`).join('')+`</tr></thead><tbody>`;
+ C.forEach((c,i)=>{const s=R[c].summary; const cell=(k)=>`<td class="v">${s[k]===best(k)?`<span class="win">${s[k]}</span>`:s[k]}${k.startsWith('r')&&k!=='mrr'?'/45':''}</td>`;
+  h+=`<tr><td class="k">${N[i]}</td>${cell('r1')}${cell('r6')}${cell('r10')}<td class="v">${s.mrr}</td><td class="v">${s.mean_rank}</td><td class="v">${s.miss}</td>`+Object.keys(TN).map(t=>{const b=s.by_type[t];return `<td class="v">${b?b[0]+'/'+b[1]:'-'}</td>`;}).join('')+`</tr>`;});
+ $('#ret').innerHTML=h+`</tbody>`;
+ // flips
+ const rows=R.C0.rows.map((r,i)=>({q:r,r:[R.C0.rows[i].rank,R.C1.rows[i].rank,R.C2.rows[i].rank]})).filter(x=>{const in6=x.r.map(v=>v&&v<=6);return !(in6.every(v=>v)||in6.every(v=>!v));});
+ let f=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>질문</th><th>C0 없음</th><th>C1 부제</th><th>C2 경로</th></tr></thead><tbody>`;
+ rows.forEach(x=>{f+=`<tr><td class="v">${x.q.qid}</td><td class="v">${x.q.doc}</td><td>${TN[x.q.type]||x.q.type}</td><td>${esc(x.q.q)}</td>`+x.r.map(v=>`<td class="v ${v&&v<=6?'good':'off'}">${v?v+'위':'미회수'}</td>`).join('')+`</tr>`;});
+ $('#flips').innerHTML=f+(rows.length?'':'<tr><td colspan="7">상위 6위 안 진입 여부가 바뀐 문항 없음</td></tr>')+`</tbody>`;
+ const s0=R.C0.summary,s1=R.C1.summary,s2=R.C2.summary;
+ $('#concl').innerHTML=`<li><b>recall@6</b>: 제목 없음 ${s0.r6}/45 · 부제만(현행) ${s1.r6}/45 · 상위 제목+부제 ${s2.r6}/45. 제목을 붙이면 오히려 ${s0.r6-s1.r6}문항 줄었다.</li>
+ <li><b>1위 적중·MRR</b>: ${s0.r1} / ${s1.r1} / ${s2.r1}, MRR ${s0.mrr} / ${s1.mrr} / ${s2.mrr}. 붙이면 1위는 1문항 늘고 MRR은 소수점 셋째 자리에서 오른다.</li>
+ <li><b>유형별</b>: 표 값 문항은 제목을 붙이면 ${s0.by_type.table[0]}→${s1.by_type.table[0]}/7로 늘고, 실험 방법 문항은 ${s0.by_type.methods[0]}→${s1.by_type.methods[0]}/24로 줄었다. 상위 제목 경로(C2)는 부제만 붙인 C1과 차이가 없다.</li>
+ <li><b>판정</b>: "제목 삽입 시 검색 성능 향상" 가설은 45문항 규모에서 지지되지 않는다. 차이는 ±2문항으로 노이즈 범위이며, 방향도 지표마다 엇갈린다.</li>
+ <li><b>표 청크 분리 효과</b>: 표를 <code>행 | 셀</code> 청크로 따로 두자 표 값 문항이 6~7/7로, 표가 본문에 녹아 있던 ② 청킹 실험(절 단위 7/7, 고정 5000 4/7)과 같은 수준을 유지했다.</li>`;
+ $('#issues').innerHTML=`<li><b>상위 제목 유실</b> — 본문 없는 제목 ${Object.values(CV.stats).reduce((a,s)=>a+s.empty_heading_sections.length,0)}개(12편)가 청크 어디에도 남지 않는다. 제목 번호로 계층을 복원해 경로를 붙일 수 있으나(C2), 회수율 이득은 없었다. 검색이 아니라 답변 단계에서 출처 표기용으로 붙이는 것이 용도에 맞다.</li>
+ <li><b>제목 오검출</b> — docling이 앞부분의 저자·소속 줄을 제목으로 잡는다(en_01 47개). 초록 이전의 section_header를 제목에서 제외하는 규칙이 필요하다.</li>
+ <li><b>긴 절의 분할</b> — 12편에서 ${Object.values(CV.stats).reduce((a,s)=>a+s.sections_split,0)}개 절이 두 청크 이상으로 나뉜다. 부제는 유지되지만 본문 맥락이 끊기므로, 절 안에서 문단 겹침을 허용할지는 ② 청킹 실험의 "본문 서술" 결과(큰 창 우세)와 함께 다시 볼 문제다.</li>
+ <li><b>표 캡션 분리</b> — 캡션이 표 청크 밖 본문 청크에 남는다. 캡션을 표 청크의 첫 줄로 옮기면 표 값 질문이 표 청크로 바로 닿는다.</li>
+ <li><b>제목 삽입의 부작용</b> — 실험 방법 문항에서 2문항이 밀렸다. 짧은 청크에 붙은 제목 줄이 임베딩에서 본문 비중을 줄이는 것으로 보인다. 청크가 짧을수록 제목 접두의 영향이 커지므로, 붙이더라도 바닥 토큰을 올려 청크를 키우는 쪽이 안전하다.</li>`;
+})();
+</script></body></html>
