@@ -1,0 +1,162 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>산초 파서 비교 · ③ 표 정확도 — 골드 대조</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;
+--pm:#2a78d6;--dl:#1f6f5c;--mu:#eb6834;--bad:#a3232b;--warn:#b4531c;--ok:#1f6f5c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.6 "IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;font-variant-numeric:tabular-nums}
+nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+nav.top b{font-size:14px}nav.top a{color:#fff;opacity:.62;text-decoration:none}nav.top a:hover{opacity:1}
+nav.top a.on{background:#fff;color:var(--ink);padding:2px 10px;border-radius:999px;opacity:1}
+main{max-width:1100px;margin:0 auto;padding:18px 18px 40px}
+h1{font-size:20px;margin:8px 0 6px}
+h2{font-size:16px;margin:30px 0 6px;display:flex;align-items:baseline;gap:10px}
+h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint);letter-spacing:.06em}
+h2.part{font-size:13px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;margin-top:44px;padding-top:18px;border-top:1px solid var(--rule)}
+p.lede{color:var(--soft);margin:0 0 12px;max-width:80ch}
+.pm{color:var(--pm)}.dl{color:var(--dl)}.mu{color:var(--mu)}
+.box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:16px 18px}
+.wrap{overflow-x:auto}
+table.t{border-collapse:collapse;width:100%;font-size:13px;background:var(--lift);border:1px solid var(--rule)}
+table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}
+table.t td{padding:8px 10px;border-top:1px solid var(--rule2);vertical-align:top}
+table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+table.t td.k{font-weight:600;white-space:nowrap}
+.good{color:var(--ok);font-weight:600}.off{color:var(--bad);font-weight:600}
+.note{font-size:12.5px;color:var(--faint);line-height:1.55}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;border-top:3px solid var(--rule)}
+.card.pm{border-top-color:var(--pm)}.card.dl{border-top-color:var(--dl)}.card.mu{border-top-color:var(--mu)}
+.card h3{margin:0 0 6px;font-size:14px}
+.card .big{font:600 24px "IBM Plex Mono",monospace;line-height:1.15}
+.card .big small{font-size:12.5px;color:var(--faint);font-weight:400}
+.card .sub{font-size:12.5px;color:var(--soft);margin-top:6px}
+/* 행 수 비교 */
+.bar{display:flex;align-items:center;gap:8px;margin-top:3px;min-width:150px}
+.bar i{display:block;height:9px;border-radius:2px;flex:none}
+.bar .g{height:9px;width:2px;background:var(--ink);flex:none}
+.rowsum{font-size:12.5px;color:var(--soft);margin-top:10px;line-height:1.6}
+ul.pts{margin:8px 0 0;padding-left:20px}ul.pts li{margin-bottom:8px;line-height:1.65}
+.verdict{background:var(--lift);border:1px solid var(--rule);border-left:4px solid var(--dl);border-radius:0 10px 10px 0;padding:14px 18px;margin-top:14px}
+.verdict b.t{display:block;margin-bottom:4px}
+svg{display:block;width:100%;height:auto}
+.pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:10px}
+.st{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:13px 15px;border-top:3px solid var(--rule)}
+.st .n{font:11px "IBM Plex Mono",monospace;color:var(--faint)}
+.st h4{margin:3px 0 5px;font-size:13.5px}
+.st p{margin:0;font-size:12.5px;color:var(--soft);line-height:1.5}
+.st .w{font:600 12.5px "IBM Plex Mono",monospace;margin-top:7px}
+.st.pm{border-top-color:var(--pm)}.st.dl{border-top-color:var(--dl)}.st.mu{border-top-color:var(--mu)}
+footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule)}
+code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;border-radius:4px}
+</style></head><body>
+<nav class="top"><b>산초 파서 비교</b><a href="parsers.html">① 파서 3종 비교</a><a href="chunking.html">② 청킹</a><a class="on" href="tables.html">③ 표 정확도</a><a href="parserchoice.html">④ 파서 선택</a><a href="e2e.html">⑤ 완주 실험</a><span style="margin-left:auto;opacity:.6">초피 RCT 표 3개 · 사람 전사 골드</span></nav>
+<main>
+<h1>표 정확도 — 사람이 전사한 골드와 대조</h1>
+<p class="lede">화면 ①에서는 표를 "몇 개 냈나"만 셌다. 여기서는 초피 RCT의 표 3개를 지면 이미지에서 사람이 직접 전사해 골드로 삼고, 세 파서의 출력이 그 골드와 얼마나 맞는지를 두 가지로 쟀다. <b>값이 남아 있는가</b>, 그리고 <b>행을 제대로 나눴는가</b>.</p>
+
+<h2><span class="no">01</span>무엇을 어떻게 쟀나</h2>
+<div class="wrap"><table class="t">
+<tbody>
+<tr><td class="k">대상 표</td><td>Table Ⅰ(6쪽, 7행) · Table Ⅳ(8쪽, 17행) · Table Ⅷ(10쪽, 47행). 작은 표·중간 표·큰 표를 하나씩 골랐다.</td></tr>
+<tr><td class="k">골드</td><td>지면을 3.2배로 렌더링한 이미지를 보고 사람이 전사했다. 어느 파서 출력도 보지 않고 만들었다. 행 수는 표 전체, 셀 값은 표마다 2개 행씩 6개 행 71개 값.</td></tr>
+<tr><td class="k">지표 1 · 값 보존</td><td>골드의 값이 파서 출력 표 어딘가에 있는가. 공백은 무시한다.</td></tr>
+<tr><td class="k">지표 2 · 행 수</td><td>파서가 낸 표의 행 수가 골드 행 수와 같은가. 적으면 행을 합친 것, 많으면 한 행을 여러 줄로 쪼갠 것이다.</td></tr>
+<tr><td class="k">참고 · 셀 하나로</td><td>값이 독립된 셀 하나에 담겼는가. 이 논문이 평균과 표준편차를 <code>59.0</code> / <code>(±6.305)</code> 두 줄로 인쇄하므로 파서가 한 셀로 합치는 것이 당연해서, 우열 지표로는 쓰지 않는다.</td></tr>
+</tbody></table></div>
+
+<h2><span class="no">02</span>값 보존</h2>
+<div class="cards" id="valcards"></div>
+<p class="note" style="margin-top:10px">MinerU는 ±를 <code>$\pm$</code>(LaTeX)로 쓴다. 처음 채점에서는 이 표기 차이 때문에 4개를 놓친 것으로 나왔으나, 표기를 되돌려 세면 셋 다 71/71이다. 표 대조에서는 "무엇을 같다고 볼 것인지"를 먼저 정해야 한다.</p>
+
+<h2><span class="no">03</span>행 수 — 표 크기에 따라 승자가 다르다</h2>
+<div class="wrap"><table class="t" id="shape"></table></div>
+<div class="verdict"><b class="t">세 표에서 결과가 갈린다</b>
+<ul class="pts" style="margin-top:2px">
+<li><b>작은 표(7행)</b>: docling·MinerU가 정확하고 pymupdf가 한 행을 더 만든다.</li>
+<li><b>중간 표(17행)</b>: MinerU만 정확하다. pymupdf는 한 행을 더 만들고, docling은 6행을 잃는다.</li>
+<li><b>큰 표(47행)</b>: pymupdf만 정확하다. docling은 19행을 잃고, MinerU는 17행을 더 만든다.</li>
+</ul>
+<p class="note" style="margin-top:8px">잃는 것과 쪼개는 것은 무게가 다르다. docling이 잃은 행은 되돌릴 수 없지만, MinerU가 쪼갠 행은 값이 그대로 남아 있어 합칠 수 있다.</p></div>
+
+<h2><span class="no">04</span>표에 대한 결론</h2>
+<div class="box"><ul class="pts" style="margin:0">
+<li><b>값은 어느 파서를 써도 100% 보존된다.</b> 표 때문에 파서를 고를 이유는 없다.</li>
+<li><b>"MinerU가 표를 가장 잘 잡는다"는 근거가 없다.</b> 병합 셀을 141개로 가장 많이 잡지만, 47행 표를 64행으로 쪼갰다. 병합 셀 수는 우열의 근거가 아니다.</li>
+<li><b>행 경계는 어느 파서도 믿을 수 없으므로, 검색용으로는 표 전체를 한 청크로 둔다.</b> 행 경계가 틀려도 검색에 영향이 없는지는 아직 재지 않았다.</li>
+</ul></div>
+
+<h2 class="part">덧붙임 · 이 대조와 함께 확인한 것</h2>
+<p class="lede">표 대조 자체보다 설계를 더 크게 바꾼 것은 곁에서 센 조판 다양성이었다. 순서대로 적는다.</p>
+
+<h2><span class="no">05</span>조판이 논문마다 다르다</h2>
+<p class="lede">"구조(제목 계층)는 사람이 라벨링하면 되지 않나"를 확인하려고 코퍼스의 조판 종류를 셌다. 앞서 채점기를 손보며 얻은 규칙 전이 98.7%는 <b>한 문서 안에서</b> 앞쪽 라벨로 뒤쪽을 맞힌 값이라, 문서 사이에도 통하려면 조판이 반복되어야 한다.</p>
+<div class="box"><div id="typeset"></div></div>
+
+<h2><span class="no">06</span>비용 — 전부 돌려도 하룻밤</h2>
+<div class="wrap"><table class="t" id="cost"></table></div>
+<p class="note" style="margin-top:8px">pymupdf 1분 + docling 7시간이고, 한 번 돌리면 캐시된다. MinerU는 전수로 돌리면 81시간이라 글자층 없는 문서에만 쓴다.</p>
+
+<footer id="foot"></footer>
+</main>
+<script>
+const D={"acc": {"shape": {"6": {"pymupdf": 8, "docling": 7, "MinerU": 7}, "8": {"pymupdf": 18, "docling": 11, "MinerU": 17}, "10": {"pymupdf": 47, "docling": 28, "MinerU": 64}}, "gold_shape": {"6": 7, "8": 17, "10": 47}, "shape_note": {"6": "머리글 2 + 본문 5 (Age·Height·Weight·Sex Male·Sex Female)", "8": "머리글 2 + 본문 15 (3개 블록 × 5행)", "10": "머리글 2 + 본문 45 (Pain·Stiffness·Function 각 15행)"}, "detail": {"p06 Table I · Age": {"pymupdf": [2, 12, 12], "docling": [2, 12, 12], "MinerU": [2, 12, 12]}, "p06 Table I · Weight": {"pymupdf": [2, 14, 14], "docling": [2, 14, 14], "MinerU": [2, 14, 14]}, "p08 Table IV · Visit 3": {"pymupdf": [7, 11, 11], "docling": [7, 11, 11], "MinerU": [7, 11, 11]}, "p08 Table IV · Change from baseline": {"pymupdf": [7, 11, 11], "docling": [6, 11, 11], "MinerU": [7, 11, 11]}, "p10 Table VIII · Pain Visit 2": {"pymupdf": [7, 11, 11], "docling": [7, 11, 11], "MinerU": [7, 11, 11]}, "p10 Table VIII · Stiffness Visit 4": {"pymupdf": [6, 12, 12], "docling": [5, 12, 12], "MinerU": [6, 12, 12]}}, "total": {"pymupdf": [31, 71, 71], "docling": [29, 71, 71], "MinerU": [31, 71, 71]}, "gold_rows": {"p06 Table I · Age": ["Age", "Visit 1", "59.0", "(±6.305)", "46,", "67", "57.3", "(±5.296)", "59.7", "(±5.982)", "0.637", "0.087"], "p06 Table I · Weight": ["Weight", "Visit 1", "59.3", "(±6.082)", "46.8,", "74.3", "62.5", "(±8.552)", "60.2", "(±10.383)", "39.9,", "89.4", "0.682", "0.312"], "p08 Table IV · Visit 3": ["Visit 3", "33", "42.55", "(±15.790)", "14, 86", "32", "41.75", "(±13.445)", "10, 65", "0.828", "0.694"], "p08 Table IV · Change from baseline": ["Change from baseline", "33", "-8.33", "(±14.510)", "-40, 27", "32", "-7.34", "(±13.116)", "-40, 11", "0.774", "0.379"], "p10 Table VIII · Pain Visit 2": ["Pain", "Visit 2", "34", "7.82", "(±3.433)", "2, 15", "7.38", "(±2.437)", "2, 12", "0.543", "0.648"], "p10 Table VIII · Stiffness Visit 4": ["Stiffness", "Visit 4", "33", "2.88", "(±1.654)", "0, 6", "32", "1.91", "(±1.201)", "0, 5", "0.009", "0.015"]}}, "typeset": {"sample": 89, "pool": 127, "body_fonts": 67, "fingerprints": 82, "cum": [[1, 4], [3, 10], [5, 16], [10, 27], [20, 42], [67, 89]], "top": [[4, "10.0pt TimesNewRomanPSMT"], [3, "9.0pt Dutch801BT-Roman"], [3, "9.0pt MinionPro-Regular"], [3, "10.0pt Times-Roman"], [3, "10.0pt Dutch801BT-Roman"], [3, "10.0pt STIX-Regular"]]}, "cost": [{"step": "본문 글자 추출", "who": "pymupdf", "per": "쪽당 0.003초", "corpus": "약 1분", "note": "800편 20,000쪽 기준"}, {"step": "구조(제목·표 위치)", "who": "docling", "per": "쪽당 1.3초", "corpus": "약 7시간", "note": "한 번 돌리고 캐시. 하룻밤"}, {"step": "글자층 없는 문서", "who": "MinerU", "per": "쪽당 14.6초", "corpus": "스캔만 약 1시간", "note": "전수로 돌리면 81시간"}, {"step": "임베딩 적재", "who": "OpenAI 3-small", "per": "6편 77,089토큰", "corpus": "약 1,030만 토큰", "note": "한 번. 단가는 확인 필요"}]}, A=D.acc, T=D.typeset;
+const C={pymupdf:'#2a78d6',docling:'#1f6f5c',MinerU:'#eb6834'};
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const NAMES=['pymupdf','docling','MinerU'], CLS={pymupdf:'pm',docling:'dl',MinerU:'mu'};
+
+// 02 값 보존
+document.getElementById('valcards').innerHTML=NAMES.map(n=>{
+ const [e,p,tot]=A.total[n];
+ return `<div class="card ${CLS[n]}"><h3 style="color:${C[n]}">${n}</h3>
+  <div class="big">${p} / ${tot}<small> 값 보존</small></div>
+  <div class="sub">셀 하나로 담은 값 ${e}/${tot} (${Math.round(e/tot*100)}%)</div></div>`;}).join('');
+
+// 03 행 수 — 표 형식 + 막대
+(function(){
+ const pages=Object.keys(A.gold_shape).map(Number).sort((a,b)=>a-b);
+ const label={6:'Table Ⅰ · 6쪽',8:'Table Ⅳ · 8쪽',10:'Table Ⅷ · 10쪽'};
+ const size={6:'작은 표',8:'중간 표',10:'큰 표'};
+ const maxN=70;
+ const cell=(n,v,gold)=>{const d=v-gold; const w=v/maxN*100, gw=gold/maxN*100;
+  const tag=d===0?`<span class="good">정확</span>`:`<span class="off">${d>0?'+'+d:d}행</span>`;
+  return `<td><div class="v" style="font-family:'IBM Plex Mono',monospace">${v}행 ${tag}</div>
+   <div class="bar"><span style="position:relative;display:block;flex:1;height:9px"><i style="width:${w}%;background:${C[n]};opacity:${d===0?1:.5}"></i><span class="g" style="position:absolute;left:${gw}%;top:0"></span></span></div></td>`;};
+ let h=`<thead><tr><th>표</th><th>골드 행 수</th>`+NAMES.map(n=>`<th style="color:${C[n]}">${n}</th>`).join('')+`</tr></thead><tbody>`;
+ pages.forEach(pg=>{const gold=A.gold_shape[pg];
+  h+=`<tr><td class="k">${label[pg]}<div class="note" style="font-weight:400">${size[pg]}</div></td>
+   <td class="v"><b>${gold}행</b><div class="note">${esc(A.shape_note[pg])}</div></td>`+NAMES.map(n=>cell(n,A.shape[pg][n],gold)).join('')+`</tr>`;});
+ h+=`</tbody>`;
+ document.getElementById('shape').innerHTML=h;
+ document.getElementById('shape').insertAdjacentHTML('afterend',`<p class="note" style="margin-top:8px">막대는 파서가 낸 행 수, 검은 눈금은 골드 행 수다. 진한 막대가 골드와 일치한 경우.</p>`);
+})();
+
+// 05 조판 다양성
+(function(){
+ const W=880,H=220,L=50,R=24,T0=22,B=46,PW=W-L-R,PH=H-T0-B;
+ const pts=T.cum, maxX=T.body_fonts, maxY=T.sample;
+ const x=v=>L+v/maxX*PW, y=v=>T0+PH-v/maxY*PH;
+ let g='';
+ [0,25,50,75,100].forEach(p=>{const v=p/100*maxY;
+  g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rule2)"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" style="fill:var(--faint);font:10.5px 'IBM Plex Mono'">${p}%</text>`;});
+ let path=`M ${x(0)} ${y(0)}`;
+ pts.forEach(([k,n])=>{path+=` L ${x(k)} ${y(n)}`;});
+ g+=`<path d="M ${x(0)} ${y(0)} L ${x(10)} ${y(maxY)}" fill="none" stroke="var(--faint)" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+ g+=`<text x="${x(11)}" y="${y(maxY)+4}" style="fill:var(--faint);font:11px 'IBM Plex Sans KR'">조판이 10종뿐이라면 (가정)</text>`;
+ g+=`<path d="${path}" fill="none" stroke="#4a3aa7" stroke-width="2.5"/>`;
+ pts.forEach(([k,n])=>{g+=`<circle cx="${x(k)}" cy="${y(n)}" r="4.5" fill="#4a3aa7"/>`;
+  if([10,20,67].includes(k)) g+=`<text x="${x(k)}" y="${y(n)+(k===67?18:-10)}" text-anchor="${k===67?'end':'middle'}" style="fill:#4a3aa7;font:600 11px 'IBM Plex Mono'">${k}종 → ${Math.round(n/maxY*100)}%</text>`;});
+ [0,10,20,30,40,50,60].forEach(v=>g+=`<text x="${x(v)}" y="${T0+PH+16}" text-anchor="middle" style="fill:var(--faint);font:10.5px 'IBM Plex Mono'">${v}</text>`);
+ g+=`<text x="${L+PW/2}" y="${H-6}" text-anchor="middle" style="fill:var(--soft);font:11.5px 'IBM Plex Sans KR'">라벨링한 조판 종류 수 (누적)</text>`;
+ g+=`<text x="${L}" y="${T0-9}" style="fill:var(--soft);font:11.5px 'IBM Plex Sans KR'">덮이는 논문 비율</text>`;
+ document.getElementById('typeset').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="조판 다양성">${g}</svg>
+ <p class="note" style="margin-top:8px">표본 ${T.sample}편(D 폴더 ${T.pool}편 중)의 2쪽 본문 폰트 서명(크기+폰트명)을 셌다. <b>${T.body_fonts}종</b>이다. 가장 흔한 조판도 ${T.top[0][0]}편뿐이고, 상위 10종을 다 라벨링해도 ${Math.round(T.cum[3][1]/T.sample*100)}%만 덮인다. 조판이 거의 논문마다 다르므로 800편을 사람이 라벨링하는 것은 불가능하고, <b>구조는 docling에서 받아야 한다.</b></p>`;
+})();
+
+// 06 비용
+document.getElementById('cost').innerHTML=`<thead><tr><th>단계</th><th>도구</th><th>속도</th><th>800편 20,000쪽</th><th>비고</th></tr></thead><tbody>`+
+ D.cost.map(c=>`<tr><td>${esc(c.step)}</td><td class="v" style="color:${C[c.who.split(' ')[0]]||'var(--ink)'}">${esc(c.who)}</td><td class="v">${esc(c.per)}</td><td class="v">${esc(c.corpus)}</td><td class="note">${esc(c.note)}</td></tr>`).join('')+`</tbody>`;
+
+document.getElementById('foot').innerHTML=`골드는 초피 RCT(정지홍 외 2021, JKMR)의 Table Ⅰ(6쪽)·Ⅳ(8쪽)·Ⅷ(10쪽)을 3.2배로 렌더링한 이미지에서 사람이 전사했다. 행 수는 표 전체, 셀 값은 전사한 6개 행 71개 값이다. "값 보존"은 값이 표 어딘가에 있는지, "셀 하나로"는 독립된 셀에 있는지를 공백 무시로 본다. 실측 조건은 화면 ①과 같다. 이 페이지는 논문 본문을 담지 않는다.`;
+</script></body></html>
