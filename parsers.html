@@ -104,22 +104,22 @@ h2.sec{font-size:15px;margin:22px 18px 8px}
 <p class="lede"><b>VLM</b>(GPT-4.1-mini)은 지면을 이미지로 받아 읽는다. 글자층을 쓰지 않고, 보이는 대로 text·table·figure 블록을 나누어 각 블록의 내용과 좌표(0~1 정규화)를 JSON으로 돌려준다. 표는 셀 값을 행 단위로 옮겨 적고, 그림은 캡션과 함께 그래프의 축·수치·경향을 문장으로 서술한다.</p>
 <p class="lede">VLM이 돌려주는 좌표는 지면을 가로 띠로 나눈 추정값이라 실제 위치와 어긋난다. 그래서 지면 위 VLM 상자는 각 블록의 첫 줄과 끝 줄(표·그림은 캡션)을 글자층에서 찾아 실제 좌표로 다시 맞춘 것이다. 168개 중 154개가 맞았고, 못 찾은 14개는 VLM 추정 좌표를 점선으로 그린다.</p>
 <p class="lede"><b>PyMuPDF4LLM</b>은 PDF의 글자층에서 글자와 좌표를 읽은 뒤 레이아웃 분석으로 영역을 나눈다(text·section-header·list-item·caption·table·picture·page-header·footnote). 영역마다 Markdown으로 바꾸어 이어 붙이는데, 제목은 <code>#</code> 단계로, 표는 <code>|</code> 구분 표로, 목록은 <code>-</code> 항목으로 쓴다. 그림은 위치만 잡고 내용은 비워 두며 캡션 글자만 본문에 남긴다. 글자층이 없는 쪽만 OCR로 보완한다.</p>
-<div class="tblwrap" style="padding:0"><table class="cmp" id="gvsum"><thead><tr><th>논문</th><th>비교한 쪽</th><th>표 (원문)</th><th>VLM 표</th><th>PyMuPDF4LLM 표</th><th>그림 (원문)</th><th>VLM 그림</th><th>PyMuPDF4LLM 그림</th><th>추출 글자 수 VLM / PyMuPDF4LLM</th></tr></thead><tbody></tbody></table></div>
+<div class="tblwrap" style="padding:0"><table class="cmp" id="gvsum"><thead><tr><th>논문</th><th>비교한 쪽</th><th>표 (원문)</th><th>GPT-4.1-mini 표</th><th>PyMuPDF4LLM 표</th><th>그림 (원문)</th><th>GPT-4.1-mini 그림</th><th>PyMuPDF4LLM 그림</th><th>추출 글자 수 GPT-4.1-mini / PyMuPDF4LLM</th></tr></thead><tbody></tbody></table></div>
 <div class="ctl">
   <select id="gvpaper"></select>
   <div class="grp"><button id="gvprev" type="button">◀</button><select id="gvpage"></select><button id="gvnext" type="button">▶</button></div>
-  <div class="grp" role="group" aria-label="겹침 선택"><button type="button" data-gov="vlm" aria-pressed="true">VLM</button><button type="button" data-gov="md" aria-pressed="false">PyMuPDF4LLM</button><button type="button" data-gov="all" aria-pressed="false">둘 다</button></div>
-  <div class="legend"><span><i style="background:rgba(235,104,52,.10);border:1.5px solid var(--mu)"></i>VLM 블록 (표 이중선 · 그림 굵은 선)</span><span><i style="border:1.5px dashed var(--mu)"></i>VLM 추정 좌표 (글자층에서 못 찾음)</span><span><i style="background:rgba(42,120,214,.10);border:1.5px solid var(--pm)"></i>PyMuPDF4LLM 영역 (표 이중선 · 그림 굵은 선 · 제목 진한 선)</span></div>
+  <div class="grp" role="group" aria-label="겹침 선택"><button type="button" data-gov="vlm" aria-pressed="true">GPT-4.1-mini</button><button type="button" data-gov="md" aria-pressed="false">PyMuPDF4LLM</button><button type="button" data-gov="all" aria-pressed="false">둘 다</button></div>
+  <div class="legend"><span><i style="background:rgba(235,104,52,.10);border:1.5px solid var(--mu)"></i>GPT-4.1-mini 블록 (표 이중선 · 그림 굵은 선)</span><span><i style="border:1.5px dashed var(--mu)"></i>GPT-4.1-mini 추정 좌표 (글자층에서 못 찾음)</span><span><i style="background:rgba(42,120,214,.10);border:1.5px solid var(--pm)"></i>PyMuPDF4LLM 영역 (표 이중선 · 그림 굵은 선 · 제목 진한 선)</span></div>
   <div class="sum" id="gvsumline" style="margin-left:0"></div>
 </div>
 <div class="grid">
   <div class="stage"><img id="gvimg" alt="지면"><div class="ov" id="gvov"></div></div>
-  <aside class="panel"><div class="tabs"><button type="button" data-gtab="vlm" aria-pressed="true">VLM 블록</button><button type="button" data-gtab="md" aria-pressed="false">PyMuPDF4LLM Markdown</button></div><div class="items" id="gvitems"></div></aside>
+  <aside class="panel"><div class="tabs"><button type="button" data-gtab="vlm" aria-pressed="true">GPT-4.1-mini 블록</button><button type="button" data-gtab="md" aria-pressed="false">PyMuPDF4LLM Markdown</button></div><div class="items" id="gvitems"></div></aside>
 </div>
 <div class="concl"><b>결론</b><ul>
-<li><b>표 검출</b>: 원문 10개 → VLM 10개, PyMuPDF4LLM 10개. 위치와 수가 같다.</li>
-<li><b>그림</b>: 위치는 둘 다 잡는다(VLM 21, PyMuPDF4LLM 24). 내용 서술은 VLM만 한다.</li>
-<li><b>본문 글자</b>: PyMuPDF4LLM 88,884자 > VLM 73,720자. VLM은 머리글·각주·참고문헌을 줄인다.</li>
+<li><b>표 검출</b>: 원문 10개 → GPT-4.1-mini 10개, PyMuPDF4LLM 10개. 위치와 수가 같다.</li>
+<li><b>그림</b>: 위치는 둘 다 잡는다(GPT-4.1-mini 21, PyMuPDF4LLM 24). 내용 서술은 GPT-4.1-mini만 한다.</li>
+<li><b>본문 글자</b>: PyMuPDF4LLM 88,884자 > GPT-4.1-mini 73,720자. GPT-4.1-mini는 머리글·각주·참고문헌을 줄인다.</li>
 </ul></div>
 </section>
 <script src="gpt_vlm/data.js?v=3"></script>
@@ -183,7 +183,7 @@ render();
   else {it=(pg.mdb||[]).map((b,i)=>{const raw=(pg.md||'').slice(b.p[0],b.p[1]); return `<div class="it mdi ${b.k}" data-id="gm${i}"><span class="k">${b.k}</span><div class="mdr">${md2html(raw)||'<p class="note">(내용 없음)</p>'}</div>${b.k==='table'||b.k==='section-header'?`<span class="raw">${esc(raw.trim())}</span>`:''}</div>`;}).join('')||'<div class="it">영역 없음</div>';}
   $$('#gvitems').innerHTML=it;
   const c=k=>pg.vlm.filter(b=>b.t===k).length, m=k=>(pg.mdb||[]).filter(b=>b.k===k).length;
-  $$('#gvsumline').textContent=`VLM 블록 ${pg.vlm.length} · 표 ${c('table')} · 그림 ${c('figure')}  |  PyMuPDF4LLM 영역 ${(pg.mdb||[]).length} · 제목 ${m('section-header')} · 표 ${m('table')} · 그림 ${m('picture')} · ${(pg.md||'').length.toLocaleString()}자`;}
+  $$('#gvsumline').textContent=`GPT-4.1-mini 블록 ${pg.vlm.length} · 표 ${c('table')} · 그림 ${c('figure')}  |  PyMuPDF4LLM 영역 ${(pg.mdb||[]).length} · 제목 ${m('section-header')} · 표 ${m('table')} · 그림 ${m('picture')} · ${(pg.md||'').length.toLocaleString()}자`;}
  psel.addEventListener('change',()=>{pi=+psel.value;gi=0;fillPages();draw();});
  gsel.addEventListener('change',()=>{gi=+gsel.value;draw();});
  $$('#gvprev').addEventListener('click',()=>{const n=GV.papers[pi].pages.length;gi=(gi+n-1)%n;draw();});
