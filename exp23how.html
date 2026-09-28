@@ -77,13 +77,10 @@ footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;paddi
 <div class="wrap"><table class="t" id="drop"></table></div>
 
 <h2><span class="no">04</span>채점 기준</h2>
-<p class="lede">채점은 두 갈래다. 어느 쪽도 사람이 매 문항을 다시 보지는 않았다.</p>
 <div class="row3" id="score"></div>
-<div class="box warn" style="margin-top:12px"><b>이 설계가 보지 못하는 것</b>
+<div class="box warn" style="margin-top:12px"><b>실험 한계점</b>
 <ul class="pts" style="margin-top:4px">
-<li>정답 발췌가 청크 경계에 걸쳐 잘리면 어느 청크에도 문자열이 온전히 남지 않아 "못 찾음"이 된다. 작은 청크일수록 불리한 채점이다. 절 단위가 이 조건에서도 이겼다는 점은 유리한 방향의 증거다.</li>
-<li>그림 문항은 서술의 내용이 맞는지 보지 않고 그 서술이 든 청크가 올라왔는지만 본다. 서술을 만든 모델과 채점하는 모델이 같아지는 순환을 피하려는 선택이다.</li>
-<li>답변과 채점을 모두 gpt-4.1-mini가 했다. 자기 답에 관대할 수 있어 사람 표본 검수가 남아 있다.</li>
+<li>정답 발췌가 청크 경계에 걸쳐 잘리면 어느 청크에도 문자열이 온전히 남지 않아 "못 찾음"이 된다. 작은 청크일수록 불리하다.</li>
 </ul></div>
 
 <footer>데이터 <code>lab/exp23how.js</code> · 빌더 <code>exp23/build_how.py</code> · 청크 <code>exp23/chunks/*.jsonl</code> · 결과 <code>exp23/results.json</code>. 페이지 글은 직접 고칠 수 있다.</footer>
@@ -132,23 +129,23 @@ document.getElementById('pipe').innerHTML=HOW.pipe.map((s,i)=>
  e.map(x=>`<tr><td class="k">${esc(x.label)}</td>`+
   [['r1',45],['r3',45],['r6',45]].map(([k,n])=>`<td class="v">${x[k]===mx(k)?'<span style="background:#e4efeb;border-radius:4px;padding:0 5px;font-weight:600">'+x[k]+'</span>':x[k]}/${n}</td>`).join('')+
   `<td class="v">${x.mrr.toFixed(3)}</td><td class="v">${x.fig6}/12</td><td class="v">${x.b6000}/57</td></tr>`).join('')+'</tbody>';}
-document.getElementById('effnote').innerHTML=`<ul class="pts" style="margin-top:4px">
-<li><b>정답 조각을 위쪽으로 끌어올린다.</b> 조각을 닮은 순서대로 줄 세웠을 때, 정답이 든 조각이 1등에 오는 문항이 절 단위에서 16개에서 18개로 는다. 고정 창에서도 12개에서 15개로 는다.</li>
-<li><b>그런데 1등으로 올라간 것은 실제로 이득이 아니다.</b> 답을 만들 때는 1등 하나만 주지 않고 여러 개를 함께 넘긴다. 1등으로 올라온 6문항은 태그를 붙이기 전에도 이미 2~3등이어서 어차피 넘어갈 조각이었다. 2등이 1등이 되어도 넘기는 발췌는 그대로다.</li>
-<li><b>반면 6등 밖으로 밀리면 아예 넘어가지 않는다.</b> 그래서 6등까지 넓혀 보는 것이다. 실제로 몇 개를 넘기느냐가 6개 안팎이기 때문이다.</li>
-<li><b>그런데 6등까지 넓혀 보면 줄어든다.</b> 정답 조각이 6등 안에 드는 문항이 골드 45문항에서 31개에서 27개로 준다. 그림 12문항까지 합치면 밖으로 밀린 문항이 5개다. 이름 태그 없음에서 절 이름 태그로 바꿨을 때 순위가 오른 문항 ${HOW.move.up}개, 내린 문항 ${HOW.move.down}개, 그대로 ${HOW.move.same}개다. 자르는 크기를 바꿨을 때의 수치와는 다른 비교다.</li>
-<li><b>새로 6등 안에 들어온 문항은 ${HOW.move.into}개다.</b> 이름 태그를 붙임으로써 붙이기 전보다 후순위로 밀려난 문항만 있고 새로 얻은 문항은 없다. 문항마다 조각을 따로 줄 세우므로, 한 문항이 밀린다고 다른 문항이 그 자리로 올라오지는 않는다.</li>
-<li><b>절 이름 태그 조건은 본문보다 토큰이 ${(HOW.rules[1].st.extra/(HOW.rules[1].st.total-HOW.rules[1].st.extra)*100).toFixed(1)}% 많다. 늘어난 분량의 ${Math.round(HOW.rules[1].st.rep/HOW.rules[1].st.pre*100)}%는 같은 제목의 반복이었다.</li>
+document.getElementById('effnote').innerHTML=`<b>절 이름 태그를 붙였을 때의 변화</b>
+<ul class="pts" style="margin-top:4px">
+<li><b>정답 조각이 1등에 오는 문항이 늘었다.</b> 조각을 질문과 닮은 순서대로 줄 세웠을 때, 정답이 든 조각이 맨 앞에 오는 문항이 절 단위에서 16개에서 18개로, 고정 창에서 12개에서 15개로 늘었다.</li>
+<li><b>다만 1등으로 올라간 것은 넘기는 발췌를 바꾸지 않는다.</b> 1등이 된 6문항은 태그를 붙이기 전에도 이미 2~3등이어서 어차피 AI에게 넘어갈 조각이었다. 새로 6등 안에 들어온 문항은 0개이고, 붙이기 전보다 후순위로 밀려난 문항들이 존재한다.</li>
+<li><b>넘어가는 발췌에서 정답 조각이 빠진 문항이 늘었다.</b> 정답 조각이 6등 안에 드는 문항이 골드 45문항 기준 31개에서 27개로 줄었다. 그림 12문항까지 합치면 5문항이 6등 밖으로 밀렸다. 이 5문항은 정답이 든 조각이 AI에게 전달되지 않는다.</li>
+<li><b>순위가 내린 문항이 오른 문항보다 많다.</b> 57문항 중 오른 문항 ${HOW.move.up}개, 내린 문항 ${HOW.move.down}개, 그대로 ${HOW.move.same}개다. 자르는 크기를 바꿨을 때의 수치와는 다른 비교다.</li>
+<li><b>토큰이 늘어난다.</b> 절 이름 태그 조건은 본문보다 토큰이 ${(HOW.rules[1].st.extra/(HOW.rules[1].st.total-HOW.rules[1].st.extra)*100).toFixed(1)}% 많다. 늘어난 분량의 ${Math.round(HOW.rules[1].st.rep/HOW.rules[1].st.pre*100)}%는 같은 제목의 반복이었다.</li>
 </ul>`;
 {const d=HOW.drop;
- document.getElementById('drophead').innerHTML=`${d.length}개 문항이 절 이름 태그 때문에 6등 밖으로 밀렸고, 반대로 들어온 문항은 ${HOW.move.into}개다. 다섯 개 모두 원래 5~6등이었다. 경계에 있던 문항이 밀린 것이지 잘 찾던 문항이 무너진 것은 아니다.`;
+ document.getElementById('drophead').innerHTML=`${d.length}개 문항이 절 이름 태그 때문에 6등 밖으로 밀렸고, 반대로 들어온 문항은 ${HOW.move.into}개다. 다섯 개 모두 원래 5~6등이었다. 경계에 있던 문항이 밀려났다.`;
  document.getElementById('drop').innerHTML=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>질문</th><th>이름 태그 없음</th><th>절 이름 태그</th></tr></thead><tbody>`+
  d.map(x=>`<tr><td class="v">${esc(x.qid)}</td><td class="v">${esc(x.doc)}</td><td>${({methods:'실험 방법',table:'표 값',reference:'참고문헌',body:'본문 서술',figure:'그림'})[x.type]||x.type}</td>
   <td>${esc(x.q)}</td><td class="v">${x.none}위</td><td class="v" style="color:var(--bad)">${x.sub}위</td></tr>`).join('')+'</tbody>';}
 // 04 채점
 document.getElementById('score').innerHTML=[
- ['골드 45문항','사람이 검토해 둔 정답 발췌 문자열이 청크 글 안에 통째로 들어 있으면 적중으로 본다. 비교 전에 공백·따옴표·붙임표를 지우고 유니코드를 정규화한다.','실험 방법 '+HOW.gtype.methods+' · 본문 서술 '+HOW.gtype.body+' · 표 값 '+HOW.gtype.table+' · 참고문헌 '+HOW.gtype.reference],
- ['그림 12문항','그 그림의 서술이 들어간 청크가 상위 k에 있으면 적중으로 본다. 서술 내용의 정확성은 채점하지 않는다.','값을 읽을 그래프가 있는 8편에서만 출제'],
+ ['골드 45문항','실험자가 검토해 둔 정답 발췌 문자열이 청크 글 안에 들어 있으면 적중으로 본다. 비교 전에 공백·따옴표·붙임표를 지우고 유니코드를 정규화한다.','실험 방법 '+HOW.gtype.methods+' · 본문 서술 '+HOW.gtype.body+' · 표 값 '+HOW.gtype.table+' · 참고문헌 '+HOW.gtype.reference],
+ ['그림 12문항','그림의 서술이 들어간 청크가 상위 k에 있으면 적중으로 본다. 실험자가 검토한 12문항을 기준으로 채점한다.','값을 읽을 그래프가 있는 8편에서만 출제'],
  ['답변 정확도','상위 청크를 발췌로 묶어 gpt-4.1-mini에 주고 두 문장 이내로 답하게 한 뒤, 같은 모델이 정답과 대조해 정답·부분·오답으로 채점한다.','같은 분량 6,000토큰 · 상위 6개 두 방식']
 ].map(([t,d,m])=>`<div class="box"><b>${t}</b><p style="margin:6px 0 0;color:var(--soft);font-size:13px">${d}</p><p class="mini" style="margin-top:6px">${m}</p></div>`).join('');
 </script>
