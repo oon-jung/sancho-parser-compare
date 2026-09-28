@@ -23,212 +23,176 @@ ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:7px;line-height:1.65}
 svg{display:block;width:100%;height:auto}
 footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule)}
 code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;border-radius:4px}
+
+.ctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0 10px;font-size:12.5px;color:var(--faint)}
+.ctl button{font:12.5px "IBM Plex Sans KR",sans-serif;border:1px solid var(--rule);background:var(--lift);color:var(--soft);padding:4px 11px;border-radius:999px;cursor:pointer}
+.ctl button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.vc{display:inline-block;min-width:34px;text-align:center;font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:5px}
+.vc.o{background:#e2efe9;color:#14604c}.vc.p{background:#fdeedd;color:#8a4a10}.vc.x{background:#fbe4e5;color:#8f1f26}
+tr.qr{cursor:pointer}tr.qr:hover td{background:#fafbfd}
+tr.qd td{background:#fbfcfe;border-top:0}
+.ansgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:9px;margin-top:4px}
+.ansbox{border:1px solid var(--rule);border-radius:8px;padding:9px 11px;background:var(--lift)}
+.ansbox h5{margin:0 0 5px;font-size:11.5px;color:var(--faint);display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.ansbox p{margin:0;font-size:12.5px;line-height:1.6;color:var(--soft)}
+.goldline{background:#f4f6fa;border-left:3px solid var(--dl);padding:7px 11px;border-radius:0 6px 6px 0;font-size:12.5px;margin-bottom:8px}
+details.more{margin-top:10px;background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:10px 16px}
+details.more summary{cursor:pointer;font-weight:600;font-size:13.5px}
+details.more[open] summary{margin-bottom:10px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.q3 .box{height:100%}
+@media(max-width:860px){.row3{grid-template-columns:1fr}}
 </style></head><body>
 <nav class="top"><b>청킹 방식 비교</b><a href="exp23.html" class="on">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html">방법 — 어떻게 쟀나</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림에서만 답이 나오는 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>자르는 방식을 바꾸면 검색과 답변이 얼마나 달라지는가</h1>
-<p class="lede">같은 논문 12편을 12가지 방식으로 잘라 보고, 어떤 방식이 질문에 맞는 내용을 가장 잘 찾아 주는지 57개 문항으로 시험했다. 문항은 사람이 검토한 골드 45개와 이번에 만든 그림 12개다. 파싱은 docling 하나로, 그림 서술은 Qwen3-VL 32B 하나로, 임베딩은 BGE-M3 하나로 고정했다. 달라지는 것은 자르는 규칙뿐이다. <span class="tag e2">묶기와 이름 줄</span>은 절 단위로 묶는 것과 조각마다 절 이름을 적는 것의 효과를, <span class="tag e3">자르는 크기</span>는 5,000자/250자를 대신할 방법을 본다.</p>
+<p class="lede">같은 논문 12편을 여러 방식으로 잘라 보고, 어떤 방식이 질문에 맞는 내용을 가장 잘 찾아 주는지 57개 문항으로 시험했다. 문항은 사람이 검토한 골드 45개와 이번에 만든 그림 12개다. 파싱은 docling 하나로, 그림 서술은 Qwen3-VL 32B 하나로, 임베딩은 BGE-M3 하나로 고정했다. 달라지는 것은 자르는 규칙뿐이다.</p>
 
-<h2><span class="no">01</span>조건과 결과</h2>
-<div class="wrap"><table class="t" id="main"></table></div>
-<p class="lede" style="margin-top:8px">recall@6은 정답이 든 청크가 상위 6위 안에 든 문항 수다. <b>예산</b>은 순위 대신 읽은 토큰 양을 기준으로 센 것으로, 위에서부터 청크를 읽어 그 예산 안에 정답 청크가 들어오면 적중이다. 청크가 크면 6위까지 읽는 데 훨씬 많은 토큰이 들기 때문에 이 지표를 함께 본다.</p>
+<h2><span class="no">01</span>네 가지 방식 — 아래로 갈 때마다 한 가지씩만 바뀐다</h2>
+<p class="lede">13가지를 돌렸지만 비교에 쓸모 있는 것은 넷이다. 줄과 줄 사이에 바뀌는 것이 하나뿐이라 그 차이가 그 한 가지의 몫이다. 나머지는 맨 아래 "그 밖에 돌려 본 조건"에 뒀다.</p>
+<div class="wrap"><table class="t" id="main4"></table></div>
+<p class="mini" style="margin-top:6px">답변 정답은 gpt-4.1-mini가 채점했고 사람이 다시 보지 않았다. 02절에서 문항을 하나씩 열어 직접 판정할 수 있다.</p>
+<div class="row3 q3" id="q3" style="margin-top:14px"></div>
 
-<h2><span class="no">02</span>같은 예산으로 보면 순위가 뒤집힌다</h2>
-<div class="box"><div id="budget"></div></div>
-<p class="lede" style="margin-top:8px">6위까지 읽을 때 실제로 넘어가는 토큰은 문항마다 다르다. 중앙값으로 보면 고정 5,000자가 19,789토큰, 절 단위(이름 줄 없음)가 3,278토큰, 목표 600토큰이 2,819토큰이다. 청크 하나의 중앙값은 각각 1,845토큰과 130토큰이다.</p>
+<h2><span class="no">02</span>문항 하나씩 직접 보기</h2>
+<p class="lede">57문항에 네 방식이 각각 어떻게 답했는지 그대로 싣는다. 줄을 누르면 정답과 네 답변이 펼쳐진다. 채점이 맞는지, 어느 방식이 나은지 여기서 직접 판단하면 된다. 발췌는 모두 같은 토큰 예산 6,000으로 맞췄다.</p>
+<div class="ctl" id="qfilter"></div>
+<div class="wrap"><table class="t" id="qtab"></table></div>
 
-<h2><span class="no">03</span>절 단위로 묶어 자르고, 절 이름 줄을 넣으면 좋아지는가</h2>
-<p class="lede">가설은 두 가지를 함께 주장했다. 하나는 <b>절을 통째로 한 조각으로 묶어서 자른다</b>, 다른 하나는 <b>잘린 조각마다 어느 절에서 나왔는지 이름을 한 줄 적는다</b>이다. 두 요인을 교차해 네 조건으로 나눠 쟀다. 자르는 모습을 눈으로 보려면 <a href="exp1chunk.html" style="color:var(--pm)">청킹 페이지</a>에서 같은 지면 위에 두 방식을 겹쳐 두었고, 절 이름 줄이 글을 어떻게 바꾸는지는 <a href="exp23how.html" style="color:var(--pm)">방법 페이지</a> 02절에 있다.</p>
-<h3>묶기 × 절 이름 줄 네 조건</h3>
-<div class="wrap"><table class="t" id="fact"></table></div>
-<div class="box key" style="margin-top:12px"><b>가설의 두 절반이 서로 다른 방향으로 갔다</b>
+<h2><span class="no">03</span>왜 큰 조각이 답변에서 지는가</h2>
+<p class="lede">검색 순위만 보면 고정 5,000자가 나쁘지 않다. 6위 안에 정답 청크가 드는 문항이 33개로 가장 많다. 그런데 답변을 만들게 하면 꼴찌가 된다. 이유는 답변에 넘길 수 있는 양이 정해져 있기 때문이다.</p>
+<div class="wrap"><table class="t" id="budget"></table></div>
+<div class="box key" style="margin-top:12px"><b>한 조각이 예산을 다 쓴다</b>
 <ul class="pts" style="margin-top:4px">
-<li><b>묶기는 맞았다.</b> 고정 창을 절 단위로 바꾸면 회수율 지표가 오르고(1위 적중 12→16, MRR .434→.488, 같은 예산 6,000에서 정답 청크를 찾은 문항 25→48), 답변 정답도 23→50으로 오른다. 앞의 셋은 검색이 정답 청크를 찾았는지를 세고, 마지막 하나는 그 청크로 만든 답이 맞았는지를 센다. 가설이 말한 "묶어서 진행하면 좋다"는 지지된다.</li>
-<li><b>절 이름 줄은 틀렸다.</b> 어느 묶기 방식에서든 6위 안 적중이 떨어진다(33→32, 31→27). 절 단위에서는 답변 정답도 50→46으로 내려간다. 오르는 것은 1위 적중과 MRR뿐이다.</li>
-<li><b>두 요인의 크기가 다르다.</b> 같은 예산 답변 정답으로 견주면 묶기는 27문항 차이(23→50), 절 이름 줄은 4문항 차이(50→46)다. 가설을 통째로 채택하면 큰 이득을 얻고 작은 손해를 같이 떠안는 셈이었다.</li>
-</ul></div>
-<h3>더 묶거나 덜 묶으면</h3>
-<p class="lede">절 단위 안에서 목표 토큰만 바꿔 봤다. 아래 여섯 줄은 모두 <b>절 절 이름 줄이 붙은 조건</b>끼리 비교한 것이다. 절 이름 줄 없는 조건을 기준선으로 쓰면 목표 토큰의 효과와 절 이름 줄의 효과가 섞이므로 따로 둔다.</p>
-<div class="wrap"><table class="t" id="bund"></table></div>
-<div class="box key" style="margin-top:12px"><b>왜 더 잘게 자르는 쪽이 나았나</b>
-<ul class="pts" style="margin-top:4px">
-<li><b>목표 토큰은 긴 절에만 영향을 준다.</b> 12편의 절은 277개인데 절 크기 중앙값이 494토큰이고 평균은 1,005토큰, 최대는 9,906토큰이다. 목표 600을 넘는 절은 122개로 44%뿐이지만 <b>그 절들이 전체 글의 85%를 담는다.</b> 나머지 짧은 절은 어느 목표에서도 그대로 한 청크로 나온다. (절 크기는 그 절에서 나온 청크 토큰의 합으로 셌다. 계산은 <code>exp23/section_stats.py</code>에 있다.)</li>
-<li><b>긴 절을 쪼개면 정답이 청크에서 차지하는 비중이 커진다.</b> 목표를 900에서 600으로 낮췄을 때 순위가 오른 골드 문항 4개에서는 정답이 든 청크가 642토큰에서 319토큰으로 줄고, 정답 발췌가 그 청크에서 차지하는 글자 비율이 4.4%에서 9.3%로 두 배가 됐다. 표본이 4개이므로 경향으로만 읽어야 한다. 벡터가 그 문장 쪽으로 기울었다는 것은 이 관찰과 들어맞는 설명이지 따로 측정한 값은 아니다.</li>
-<li><b>그런데 전체로 보면 이득이 작고 방향도 엇갈린다.</b> 목표 900에서 600으로 바꿨을 때 57문항 중 순위가 오른 것은 6개, 내린 것은 11개, 그대로가 40개다. 6위 안 수치가 좋아진 것은 오른 6개 중 3개가 6위 선을 넘어 들어왔고 내린 11개는 선을 넘지 않았기 때문이다.</li>
-<li><b>어느 기준으로 끊어도 손해는 아니다.</b> 57문항 기준으로 1위 안 24→26, 3위 안 37→37, 6위 안 38→41, 10위 안 43→44다. 내려간 11문항은 모두 같은 구간 안에서 조금씩 내려갔을 뿐이다. 그래도 개별 문항으로는 내린 쪽이 더 많으니 "확실히 낫다"가 아니라 "손해가 없고 읽는 양이 적다"로 읽는 것이 맞다.</li>
-<li><b>절끼리 더 붙이는 쪽은 도움이 되지 않았다.</b> 짧은 첫 청크를 다음 청크와 합치면 1위 적중과 6위 안이 모두 내려간다. 묶는 단위는 절이면 충분하고 그보다 크게 묶을 이유는 이 실험에서 나오지 않았다.</li>
-</ul></div>
-<h3>절 이름 줄만 떼어 보면</h3>
-<div class="wrap"><table class="t" id="exp2"></table></div>
-<div class="box warn" style="margin-top:12px"><b>절 이름 줄은 가설과 반대 방향이다</b>
-<ul class="pts" style="margin-top:4px">
-<li><b>상위 6위 안에 드는 문항은 줄었다.</b> 이름 줄 없음 31개에서 절 이름 줄을 붙이면 27개가 된다. 대상위 절까지 이름 줄까지 붙여도 27개로 같다.</li>
-<li><b>대신 1위 적중과 순위는 올랐다.</b> 1위가 16개에서 18개로, MRR이 0.488에서 0.503으로 오른다. 제목이 질문의 단어와 겹치면 그 청크를 위로 끌어올린다.</li>
-<li><b>밀려난 문항은 모두 경계선에 있었다.</b> 절 이름 줄 때문에 6위 밖으로 나간 5문항은 원래 5~6위였고, 절 이름 줄을 붙여 6위 안으로 들어온 문항은 하나도 없다.</li>
-<li><b>설명.</b> 절 단위 청크는 중앙값이 140토큰으로 짧다. 여기에 제목 한 줄을 붙이면 본문이 차지하는 비중이 줄어, 제목과 상관없는 질문에서는 유사도가 내려간다.</li>
-</ul></div>
-<h3>절 이름 줄 때문에 순위가 바뀐 문항</h3>
-<div class="wrap"><table class="t" id="flips"></table></div>
-
-<h2><span class="no">04</span>기준선인 5,000자/250자를 대신할 방법</h2>
-<div class="wrap"><table class="t" id="exp3"></table></div>
-<div class="box key" style="margin-top:12px"><b>읽는 방법</b>
-<ul class="pts" style="margin-top:4px">
-<li><b>순위만 보면 5,000자가 가장 높다(33/45).</b> 큰 청크는 정답을 품을 확률이 높기 때문이다. 다만 그 대가로 한 번에 읽는 양이 많다.</li>
-<li><b>같은 예산으로 맞추면 절 단위가 두 배 이상 앞선다.</b> 6천 토큰 기준 16 대 36이다. 답변 단계에 넘길 토큰이 정해져 있다면 절 단위가 유리하다.</li>
-<li><b>목표 토큰을 600으로 줄이면 절 단위 중에서 가장 좋다.</b> 절 이름 줄이 같은 현행 900과 견주면 recall@6 27→29, 1위 18→19, MRR 0.503→0.523이다. 다만 순위가 오른 문항 6개에 내린 문항 11개라 이득은 작다. 900은 측정으로 정한 값이 아니라 이전 설정을 이어받은 값이었다는 점이 600을 볼 이유다.</li>
-<li><b>머리글 제목 제외와 첫 청크 병합은 효과가 없었다.</b> 각각 27, 26으로 현행과 같거나 낮다. 앞선 파싱 점검에서 찾은 문제이지만 회수율로는 드러나지 않는다.</li>
+<li><b>고정 5,000자는 조각 하나가 중앙값 1,845토큰, 최대 7,745토큰이다.</b> 6,000토큰 예산에 중앙값 <b>1개</b>만 들어간다. 그 하나에 답이 없으면 끝이다. 오답 29개 중 16개가 "근거 없음"이었다.</li>
+<li><b>절 단위는 같은 예산에 10개 넘게 들어간다.</b> 여러 곳에서 근거를 모으므로 한 번 빗나가도 다른 조각이 받쳐 준다.</li>
+<li><b>상위 6개를 그냥 주면 읽는 양이 갈린다.</b> 고정 5,000자는 중앙값 19,789토큰을 읽고 34개를 맞히고, 절 단위는 3,278토큰을 읽고 43개를 맞힌다.</li>
 </ul></div>
 
-<h2><span class="no">05</span>문항 유형별·언어별</h2>
-<h3>유형별 recall@6</h3>
+<h2><span class="no">04</span>어떤 문항에서 갈리는가</h2>
+<p class="lede">같은 예산 6,000토큰에서 유형별·언어별 정답 수다. 분모는 그 유형·언어의 문항 수다.</p>
+<h3>유형별</h3>
 <div class="wrap"><table class="t" id="bytype"></table></div>
-<h3>언어별 recall@6</h3>
+<h3>언어별</h3>
 <div class="wrap"><table class="t" id="bylang"></table></div>
-<div class="box" style="margin-top:12px"><ul class="pts">
-<li><b>표 값과 그림은 어느 조건에서도 잘 찾는다.</b> 표 6~7/7, 그림 11~12/12. 표를 독립 청크로 두고 캡션을 붙인 것, 그림에 VLM 서술을 넣은 것이 효과를 냈다.</li>
-<li><b>차이는 실험 방법 문항에서 난다.</b> 24문항 중 고정 5,000자는 18개, 절 단위는 13~15개다. 실험 방법은 여러 절에 흩어져 서술되는 경우가 많아 큰 창이 유리하다.</li>
-<li><b>중국어가 가장 나쁘다.</b> 13문항 중 절 단위는 6~8개뿐이고 고정 5,000자는 11개다. zh_02는 제목 검출이 부실해(제목 14개 중 3개가 머리글) 절이 제대로 나뉘지 않는다. 앞선 파싱 점검에서 절 보존율 21%로 확인한 문제가 그대로 드러났다.</li>
-<li><b>한국어는 절 단위가 낫다.</b> 22문항 중 절 이름 줄 없는 절 단위가 20개로 가장 높다.</li>
-</ul></div>
+<div class="box" style="margin-top:12px"><b>차이는 거의 전부 실험 방법 문항에서 난다</b>
+<p style="margin:5px 0 0;color:var(--soft)">실험 방법 24문항에서 고정 5,000자는 6개, 절 단위는 21개를 맞혔다. 나머지 유형의 격차는 2~5개다. 실험 방법 문항은 답이 재료·농도·기간처럼 한 문장에 박혀 있어, 큰 조각 하나에 걸리지 않으면 대안이 없다.</p></div>
 
-
-<h2><span class="no">06</span>답변 정확도 — 검색한 청크로 답을 만들고 모델이 채점</h2>
-<p class="lede">아래 수치는 모두 <b>gpt-4.1-mini가 채점한 값</b>이며 사람이 다시 본 것이 아니다. 검색이 정답 청크를 찾아 주는 것과, 그 청크로 모델이 실제로 맞는 답을 쓰는 것은 다르다. 상위 조건 4개로 검색한 발췌를 gpt-4.1-mini에 주고 한국어로 답하게 한 뒤, 같은 모델에게 골드 정답과 대조해 정답·부분·오답으로 채점하게 했다. 발췌에 근거가 없으면 "근거 없음"이라고 답하도록 지시했고, 그 경우는 오답으로 센다.</p>
-<h3>같은 토큰 예산 6,000에서</h3>
-<div class="wrap"><table class="t" id="ansB"></table></div>
-<h3>상위 6개 청크를 줄 때 (읽는 양은 조건마다 다름)</h3>
-<div class="wrap"><table class="t" id="ansK"></table></div>
-<div class="box key" style="margin-top:12px"><b>검색 순위와 답변 정확도가 뒤집힌다</b>
-<ul class="pts" style="margin-top:4px">
-<li><b>검색에서 1위였던 고정 5,000자가 답변에서는 꼴찌다.</b> 같은 예산에서 정답 23개, 상위 6개를 줘도 34개로, 절 단위(50개, 43~45개)에 크게 못 미친다.</li>
-<li><b>발췌 개수로 설명된다.</b> 고정 5,000자의 청크는 중앙값 1,845토큰, 최대 7,745토큰이다. 6,000토큰 예산에 <b>중앙값 1개</b>만 들어가고 그 하나에 답이 없으면 끝이다. 절 단위는 같은 예산에 10~13개가 들어가 여러 곳에서 근거를 모은다.</li>
-<li><b>상위 6개를 줘도 마찬가지다.</b> 고정 5,000자는 6개를 다 주면 중앙값 19,789토큰을 읽는데도 34개에 그친다. 절 단위는 2,800~3,500토큰만 읽고 43~45개를 맞힌다. <b>읽는 양이 5~7배인데 정확도는 낮다.</b></li>
-<li><b>절 이름 줄의 효과는 어느 쪽을 보느냐에 따라 뒤집힌다.</b> 같은 예산에서는 이름 줄 없음 50개가 절 이름 줄 46개보다 낫고, 상위 6개에서는 반대로 이름 줄 없음 43개가 절 이름 줄 45개보다 낮다. 두 경우 모두 차이는 2~4문항이다.</li>
-</ul></div>
-<h3>고정 5,000자는 틀리고 절 단위는 맞힌 문항 (같은 예산 6,000토큰)</h3>
-<p class="lede" style="margin-top:-2px">역전은 23문항에서 일어났고 아래는 그중 8개다. 고정 5,000자의 오답은 23개 중 16개가 "근거 없음"이었다. 청크 하나가 예산을 다 써서 답이 든 대목이 발췌에 들어오지 못했다는 뜻이다. 검색이 전체 문서를 대상으로 하므로 답변이 다른 논문의 발췌를 함께 인용하기도 한다.</p>
-<div class="wrap"><table class="t" id="ansS"></table></div>
-<h3>유형별 정답 수 (같은 예산)</h3>
-<div class="wrap"><table class="t" id="ansT"></table></div>
-<div class="box" style="margin-top:12px"><b>차이는 실험 방법 문항에서 거의 다 나온다</b>
-<p style="margin:4px 0 0">실험 방법 24문항에서 고정 5,000자는 6개, 절 단위(이름 줄 없음)는 21개를 맞혔다. 나머지 유형의 격차는 2~5개다. 실험 방법 문항은 답이 재료·농도·기간처럼 한 문장에 박혀 있어, 큰 청크 하나에 걸리지 않으면 대안이 없다. 작은 청크 여러 개를 주면 그 문장이 들어올 확률이 올라간다.</p></div>
-<div class="box warn" style="margin-top:12px"><b>채점의 한계</b>
-<ul class="pts" style="margin-top:4px">
-<li>채점을 gpt-4.1-mini가 했다. 답변을 만든 모델과 같은 모델이므로 자기 답에 관대할 수 있다. 표본을 사람이 확인해야 한다.</li>
-<li>그림 문항의 골드 정답은 사람이 확정한 값이지만 "약 0.7"처럼 범위가 있어, 채점자가 얼마나 엄격한지에 따라 결과가 달라진다.</li>
-<li>답변 모델은 하나(gpt-4.1-mini)만 썼다. 다른 모델에서는 청크 크기에 대한 민감도가 다를 수 있다.</li>
-</ul></div>
-
-<h2><span class="no">07</span>결론과 다음</h2>
+<h2><span class="no">05</span>결론</h2>
 <div class="box key"><ul class="pts">
-<li><b>절 단위를 채택한다.</b> 검색 순위만 보면 고정 5,000자가 앞서지만, 실제로 답을 만들게 하면 정반대다. 같은 예산에서 정답 50개 대 23개, 상위 6개를 줘도 45개 대 34개다. 읽는 양은 절 단위가 5~7배 적다.</li>
-<li><b>발췌 개수로 설명된다.</b> 큰 청크는 6,000토큰 예산에 하나만 들어가 한 번의 실패가 곧 오답이 된다. 작은 청크는 열 개 이상 들어가 근거를 여러 곳에서 모은다.</li>
-<li><b>절 이름 줄은 결정적이지 않다.</b> 6위 안 회수율은 떨어뜨리고(31→27), 같은 예산 답변은 손해(50→46), 상위 6개 답변은 이득(43→45)이다. 방향이 일정하지 않고 폭도 2~4문항이다. 붙이지 않는 쪽을 기본으로 두고, 출처 표기가 필요할 때만 본문 밖 메타데이터로 다루기를 제안한다.</li>
-<li><b>목표 토큰은 900에서 600으로 낮추는 것을 제안한다.</b> 다만 근거는 "확실히 낫다"가 아니라 "손해가 없다"에 가깝다. 절 이름 줄이 같은 조건끼리 비교해 검색 지표가 조금 오르고 답변은 45개로 같다. 900이 측정으로 정해진 값이 아니었다는 점이 바꿀 이유다.</li>
-<li><b>병목은 중국어 제목 검출이다.</b> 청킹 규칙을 더 손대기보다 파싱 단계에서 머리글을 제목으로 잡지 않게 고치는 것이 먼저다.</li>
-<li><b>남은 것.</b> 답변 채점을 답변 모델과 같은 gpt-4.1-mini가 했다. 표본을 읽어 보니 판정을 다시 봐야 할 문항이 최소 3개, 경계 사례까지 5개 나왔다. 57문항에서 2~4개 차이를 노이즈로 볼지도 이 검수가 끝나야 말할 수 있다. 다음은 채점 표본 사람 검수, 답변 모델 하나 더, 800편으로 늘렸을 때의 비용 측정이다.</li></ul></div>
-<footer>12편 · 골드 45문항(사람 검토본) + 그림 12문항(사용자 확정) · 임베딩 BGE-M3 · 입력은 docling + 그림 서술 Qwen3-VL 32B 고정. 골드 문항은 정답 발췌를 공백·따옴표·하이픈 무시로 포함하는 첫 청크의 위치로, 그림 문항은 그 그림의 서술이 든 청크가 몇 위에 오는지로 채점했다. 코드는 exp23/{build_conditions.py,evaluate.py}. 이 페이지는 논문 본문을 담지 않는다.</footer>
+<li><b>절 단위로 묶어 자른다.</b> 이것 하나가 거의 전부다. 고정 5,000자에서 바꾸면 같은 예산 답변 정답이 23개에서 50개로 간다. 나머지 선택은 여기에 비하면 잔돈이다.</li>
+<li><b>절 이름 줄은 붙이지 않는다.</b> 같은 예산에서 50개 대 46개다. 상위 6개만 볼 때는 반대로 43개 대 45개인데, 답변에 넘길 양이 정해진 실제 상황에서는 예산 기준이 맞다.</li>
+<li><b>목표 토큰은 900을 그대로 둔다.</b> 600을 돌려 봤으나 답변 정답이 50개에서 47개로 내려갔다. 앞서 600을 권했던 것은 검색 순위만 보고 내린 판단이라 철회한다. 다만 900도 측정으로 정해진 값은 아니다.</li>
+<li><b>남은 병목은 중국어 제목 검출이다.</b> zh_02는 제목 14개 중 3개가 쪽마다 반복되는 머리글이라 절이 제대로 잡히지 않는다. 자르는 규칙을 더 손대기보다 파싱을 고치는 것이 먼저다.</li>
+<li><b>확인해야 할 것.</b> 채점을 답변 모델과 같은 gpt-4.1-mini가 했다. 표본을 읽어 보니 다시 봐야 할 문항이 최소 3개, 경계 사례까지 5개 나왔다. 02절에서 직접 확인할 수 있다.</li>
+</ul></div>
+
+<details class="more"><summary>그 밖에 돌려 본 조건 (전체 13가지)</summary>
+<p class="lede" style="margin-top:6px">아래는 위 넷을 포함한 전부다. 답변 정확도는 네 조건에만 있다. 나머지는 검색 지표만 쟀다.</p>
+<div class="wrap"><table class="t" id="allc"></table></div>
+<p class="mini" style="margin-top:8px">절 이름 줄 때문에 6위 밖으로 밀린 문항 <span id="flipn"></span>개, 반대로 들어온 문항 0개.</p>
+<div class="wrap"><table class="t" id="flips"></table></div>
+</details>
+
+<footer>데이터 <code>lab/exp23.js</code> · <code>lab/exp23ans.js</code>(빌더 <code>exp23/build_web.py</code>) · 원천 <code>exp23/{results,answers,answers_k6}.json</code> · 절 통계 <code>exp23/section_stats.py</code>. 페이지 글과 제목은 오른쪽 아래에서 직접 고칠 수 있다.</footer>
 </main>
-<script src="exp23.js?v=1"></script><script src="exp23ans.js?v=1"></script>
+<script src="exp23.js?v=2"></script><script src="exp23ans.js?v=2"></script>
 <script>
-const $=s=>document.querySelector(s); const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
-const C=EX.conds, TN={methods:'실험 방법',table:'표 값',reference:'참고문헌',body:'본문 서술',figure:'그림'};
-const best=(k,f)=>Math.max(...C.map(f));
-// 01 메인
-(function(){const g=c=>c.gold, f=c=>c.figure;
- const mx={r6:best(0,c=>g(c).r6),r1:best(0,c=>g(c).r1),mrr:best(0,c=>g(c).mrr),b6:best(0,c=>g(c).b6000),fig:best(0,c=>f(c).r6)};
- let h=`<thead><tr><th>조건</th><th>구분</th><th>청크</th><th>토큰 중앙 / 최대</th><th>골드 recall@6</th><th>1위</th><th>MRR</th><th>미도달</th><th>예산 3천</th><th>예산 6천</th><th>예산 1.2만</th><th>그림 12</th></tr></thead><tbody>`;
- C.forEach((c,i)=>{const G=g(c),F=f(c); const m=(v,b)=>v===b?`<span class="best">${v}</span>`:v;
-  h+=`<tr${i===3?' class="grp2"':''}><td class="k">${esc(c.label)}${c.note?`<div class="tag" style="font-weight:400;margin-top:3px">${esc(c.note)}</div>`:''}</td>`+
-     `<td><span class="tag ${c.exp==='exp2'?'e2':'e3'}">${c.exp==='exp2'?'절 이름 줄':'자르는 크기'}</span></td>`+
-     `<td class="v">${c.chunks}</td><td class="v">${c.tok_med.toLocaleString()} / ${c.tok_max.toLocaleString()}</td>`+
-     `<td class="v">${m(G.r6,mx.r6)}/45</td><td class="v">${m(G.r1,mx.r1)}</td><td class="v">${m(G.mrr.toFixed(3),mx.mrr.toFixed(3))}</td><td class="v">${G.miss}</td>`+
-     `<td class="v">${G.b3000}</td><td class="v">${m(G.b6000,mx.b6)}</td><td class="v">${G.b12000}</td><td class="v">${m(F.r6,mx.fig)}/12</td></tr>`;});
- $('#main').innerHTML=h+'</tbody>';})();
-// 02 예산 그래프
-(function(){const W=880,H=210,L=150,R=20,T=14,B=40,PW=W-L-R,PH=H-T-B, mx=45;
- const pick=['FIX5000','FIX1000','SEC_none','SEC_sub','TOK600'];
- const COL={FIX5000:'#a3232b',FIX1000:'#b4531c',SEC_none:'#1f6f5c',SEC_sub:'#2a78d6',TOK600:'#7a4fb5'};
- let g='';
- pick.forEach((n,i)=>{const c=C.find(x=>x.name===n); const y=T+i*(PH/pick.length)+6;
-  g+=`<text x="0" y="${y+11}" style="fill:var(--ink);font:600 12px 'IBM Plex Sans KR'">${esc(c.label.slice(0,18))}</text>`;
-  [['b3000',3000],['b6000',6000],['b12000',12000]].forEach(([k,b],j)=>{
-   const v=c.gold[k], w=v/mx*PW, yy=y+j*10;
-   g+=`<rect x="${L}" y="${yy}" width="${Math.max(w,2)}" height="8" rx="1.5" fill="${COL[n]}" opacity="${0.45+j*0.27}"/>`;
-   if(j===2) g+=`<text x="${L+w+7}" y="${yy+8}" style="fill:var(--soft);font:11px 'IBM Plex Mono'">${c.gold.b3000} / ${c.gold.b6000} / ${c.gold.b12000}</text>`;});});
- [0,9,18,27,36,45].forEach(v=>{const x=L+v/mx*PW; g+=`<line x1="${x}" x2="${x}" y1="${T}" y2="${T+PH}" stroke="var(--rule2)"/><text x="${x}" y="${H-22}" text-anchor="middle" style="fill:var(--faint);font:10.5px 'IBM Plex Mono'">${v}</text>`;});
- g+=`<text x="${L+PW/2}" y="${H-6}" text-anchor="middle" style="fill:var(--soft);font:11.5px 'IBM Plex Sans KR'">예산 안에 정답 청크가 들어온 문항 수 (45문항) — 막대 3개는 3천·6천·1.2만 토큰</text>`;
- $('#budget').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}</svg>`;})();
-// 03 묶기와 절 이름 줄
-(function(){const names=['FIX5000','FIX5000H','SEC_none','SEC_sub','SEC_path'];
- let h=`<thead><tr><th>조건</th><th>묶는 방식</th><th>앞에 붙이는 제목</th><th>recall@6</th><th>1위</th><th>MRR</th><th>예산 6천</th></tr></thead><tbody>`;
- const info={FIX5000:['고정 5,000자','없음'],FIX5000H:['고정 5,000자','절 이름 줄'],SEC_none:['절 단위','없음'],SEC_sub:['절 단위','절 이름 줄 (현행)'],SEC_path:['절 단위','대제목 > 절 이름 줄']};
- names.forEach(n=>{const c=C.find(x=>x.name===n); const G=c.gold;
-  h+=`<tr><td class="k">${esc(c.label)}</td><td>${info[n][0]}</td><td>${info[n][1]}</td><td class="v">${G.r6}/45</td><td class="v">${G.r1}</td><td class="v">${G.mrr.toFixed(3)}</td><td class="v">${G.b6000}</td></tr>`;});
- $('#exp2').innerHTML=h+'</tbody>';
- let f=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>이름 줄 없음</th><th>절 이름 줄 붙임</th></tr></thead><tbody>`;
- EX.flips.forEach(x=>{f+=`<tr><td class="v">${x.qid}</td><td class="v">${x.doc}</td><td>${TN[x.type]||x.type}</td><td class="v" style="color:var(--dl)">${x.none?x.none+'위':'미회수'}</td><td class="v" style="color:var(--bad)">${x.sub?x.sub+'위':'미회수'}</td></tr>`;});
- $('#flips').innerHTML=f+(EX.flips.length?'':'<tr><td colspan="5">바뀐 문항 없음</td></tr>')+'</tbody>';})();
-// 04 자르는 크기
-(function(){const names=['FIX5000','FIX1000','SEC_sub','SEC_clean','SEC_merge','TOK600','TOK1500','TOK2500'];
- let h=`<thead><tr><th>조건</th><th>설명</th><th>청크</th><th>토큰 중앙</th><th>recall@6</th><th>1위</th><th>MRR</th><th>예산 6천</th><th>그림</th></tr></thead><tbody>`;
- names.forEach(n=>{const c=C.find(x=>x.name===n); const G=c.gold;
-  h+=`<tr><td class="k">${esc(c.label)}</td><td>${esc(c.note||'절 단위에서 목표 토큰만 변경')}</td><td class="v">${c.chunks}</td><td class="v">${c.tok_med}</td><td class="v">${G.r6}/45</td><td class="v">${G.r1}</td><td class="v">${G.mrr.toFixed(3)}</td><td class="v">${G.b6000}</td><td class="v">${c.figure.r6}/12</td></tr>`;});
- $('#exp3').innerHTML=h+'</tbody>';})();
-// 05 유형·언어
-(function(){const types=['methods','table','reference','body','figure'], langs=['ko','en','ja','zh'];
- let h=`<thead><tr><th>조건</th>`+types.map(t=>`<th>${TN[t]}</th>`).join('')+`<th>합계</th></tr></thead><tbody>`;
- C.forEach(c=>{const tot=types.reduce((a,t)=>a+(c.by_type[t]?c.by_type[t][0]:0),0);
-  h+=`<tr><td class="k">${esc(c.label)}</td>`+types.map(t=>{const b=c.by_type[t]; return `<td class="v">${b?b[0]+'/'+b[1]:'-'}</td>`;}).join('')+`<td class="v">${tot}/57</td></tr>`;});
- $('#bytype').innerHTML=h+'</tbody>';
- let l=`<thead><tr><th>조건</th>`+langs.map(x=>`<th>${x}</th>`).join('')+`</tr></thead><tbody>`;
- C.forEach(c=>{l+=`<tr><td class="k">${esc(c.label)}</td>`+langs.map(x=>{const b=c.by_lang[x]; return `<td class="v">${b?b[0]+'/'+b[1]:'-'}</td>`;}).join('')+`</tr>`;});
- $('#bylang').innerHTML=l+'</tbody>';})();
-
-// 03 묶기 × 절 이름 줄
-(function(){const by=Object.fromEntries(EX.conds.map(c=>[c.name,c]));
- const ansB=Object.fromEntries((typeof AN!=='undefined'?AN.budget:[]).map(x=>[x.name,x['정답']]));
- const ansK=Object.fromEntries((typeof AN!=='undefined'?AN.k6:[]).map(x=>[x.name,x['정답']]));
- const cells=[['FIX5000','고정 5,000자 창','없음'],['FIX5000H','고정 5,000자 창','절 이름 줄'],
-              ['SEC_none','절 단위로 묶음','없음'],['SEC_sub','절 단위로 묶음','절 이름 줄 (현행)']];
- const mx=f=>Math.max(...cells.map(([n])=>f(by[n],n)||0));
- const B=(v,m)=>v===m?`<span class="best">${v}</span>`:v;
- const m1=mx(c=>c.gold.r1),m6=mx(c=>c.gold.r6),mm=mx(c=>c.gold.mrr),
-       mb=mx(c=>c.gold.b6000+c.figure.b6000),ma=mx((c,n)=>ansB[n]||0);
- let h=`<thead><tr><th>묶는 방식</th><th>절 이름 줄</th><th>청크 수</th><th>청크 중앙 토큰</th><th>1위 적중</th><th>6위 안</th><th>MRR</th><th>예산 6,000 적중</th><th>답변 정답 (예산)</th></tr></thead><tbody>`;
- cells.forEach(([n,b,p],i)=>{const c=by[n];
-  h+=`<tr${i===2?' class="grp2"':''}><td class="k">${b}</td><td>${p}</td><td class="v">${c.chunks}</td><td class="v">${c.tok_med.toLocaleString()}</td>
-   <td class="v">${B(c.gold.r1,m1)}/45</td><td class="v">${B(c.gold.r6,m6)}/45</td><td class="v">${B(c.gold.mrr.toFixed(3),mm.toFixed(3))}</td>
-   <td class="v">${B(c.gold.b6000+c.figure.b6000,mb)}/57</td><td class="v">${ansB[n]?B(ansB[n],ma)+'/57':'—'}</td></tr>`;});
- document.getElementById('fact').innerHTML=h+'</tbody>';
- const bl=[['TOK600','절을 더 잘게 · 목표 600토큰'],['SEC_sub','현행 · 목표 900토큰 (기준)'],
-           ['TOK1500','목표 1,500토큰'],['TOK2500','목표 2,500토큰'],
-           ['SEC_merge','짧은 첫 청크를 다음 청크와 병합 · 목표 900'],['SEC_clean','머리글로 오검출된 제목 제외 · 목표 900']];
- const n1=Math.max(...bl.map(([n])=>by[n].gold.r1)),nb=Math.max(...bl.map(([n])=>by[n].gold.b6000+by[n].figure.b6000));
- let g=`<thead><tr><th>묶는 정도</th><th>청크 수</th><th>청크 중앙 토큰</th><th>1위 적중</th><th>6위 안</th><th>MRR</th><th>예산 6,000 적중</th></tr></thead><tbody>`;
- bl.forEach(([n,l])=>{const c=by[n];
-  g+=`<tr><td class="k">${l}</td><td class="v">${c.chunks}</td><td class="v">${c.tok_med.toLocaleString()}</td>
-   <td class="v">${B(c.gold.r1,n1)}/45</td><td class="v">${c.gold.r6}/45</td><td class="v">${c.gold.mrr.toFixed(3)}</td>
-   <td class="v">${B(c.gold.b6000+c.figure.b6000,nb)}/57</td></tr>`;});
- document.getElementById('bund').innerHTML=g+'</tbody>';})();
-
-// 06 답변 정확도
-(function(){if(typeof AN==='undefined')return;
- const TN={methods:'실험 방법',table:'표 값',reference:'참고문헌',body:'본문 서술',figure:'그림'};
- const mk=(id,arr,showChunk)=>{const mx=Math.max(...arr.map(x=>x['정답']));
-  let h=`<thead><tr><th>조건</th><th>정답</th><th>부분</th><th>오답</th><th>정답률</th>${showChunk?'<th>발췌 수 (중앙)</th>':''}<th>읽은 토큰 (중앙)</th></tr></thead><tbody>`;
-  arr.forEach(x=>{const r=Math.round(x['정답']/57*100);
-   h+=`<tr><td class="k">${esc(x.label)}</td><td class="v">${x['정답']===mx?`<span class="best">${x['정답']}</span>`:x['정답']}</td><td class="v">${x['부분']}</td><td class="v">${x['오답']}</td><td class="v">${r}%</td>${showChunk?`<td class="v">${x.chunk_med}</td>`:''}<td class="v">${x.tok_med.toLocaleString()}</td></tr>`;});
-  document.getElementById(id).innerHTML=h+'</tbody>';};
- mk('ansB',AN.budget,true); mk('ansK',AN.k6,false);
- let s=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>정답</th><th>고정 5,000자 답변</th><th>절 단위 답변</th></tr></thead><tbody>`;
- AN.samples.slice(0,8).forEach(x=>{s+=`<tr><td class="v">${x.qid}</td><td class="v">${x.doc}</td><td>${TN[x.type]||x.type}</td><td>${esc(x.gold)}</td><td style="color:var(--bad)">${esc(x.fix)}</td><td style="color:var(--dl)">${esc(x.sec)}</td></tr>`;});
- document.getElementById('ansS').innerHTML=s+'</tbody>';
- const types=['methods','table','reference','body','figure'];
- let t=`<thead><tr><th>조건</th>`+types.map(x=>`<th>${TN[x]}</th>`).join('')+`</tr></thead><tbody>`;
- AN.budget.forEach(x=>{t+=`<tr><td class="k">${esc(x.label)}</td>`+types.map(k=>{const b=x.by_type[k]; return `<td class="v">${b?b[0]+'/'+b[1]:'-'}</td>`;}).join('')+`</tr>`;});
- document.getElementById('ansT').innerHTML=t+'</tbody>';})();
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const TN={methods:'실험 방법',table:'표 값',reference:'참고문헌',body:'본문 서술',figure:'그림'};
+const LN={ko:'한국어',en:'영어',zh:'중국어',ja:'일본어',kohanja:'한자 혼용'};
+const by=Object.fromEntries(EX.conds.map(c=>[c.name,c]));
+const AB=Object.fromEntries(AN.budget.map(x=>[x.name,x]));
+const AK=Object.fromEntries(AN.k6.map(x=>[x.name,x]));
+const MAIN=[
+ ['FIX5000','고정 5,000자/250자','현재 기준선','—','—','5,000자'],
+ ['SEC_none','절 단위로 묶기','절에서 끊는다','절','없음','900토큰'],
+ ['SEC_sub','절 단위 + 절 이름 줄','조각마다 절 이름을 한 줄','절','있음','900토큰'],
+ ['TOK600_none','절 단위 + 더 잘게','긴 절을 더 쪼갠다','절','없음','600토큰']];
+const B=(v,m)=>v===m?`<span class="best">${v}</span>`:v;
+// 01
+{const mx=f=>Math.max(...MAIN.map(([n])=>f(n)||0));
+ const m6=mx(n=>by[n].gold.r6),mb=mx(n=>by[n].gold.b6000+by[n].figure.b6000),
+       ma=mx(n=>AB[n]&&AB[n]['정답']),mk=mx(n=>AK[n]&&AK[n]['정답']);
+ let h=`<thead><tr><th>방식</th><th>바뀌는 것</th><th>끊는 자리</th><th>절 이름 줄</th><th>조각 크기</th><th>조각 수</th><th>검색 6위 안</th><th>같은 예산에 담기는 조각</th><th>같은 예산 정답 청크</th><th>같은 예산 답변 정답</th><th>상위 6개 답변 정답</th></tr></thead><tbody>`;
+ MAIN.forEach(([n,lb,ch,cut,nm,tg],i)=>{const c=by[n],a=AB[n],k=AK[n];
+  h+=`<tr${i?'':''}><td class="k">${lb}</td><td>${ch}</td><td class="v">${cut}</td><td class="v">${nm}</td><td class="v">${tg}</td>
+   <td class="v">${c.chunks}</td><td class="v">${B(c.gold.r6,m6)}/45</td><td class="v">${a?a.chunk_med:'—'}개</td>
+   <td class="v">${B(c.gold.b6000+c.figure.b6000,mb)}/57</td>
+   <td class="v">${a?B(a['정답'],ma)+'/57':'—'}</td><td class="v">${k?B(k['정답'],mk)+'/57':'—'}</td></tr>`;});
+ document.getElementById('main4').innerHTML=h+'</tbody>';}
+// 01 세 질문
+document.getElementById('q3').innerHTML=[
+ ['묶어서 자르면 좋아지나','고정 5,000자 → 절 단위','같은 예산 답변 정답 <b>23 → 50</b><br>검색 6위 안 33 → 31',
+  '좋아진다. 이것이 가장 큰 차이다. 검색 순위는 오히려 내려가지만 답변은 크게 오른다.','dl'],
+ ['절 이름 줄을 붙이면 좋아지나','이름 줄 없음 → 있음','같은 예산 답변 정답 <b>50 → 46</b><br>상위 6개 답변 정답 43 → 45',
+  '보는 각도에 따라 뒤집힌다. 예산이 정해져 있으면 손해다. 붙이지 않는 쪽을 권한다.','mu'],
+ ['더 잘게 자르면 좋아지나','900토큰 → 600토큰','같은 예산 답변 정답 <b>50 → 47</b><br>상위 6개 답변 정답 43 → 40',
+  '좋아지지 않는다. 읽는 양은 19% 줄지만 답변이 나빠진다.','bad']
+].map(([q,cond,num,ans,col])=>`<div class="box" style="border-left:4px solid var(--${col});border-radius:0 10px 10px 0">
+ <b>${q}</b><p class="mini" style="margin:3px 0 7px">${cond}</p>
+ <p style="margin:0 0 7px;font-size:13px;color:var(--soft)">${num}</p>
+ <p style="margin:0;font-size:13px">${ans}</p></div>`).join('');
+// 02 문항표
+let FT='all';
+const TYPES=[['all','전체'],['methods','실험 방법'],['table','표 값'],['body','본문 서술'],['reference','참고문헌'],['figure','그림']];
+document.getElementById('qfilter').innerHTML='<span>유형</span>'+TYPES.map(([k,l])=>`<button type="button" data-t="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('')+'<span id="qcount" style="margin-left:6px"></span>';
+const VC={'정답':'o','부분':'p','오답':'x'};
+function drawQ(){
+ const rows=AN.detail.filter(r=>FT==='all'||r.type===FT);
+ let h=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>질문</th>`+MAIN.map(([n,lb])=>`<th>${lb.replace('절 단위 + ','+ ').replace('고정 5,000자/250자','고정 5,000자')}</th>`).join('')+`</tr></thead><tbody>`;
+ rows.forEach(r=>{
+  h+=`<tr class="qr" data-q="${r.qid}"><td class="v">${r.qid}</td><td class="v">${esc(r.doc)}</td><td>${TN[r.type]||r.type}</td><td>${esc(r.q)}</td>`
+   +MAIN.map(([n])=>{const c=r.conds[n];return `<td class="v">${c?`<span class="vc ${VC[c.v]}">${c.v}</span>`:'—'}</td>`}).join('')+`</tr>`;
+  h+=`<tr class="qd" data-d="${r.qid}" hidden><td colspan="${4+MAIN.length}">
+   <div class="goldline"><b>정답</b> ${esc(r.gold)}</div>
+   <div class="ansgrid">`+MAIN.map(([n,lb])=>{const c=r.conds[n];
+     return c?`<div class="ansbox"><h5><span>${lb}</span><span class="vc ${VC[c.v]}">${c.v}</span></h5>
+      <p>${esc(c.a)}</p><p class="mini" style="margin-top:6px">발췌 ${c.ch}개 · ${c.tok.toLocaleString()}토큰${c.rank?' · 정답 청크 '+c.rank+'위':' · 정답 청크 못 찾음'}</p></div>`:'';}).join('')
+   +`</div></td></tr>`;});
+ document.getElementById('qtab').innerHTML=h+'</tbody>';
+ document.getElementById('qcount').textContent=`${rows.length}문항`;
+}
+drawQ();
+document.getElementById('qfilter').addEventListener('click',e=>{
+ const b=e.target.closest('button[data-t]'); if(!b) return;
+ FT=b.dataset.t;
+ document.querySelectorAll('#qfilter button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+ drawQ();});
+document.getElementById('qtab').addEventListener('click',e=>{
+ if(document.body.classList.contains('ed-on')) return;
+ const tr=e.target.closest('tr.qr'); if(!tr) return;
+ const d=document.querySelector(`tr.qd[data-d="${tr.dataset.q}"]`); if(d) d.hidden=!d.hidden;});
+// 03 예산
+{let h=`<thead><tr><th>방식</th><th>조각 중앙 토큰</th><th>조각 최대</th><th>같은 예산에 담기는 조각</th><th>실제 읽은 토큰</th><th>같은 예산 답변 정답</th><th>상위 6개 읽은 토큰</th><th>상위 6개 답변 정답</th></tr></thead><tbody>`;
+ MAIN.forEach(([n,lb])=>{const c=by[n],a=AB[n],k=AK[n];
+  h+=`<tr><td class="k">${lb}</td><td class="v">${c.tok_med.toLocaleString()}</td><td class="v">${c.tok_max.toLocaleString()}</td>
+   <td class="v">${a?a.chunk_med:'—'}개</td><td class="v">${a?a.tok_med.toLocaleString():'—'}</td><td class="v">${a?a['정답']+'/57':'—'}</td>
+   <td class="v">${k?k.tok_med.toLocaleString():'—'}</td><td class="v">${k?k['정답']+'/57':'—'}</td></tr>`;});
+ document.getElementById('budget').innerHTML=h+'</tbody>';}
+// 04 유형·언어
+function grid(id,key,names){
+ const keys=[...new Set(MAIN.flatMap(([n])=>Object.keys((AB[n]||{})[key]||{})))];
+ let h=`<thead><tr><th>방식</th>`+keys.map(k=>`<th>${names[k]||k}</th>`).join('')+`</tr></thead><tbody>`;
+ MAIN.forEach(([n,lb])=>{const a=AB[n];
+  h+=`<tr><td class="k">${lb}</td>`+keys.map(k=>{const v=a&&a[key][k];
+   if(!v) return '<td class="v">—</td>';
+   const pct=v[0]/v[1];
+   return `<td class="v"><b>${v[0]}</b>/${v[1]} <span style="color:var(--faint)">${Math.round(pct*100)}%</span></td>`;}).join('')+`</tr>`;});
+ document.getElementById(id).innerHTML=h+'</tbody>';}
+grid('bytype','by_type',TN); grid('bylang','by_lang',LN);
+// 부록
+{let h=`<thead><tr><th>이름</th><th>설명</th><th>끊는 자리</th><th>절 이름 줄</th><th>조각 크기</th><th>조각 수</th><th>중앙 토큰</th><th>1위</th><th>6위 안</th><th>MRR</th><th>예산 6,000</th><th>답변 (예산)</th></tr></thead><tbody>`;
+ EX.conds.forEach(c=>{const a=AB[c.name];
+  h+=`<tr><td class="k">${esc(c.label)}</td><td>${esc(c.note)}</td><td class="v">${c.name.startsWith('FIX')?'글자 수':'절'}</td>
+   <td class="v">${esc(c.namerow)}</td><td class="v">${esc(c.target)}</td><td class="v">${c.chunks}</td><td class="v">${c.tok_med.toLocaleString()}</td>
+   <td class="v">${c.gold.r1}</td><td class="v">${c.gold.r6}/45</td><td class="v">${c.gold.mrr.toFixed(3)}</td>
+   <td class="v">${c.gold.b6000+c.figure.b6000}/57</td><td class="v">${a?a['정답']+'/57':'—'}</td></tr>`;});
+ document.getElementById('allc').innerHTML=h+'</tbody>';}
+{const f=EX.flips; document.getElementById('flipn').textContent=f.length;
+ let h=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>이름 줄 없음</th><th>이름 줄 있음</th></tr></thead><tbody>`;
+ f.forEach(x=>{h+=`<tr><td class="v">${x.qid}</td><td class="v">${esc(x.doc)}</td><td>${TN[x.type]||x.type}</td><td class="v">${x.none}위</td><td class="v" style="color:var(--bad)">${x.sub}위</td></tr>`;});
+ document.getElementById('flips').innerHTML=h+'</tbody>';}
 </script>
-<script src="edit.js?v=5"></script>
+<script src="edit.js?v=6"></script>
 </body></html>

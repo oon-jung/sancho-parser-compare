@@ -124,5 +124,5 @@ $('#notes').innerHTML=D.map(d=>{const heads=d.items.filter(i=>i.k==='section_hea
  return `<li><b>${d.id}</b>: 제목 ${heads.length}개 (앞부분: ${esc(first)}${heads.length>6?' …':''}). 표 ${d.counts.table||0}개${emptyT?` 중 HTML 없음 ${emptyT}개`:''}, 그림 ${d.counts.picture||0}개는 위치만 있고 내용은 비어 있다.</li>`;}).join('')+
  `<li><b>en_02의 쪽 넘김 중복</b>: 쪽을 넘는 문단 5개를 docling이 쪽마다 <b>통째로</b> 기록해 같은 번호·같은 텍스트 항목이 두 번 저장된다(4,994자, 본문의 7.5%). 상자에 빨간 테두리와 번호 뒤 *로 표시했다. 청킹 단계에서도 중복이 그대로 남는다.</li>
  <li><b>공통</b>: 제목의 계층이 없어 "2. Materials and Methods"와 "2.1 Preparation"이 같은 단계로 온다. 논문 첫 쪽의 저자·소속·초록 머리 줄이 제목으로 잡히는 경우가 있다. 이것이 3단계 이후 절 단위 청킹의 경계가 된다.</li>`;
-</script><script src="edit.js?v=5"></script>
+</script><script src="edit.js?v=6"></script>
 </body></html>

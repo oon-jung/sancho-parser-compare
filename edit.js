@@ -79,11 +79,14 @@
  .ed-bar .ed-tl{display:flex;gap:6px;align-items:center;font:12px inherit;color:#737c8c}
  .ed-bar .ed-title{font:13px "IBM Plex Sans KR",sans-serif;padding:4px 9px;border:1px solid #d5d9e2;border-radius:6px;min-width:260px;background:#fff;color:#16181d}
  body.ed-on nav.top [data-ed]{outline:1px dashed rgba(255,255,255,.55);outline-offset:2px;cursor:text}
- body.ed-on nav.top [data-ed]:focus{outline:2px solid #eb6834;background:rgba(255,255,255,.14)}
+ body.ed-on nav.top [data-ed]:focus{outline:2px solid #eb6834;background:rgba(255,255,255,.18);color:#fff}
+ body.ed-on nav.top [data-ed]{opacity:1}
  body.ed-on nav.top a[data-ed]{cursor:text}
  body.ed-on [data-ed]{outline:1px dashed rgba(235,104,52,.5);outline-offset:2px;cursor:text}
  body.ed-on [data-ed]:focus{outline:2px solid #eb6834;background:#fffdf5}
- .ed-changed{background:#fff9e6}`;
+ .ed-changed{background:#fff9e6;box-shadow:inset 0 -2px 0 rgba(235,104,52,.45)}
+ /* 어두운 메뉴 막대에서는 흰 글씨가 옅은 배경에 묻히므로 밑줄만 쓴다. */
+ nav.top .ed-changed{background:none;box-shadow:inset 0 -2px 0 #eb6834;border-radius:0}`;
  document.head.append(style); document.body.append(btn,bar);
  btn.addEventListener('click',()=>setMode(btn.getAttribute('aria-pressed')!=='true'));
  const tinput=bar.querySelector('.ed-title');
