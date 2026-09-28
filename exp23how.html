@@ -28,7 +28,7 @@ footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;paddi
 .arw{height:16px;display:flex;justify-content:center;align-items:center;color:var(--rule);font-size:13px;line-height:1}
 .arw::before{content:"";width:2px;height:16px;background:var(--rule)}
 .stg.fork{border-left:4px solid var(--dl)}
-/* 절 이름 줄 예시 */
+/* 절 이름 태그 예시 */
 .cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px;margin-top:8px}
 .cd{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:11px 13px;overflow:hidden}
 .cd h4{margin:0 0 6px;font-size:12px;color:var(--faint);font-weight:600;display:flex;justify-content:space-between;gap:8px}
@@ -46,34 +46,34 @@ footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;paddi
 <main>
 <h1>이 결과를 어떻게 쟀는가</h1>
 <p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">논문 12편을 한 번만 파싱해 두고 <b>자르는 규칙만</b> 바꿨다. 파싱·그림 서술·임베딩은 모두 같은 것을 썼으므로, 조건 사이의 차이는 자르는 규칙에서만 온다.</p>
-<p class="lede">앞 단계에서 무엇을 고정하고 어디서만 조건을 갈랐는지, 그리고 "절 이름 줄"이 청크 글을 실제로 어떻게 바꾸는지 보여준다. 수치와 예시는 모두 실제 실행 파일에서 읽어 온 것이다.</p>
+<p class="lede">앞 단계에서 무엇을 고정하고 어디서만 조건을 갈랐는지, 그리고 "절 이름 태그"이 청크 글을 실제로 어떻게 바꾸는지 보여준다. 수치와 예시는 모두 실제 실행 파일에서 읽어 온 것이다.</p>
 
 <h2><span class="no">01</span>전체 흐름 — 5번까지는 모든 조건이 같다</h2>
 <p class="lede">1번부터 4번까지의 산출물은 한 번 만들어 캐시했고 12개 조건이 같은 파일을 읽는다. 조건이 갈리는 곳은 5번 청킹 하나뿐이다. 따라서 결과 차이는 자르는 규칙과 제목 붙이는 규칙에서만 온다.</p>
 <div class="pipe" id="pipe"></div>
 
-<h2><span class="no">02</span>절 이름 줄 — 조각마다 어느 절에서 나왔는지 한 줄 적기</h2>
-<p class="lede"><b>절 이름 줄은 자르는 규칙이 아니다.</b> 자르는 일은 이미 끝난 뒤에, 잘린 조각마다 "이 조각은 어느 절에서 나왔다"를 한 줄 적어 넣는 것이다. 예를 들어 서론에서 나온 조각이면 그 조각의 맨 앞에 <code>## 서 론</code>이라는 줄이 들어간다. 큰 제목을 기준으로 자른다는 뜻이 아니다.</p>
-<p class="lede">이 한 줄은 메모나 딱지가 아니라 <b>조각의 글 그 자체의 첫 줄</b>이 된다. 그 글이 그대로 임베딩 모델에 들어가 벡터가 되고, 검색에서 질문과 비교되며, 답변 단계에서 모델에게 발췌로 전달된다. 그래서 한 줄을 넣는 것만으로 세 곳이 동시에 바뀐다.</p>
+<h2><span class="no">02</span>절 이름 태그 — 조각마다 어느 절에서 나왔는지 붙이기</h2>
+<p class="lede"><b>절 이름 태그는 자르는 규칙이 아니다.</b> 자르는 일은 이미 끝난 뒤에, 잘린 조각마다 "이 조각은 어느 절에서 나왔다"를 한 줄 적어 넣는 것이다. 예를 들어 서론에서 나온 조각이면 그 조각의 맨 앞에 <code>## 서 론</code>이라는 줄이 들어간다. 큰 제목을 기준으로 자른다는 뜻이 아니다.</p>
+<p class="lede"><b>태그라고 부르지만 따로 붙는 딱지가 아니다.</b> 이 한 줄은 조각의 글 그 자체의 첫 줄이 된다. 그 글이 그대로 임베딩 모델에 들어가 벡터가 되고, 검색에서 질문과 비교되며, 답변 단계에서 모델에게 발췌로 전달된다. 그래서 한 줄을 넣는 것만으로 세 곳이 동시에 바뀐다.</p>
 <div class="wrap"><table class="t" id="rules"></table></div>
 
-<h3>같은 절의 연속한 세 청크 — 절 이름 줄이 어떻게 반복되는가</h3>
+<h3>같은 절의 연속한 세 청크 — 절 이름 태그가 어떻게 반복되는가</h3>
 <p class="lede" id="exhead"></p>
 <div class="stack" id="ex"></div>
 
-<h3>상위 절까지 이름 줄는 번호가 있어야만 생긴다</h3>
-<p class="lede">상위 제목까지 붙이려면 "2.1"처럼 번호로 계층을 알아내야 한다. 번호 없는 제목은 계층을 만들 수 없어 절 이름 줄 한 줄과 같아진다. 그래서 상위 절까지 이름 줄 조건은 12편 중 3편(en_02·zh_01·zh_03)에서만, 862개 청크 중 62개에서만 절 이름 줄 조건과 달라진다. 나머지 9편은 글자 하나까지 같다.</p>
+<h3>상위 절까지 이름 태그는 번호가 있어야만 생긴다</h3>
+<p class="lede">상위 제목까지 붙이려면 "2.1"처럼 번호로 계층을 알아내야 한다. 번호 없는 제목은 계층을 만들 수 없어 절 이름 태그 한 줄과 같아진다. 그래서 상위 절까지 이름 태그 조건은 12편 중 3편(en_02·zh_01·zh_03)에서만, 862개 청크 중 62개에서만 절 이름 태그 조건과 달라진다. 나머지 9편은 글자 하나까지 같다.</p>
 <div class="cmp" id="expath"></div>
 <div class="wrap" style="margin-top:10px"><table class="t" id="pathdoc"></table></div>
 
-<h3>고정 5,000자에서의 절 이름 줄</h3>
-<p class="lede">고정 창은 절을 넘나들며 잘리므로 "이 청크의 절"이 하나로 정해지지 않는다. 창이 시작한 지점의 절 이름 줄 하나만 붙였다.</p>
+<h3>고정 5,000자에서의 절 이름 태그</h3>
+<p class="lede">고정 창은 절을 넘나들며 잘리므로 "이 청크의 절"이 하나로 정해지지 않는다. 창이 시작한 지점의 절 이름 태그 하나만 붙였다.</p>
 <div class="cmp" id="exfix"></div>
 
-<h2><span class="no">03</span>절 이름 줄이 결과를 어떻게 바꿨나</h2>
+<h2><span class="no">03</span>절 이름 태그가 결과를 어떻게 바꿨나</h2>
 <div class="wrap"><table class="t" id="effect"></table></div>
 <div class="box key" style="margin-top:12px" id="effnote"></div>
-<h3>절 이름 줄을 붙여서 6위 밖으로 밀린 문항</h3>
+<h3>절 이름 태그를 붙여서 6위 밖으로 밀린 문항</h3>
 <p class="lede" id="drophead"></p>
 <div class="wrap"><table class="t" id="drop"></table></div>
 
@@ -99,7 +99,7 @@ document.getElementById('pipe').innerHTML=HOW.pipe.map((s,i)=>
   <div class="fil">${esc(s.f)}</div></div>`).join('');
 // 02 규칙표
 {const r=HOW.rules;
- document.getElementById('rules').innerHTML=`<thead><tr><th>조건</th><th>붙이는 규칙</th><th>절 이름 줄이 붙은 청크</th><th>그중 반복</th><th>늘어난 토큰</th></tr></thead><tbody>`+
+ document.getElementById('rules').innerHTML=`<thead><tr><th>조건</th><th>붙이는 규칙</th><th>절 이름 태그가 붙은 청크</th><th>그중 반복</th><th>늘어난 토큰</th></tr></thead><tbody>`+
  r.map(x=>`<tr><td class="k">${esc(x.label)}<div class="mini">${x.name}</div></td><td>${esc(x.rule||'청크 글은 본문뿐이다.')}</td>
   <td class="v">${x.st.pre} / ${x.st.chunks}</td><td class="v">${x.st.rep||'—'}</td>
   <td class="v">${x.st.extra?('+'+x.st.extra.toLocaleString()+' ('+(x.st.extra/(x.st.total-x.st.extra)*100).toFixed(1)+'%)'):'—'}</td></tr>`).join('')+'</tbody>';}
@@ -107,24 +107,24 @@ document.getElementById('pipe').innerHTML=HOW.pipe.map((s,i)=>
 {const e=HOW.ex, d=e[0];
  document.getElementById('exhead').innerHTML=`${esc(d.doc)}의 "${esc(d.path.join(' > '))}" 절은 ${HOW.exn}개의 청크로 쪼개졌다. 아래는 그중 연속한 세 개다. <span class="pf">주황</span>은 그 절에서 제목이 처음 붙은 자리, <span class="rep">빨강</span>은 같은 줄이 다시 들어간 자리다.`;
  document.getElementById('ex').innerHTML=e.map((x,i)=>`<div class="cmp">
-  ${[['이름 줄 없음',x.none,x.tok[0],0],['절 이름 줄',x.sub,x.tok[1],i],['상위 절까지 이름 줄',x.path_t,x.tok[2],i]].map(([t,tx,tk,rep])=>{
+  ${[['이름 태그 없음',x.none,x.tok[0],0],['절 이름 태그',x.sub,x.tok[1],i],['상위 절까지 이름 태그',x.path_t,x.tok[2],i]].map(([t,tx,tk,rep])=>{
    const m=tx.match(/^## [^\n]*\n/);
    const head=m?`<span class="${rep?'rep':'pf'}">${esc(m[0].trim())}</span>\n`:'';
    return `<div class="cd"><h4><span>청크 ${i+1} · ${t}</span><span>${tk} 토큰</span></h4><div class="tx">${head}${esc(m?tx.slice(m[0].length):tx)}…</div></div>`;}).join('')}
   </div>`).join('');}
 // 02 경로 예시
 {const x=HOW.expath;
- document.getElementById('expath').innerHTML=[['이름 줄 없음',x.none,x.tok[0]],['절 이름 줄',x.sub,x.tok[1]],['상위 절까지 이름 줄',x.path_t,x.tok[2]]].map(([t,tx,tk])=>{
+ document.getElementById('expath').innerHTML=[['이름 태그 없음',x.none,x.tok[0]],['절 이름 태그',x.sub,x.tok[1]],['상위 절까지 이름 태그',x.path_t,x.tok[2]]].map(([t,tx,tk])=>{
   const m=tx.match(/^## [^\n]*\n/);
   return `<div class="cd"><h4><span>${esc(x.doc)} · ${t}</span><span>${tk} 토큰</span></h4><div class="tx">${m?'<span class="pf">'+esc(m[0].trim())+'</span>\n':''}${esc(m?tx.slice(m[0].length):tx)}…</div></div>`;}).join('');}
 {const p=HOW.pathdoc;
- document.getElementById('pathdoc').innerHTML=`<thead><tr><th>문서</th><th>경로가 2단 이상인 청크</th><th style="width:40%"></th><th>절 이름 줄 조건과</th></tr></thead><tbody>`+
+ document.getElementById('pathdoc').innerHTML=`<thead><tr><th>문서</th><th>경로가 2단 이상인 청크</th><th style="width:40%"></th><th>절 이름 태그 조건과</th></tr></thead><tbody>`+
  p.map(x=>`<tr><td class="k">${esc(x.doc)}</td><td class="v">${x.multi} / ${x.all}</td>
   <td><div class="barw"><i style="width:${(x.multi/x.all*100).toFixed(1)}%;background:var(--tbl)"></i></div></td>
   <td>${x.multi?'다름':'완전히 같음'}</td></tr>`).join('')+'</tbody>';}
 // 02 고정창 예시
 {const f=HOW.exfix.fix2||{fix:HOW.exfix.fix,fixh:HOW.exfix.fixh,sec:HOW.exfix.sec,tok:[0,0]};
- document.getElementById('exfix').innerHTML=[['이름 줄 없음',f.fix,f.tok[0]],['창이 시작한 절 이름',f.fixh,f.tok[1]]].map(([t,tx,tk])=>{
+ document.getElementById('exfix').innerHTML=[['이름 태그 없음',f.fix,f.tok[0]],['창이 시작한 절 이름',f.fixh,f.tok[1]]].map(([t,tx,tk])=>{
   const m=tx.match(/^## [^\n]*\n/);
   return `<div class="cd"><h4><span>ko_01 · ${t}</span><span>${tk} 토큰</span></h4><div class="tx">${m?'<span class="pf">'+esc(m[0].trim())+'</span>\n':''}${esc(m?tx.slice(m[0].length):tx)}…</div></div>`;}).join('');}
 // 03 효과
@@ -133,16 +133,16 @@ document.getElementById('pipe').innerHTML=HOW.pipe.map((s,i)=>
  e.map(x=>`<tr><td class="k">${esc(x.label)}</td>`+
   [['r1',45],['r3',45],['r6',45]].map(([k,n])=>`<td class="v">${x[k]===mx(k)?'<span style="background:#e4efeb;border-radius:4px;padding:0 5px;font-weight:600">'+x[k]+'</span>':x[k]}/${n}</td>`).join('')+
   `<td class="v">${x.mrr.toFixed(3)}</td><td class="v">${x.fig6}/12</td><td class="v">${x.b6000}/57</td></tr>`).join('')+'</tbody>';}
-document.getElementById('effnote').innerHTML=`<b>절 이름 줄은 위를 올리고 아래를 깎는다</b>
+document.getElementById('effnote').innerHTML=`<b>절 이름 태그는 위를 올리고 아래를 깎는다</b>
 <ul class="pts" style="margin-top:4px">
 <li><b>상위 1~3위는 좋아진다.</b> 절 단위에서 1위 적중이 16에서 18로 오르고 MRR은 .488에서 .503으로 오른다. 고정 창에서도 12에서 15로 오른다.</li>
-<li><b>6위까지 넓히면 나빠진다.</b> 절 단위 6위 안이 31에서 27로 떨어진다. 이름 줄 없음에서 절 이름 줄로 바꿨을 때 순위가 오른 문항 ${HOW.move.up}개, 내린 문항 ${HOW.move.down}개, 그대로 ${HOW.move.same}개다. 자르는 크기를 바꿨을 때의 수치와는 다른 비교다.</li>
+<li><b>6위까지 넓히면 나빠진다.</b> 절 단위 6위 안이 31에서 27로 떨어진다. 이름 태그 없음에서 절 이름 태그로 바꿨을 때 순위가 오른 문항 ${HOW.move.up}개, 내린 문항 ${HOW.move.down}개, 그대로 ${HOW.move.same}개다. 자르는 크기를 바꿨을 때의 수치와는 다른 비교다.</li>
 <li><b>새로 6위 안에 들어온 문항은 ${HOW.move.into}개다.</b> 밀려난 문항만 있고 얻은 문항은 없다.</li>
-<li><b>대가는 토큰이다.</b> 절 이름 줄 조건은 본문보다 토큰이 ${(HOW.rules[1].st.extra/(HOW.rules[1].st.total-HOW.rules[1].st.extra)*100).toFixed(1)}% 많다. 그 늘어난 분량의 ${Math.round(HOW.rules[1].st.rep/HOW.rules[1].st.pre*100)}%는 같은 제목의 반복이다.</li>
+<li><b>대가는 토큰이다.</b> 절 이름 태그 조건은 본문보다 토큰이 ${(HOW.rules[1].st.extra/(HOW.rules[1].st.total-HOW.rules[1].st.extra)*100).toFixed(1)}% 많다. 그 늘어난 분량의 ${Math.round(HOW.rules[1].st.rep/HOW.rules[1].st.pre*100)}%는 같은 제목의 반복이다.</li>
 </ul>`;
 {const d=HOW.drop;
- document.getElementById('drophead').innerHTML=`${d.length}개 문항이 절 이름 줄 때문에 6위 밖으로 밀렸고, 반대로 들어온 문항은 ${HOW.move.into}개다. 다섯 개 모두 원래 5~6위였다. 경계에 있던 문항이 밀린 것이지 잘 찾던 문항이 무너진 것은 아니다.`;
- document.getElementById('drop').innerHTML=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>질문</th><th>이름 줄 없음</th><th>절 이름 줄</th></tr></thead><tbody>`+
+ document.getElementById('drophead').innerHTML=`${d.length}개 문항이 절 이름 태그 때문에 6위 밖으로 밀렸고, 반대로 들어온 문항은 ${HOW.move.into}개다. 다섯 개 모두 원래 5~6위였다. 경계에 있던 문항이 밀린 것이지 잘 찾던 문항이 무너진 것은 아니다.`;
+ document.getElementById('drop').innerHTML=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>질문</th><th>이름 태그 없음</th><th>절 이름 태그</th></tr></thead><tbody>`+
  d.map(x=>`<tr><td class="v">${esc(x.qid)}</td><td class="v">${esc(x.doc)}</td><td>${({methods:'실험 방법',table:'표 값',reference:'참고문헌',body:'본문 서술',figure:'그림'})[x.type]||x.type}</td>
   <td>${esc(x.q)}</td><td class="v">${x.none}위</td><td class="v" style="color:var(--bad)">${x.sub}위</td></tr>`).join('')+'</tbody>';}
 // 04 채점

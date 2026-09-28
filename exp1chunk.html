@@ -137,7 +137,7 @@ svg{display:block;width:100%;height:auto}
 
 <h3>6-6. 다음 비교로 넘길 것</h3>
 <div class="box"><ul class="pts">
-<li><b>가설의 두 요소를 분리해 잰다.</b> "제목·부제를 앞에 붙인다"와 "제목 아래 내용을 묶는다"는 다른 변수다. A(붙이지 않고 묶지 않음) 대 B(붙이고 묶음)를 그대로 비교하면 둘이 섞이므로, 절 이름 줄만 뺀 조건을 하나 더 두어 각각의 몫을 본다.</li>
+<li><b>가설의 두 요소를 분리해 잰다.</b> "제목·부제를 앞에 붙인다"와 "제목 아래 내용을 묶는다"는 다른 변수다. A(붙이지 않고 묶지 않음) 대 B(붙이고 묶음)를 그대로 비교하면 둘이 섞이므로, 절 이름 태그만 뺀 조건을 하나 더 두어 각각의 몫을 본다.</li>
 <li><b>자르는 규칙 후보는 네 가지다.</b> ① 절 단위 그대로 ② 절 단위 + 캡션을 표·그림 청크에 붙임 ③ 절 단위 + 짧은 절 병합(바닥 토큰 상향) ④ 고정 1000/100. 5000/250은 이번 관찰에서 구조를 가장 많이 깨뜨렸으므로 기준선으로만 둔다.</li>
 <li><b>언어별로 결과가 갈릴 수 있다.</b> zh_02는 제목 검출이 14개뿐이라 절 단위의 이점이 가장 적었다. 다음 비교의 문항을 언어별로 나눠 집계해야 한다.</li>
 <li><b>그림 서술 포함 여부도 조건으로 둔다.</b> 서술을 넣으면 청크 수와 길이가 달라지므로, 회수율 비교에서 같은 조건으로 맞추거나 별도 조건으로 분리해야 한다.</li>
@@ -214,7 +214,7 @@ function renderSamples(){const d=doc(); const cs=chunks(); const picks=[]; const
  const byi={}; d.items.forEach(it=>byi[it.i]=it);
  $('#samples').innerHTML=picks.map(({label,ci})=>{const c=cs[ci]; let inner='';
   if(M==='A'&&c.segs){let pos=0; c.segs.forEach(sg=>{if(sg.a>pos) inner+=esc(c.text.slice(pos,sg.a)); const txt=c.text.slice(sg.a,sg.b); const x=c.items.find(y=>y.i===sg.i); inner+=`<span class="seg${(sg.cut_head||sg.cut_tail)?' cut':''}${x&&x.shared?' shared':''}" style="border-color:${KC[sg.k]||'#999'}" title="항목 ${sg.i} · ${KN[sg.k]||sg.k}${sg.cut_head?' · 앞 잘림':''}${sg.cut_tail?' · 뒤 잘림':''}${x&&x.shared?' · 앞 청크와 공유':''}">${esc(txt)}</span>`; pos=sg.b;}); inner+=esc(c.text.slice(pos));}
-  else {const prefix=c.section?`## ${c.section}\n`:''; inner+=`<span class="seg" style="border-color:${KC.section_header}" title="절 절 이름 줄">${esc(prefix)}</span>`; c.items.forEach(x=>{if(x.heading) return; const it=byi[x.i]; const t=it?(it.k==='table'?'(표 HTML → 셀 | 셀 텍스트)':it.t):''; inner+=`<span class="seg" style="border-color:${KC[x.k]||'#999'}" title="항목 ${x.i} · ${KN[x.k]||x.k}">${esc(t)}</span>\n`;});}
+  else {const prefix=c.section?`## ${c.section}\n`:''; inner+=`<span class="seg" style="border-color:${KC.section_header}" title="절 절 이름 태그">${esc(prefix)}</span>`; c.items.forEach(x=>{if(x.heading) return; const it=byi[x.i]; const t=it?(it.k==='table'?'(표 HTML → 셀 | 셀 텍스트)':it.t):''; inner+=`<span class="seg" style="border-color:${KC[x.k]||'#999'}" title="항목 ${x.i} · ${KN[x.k]||x.k}">${esc(t)}</span>\n`;});}
   const items=c.items.map(x=>`${x.i}${x.cut_head?'(앞 잘림)':''}${x.cut_tail?'(뒤 잘림)':''}${x.shared?'(공유)':''}`).join(', ');
   return `<div class="samp"><h4>${label} — 청크 ${ci} · ${c.kind} · ${c.chars.toLocaleString()}자 · ${c.pages.join('·')}쪽 · 항목 [${items}] <button type="button" style="padding:2px 9px;font-size:11.5px" onclick="goto(${ci},${c.pages[0]})">지면에서 보기</button></h4><div class="segtxt">${inner}</div></div>`;}).join('')||'<p class="lede">표본 없음</p>';}
 // 04 히스토그램
