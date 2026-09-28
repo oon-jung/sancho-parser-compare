@@ -1,0 +1,137 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>실험 1 요약 — docling 청킹 현황</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--bad:#a3232b}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.65 "IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;font-variant-numeric:tabular-nums}
+nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}nav.top b{font-size:14px}nav.top a{color:#fff;opacity:.7;text-decoration:none}nav.top a:hover{opacity:1}nav.top span{opacity:.7}
+main{max-width:1060px;margin:0 auto;padding:22px 18px 50px}
+h1{font-size:22px;margin:6px 0 4px}.sub{color:var(--soft);margin:0 0 18px}
+h2{font-size:16px;margin:30px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint)}
+.wrap{overflow-x:auto}table.t{border-collapse:collapse;width:100%;font-size:13px;background:var(--lift);border:1px solid var(--rule)}table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}table.t td{padding:8px 10px;border-top:1px solid var(--rule2);vertical-align:top}table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap}table.t td.k{font-weight:600;white-space:nowrap}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:14px 0}
+.kpi .c{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;border-top:3px solid var(--rule)}
+.kpi .c.a{border-top-color:var(--bad)}.kpi .c.b{border-top-color:var(--dl)}
+.kpi .big{font:600 26px/1.2 "IBM Plex Mono",monospace}.kpi .lab{font-size:12.5px;color:var(--faint);margin-top:4px}
+.box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 18px}
+.box.bad{border-left:4px solid var(--bad);border-radius:0 10px 10px 0}.box.ok{border-left:4px solid var(--dl);border-radius:0 10px 10px 0}.box.warn{border-left:4px solid var(--mu);border-radius:0 10px 10px 0}
+ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:7px;line-height:1.65}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media (max-width:860px){.two{grid-template-columns:1fr}}
+.bar{height:22px;background:var(--sunk);border-radius:4px;overflow:hidden;position:relative;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--dl)}
+.bar span{position:absolute;right:7px;top:0;font:600 12px/22px "IBM Plex Mono",monospace;color:var(--ink)}
+.barlab{font-size:12.5px;color:var(--soft);margin-top:8px}
+.tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--sunk);color:var(--soft);margin-right:4px}.tag.bad{background:#f6e4e5;color:var(--bad)}.tag.ok{background:#e4efeb;color:var(--dl)}.tag.warn{background:#fbe8df;color:var(--mu)}
+footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule)}
+code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;border-radius:4px}
+</style></head><body>
+<nav class="top"><b>실험 1 요약</b><a href="exp1.html">1·2단계 파싱 확인</a><a href="exp1chunk.html">3~6단계 청킹 결과</a><a href="exp23.html">실험 2·3 결과</a><a href="exp23how.html">실험 2·3 과정</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<main>
+<h1>docling 파싱 결과가 실제로 어떻게 청크로 잘리는가</h1>
+<p class="sub">논문 4편(한국어·영어·일본어·중국어 각 1편, 40쪽)을 docling으로 파싱한 뒤 두 방식으로 청킹해 지면 위에서 확인했다. 기준은 PaperQA2의 기본값인 5,000자/250자이고, 현행 절 단위와 나란히 놓았다. 두 방식 모두 입력은 같은 docling 항목이며, 차이는 자르는 규칙 하나다. 그림은 내용이 비어 있어 로컬 VLM(Qwen3-VL 32B)으로 서술을 채운 뒤 청킹했다.</p>
+
+<h2><span class="no">01</span>한눈에</h2>
+<div class="kpi">
+ <div class="c a"><div class="big">27 / 36</div><div class="lab">A 5000/250에서 제목이 청크 중간에 들어간 청크</div></div>
+ <div class="c a"><div class="big">32곳</div><div class="lab">A에서 항목(본문 20·목록 7·표 2·그림 서술 3)이 청크 경계에 걸려 잘린 자리</div></div>
+ <div class="c b"><div class="big">21~69%</div><div class="lab">B 절 단위에서 한 절이 한 청크에 온전히 담긴 비율 (문서별, 본문 있는 절만)</div></div>
+ <div class="c b"><div class="big">11 / 11</div><div class="lab">B에서 표가 통째로 독립 청크가 된 수</div></div>
+ <div class="c"><div class="big">30장</div><div class="lab">VLM 서술을 넣기 전까지 어느 청크에도 없던 그림</div></div>
+ <div class="c"><div class="big">6개</div><div class="lab">본문 없이 부제만 거느려 사라진 상위 제목</div></div>
+ <div class="c a"><div class="big">4,994자</div><div class="lab">en_02에서 쪽을 넘는 문단 5개가 통째로 중복 저장됨 (그림 서술 전 본문 67,665자의 7.4%)</div></div>
+</div>
+
+<h2><span class="no">02</span>대상 논문</h2>
+<div class="wrap"><table class="t">
+<thead><tr><th>문서</th><th>언어</th><th>쪽</th><th>docling 항목</th><th>제목</th><th>표</th><th>그림</th><th>절 보존율 (B, 본문 있는 절만)</th></tr></thead>
+<tbody>
+<tr><td class="k">ko_01 한국식품과학회지 2020</td><td class="v">한국어</td><td class="v">10</td><td class="v">142</td><td class="v">25</td><td class="v">2</td><td class="v">9</td><td class="v">63%</td></tr>
+<tr><td class="k">en_02 Nutrients 2020</td><td class="v">영어</td><td class="v">15</td><td class="v">191</td><td class="v">21</td><td class="v">2</td><td class="v">9</td><td class="v">50%</td></tr>
+<tr><td class="k">ja_01 園芸学研究</td><td class="v">일본어</td><td class="v">6</td><td class="v">102</td><td class="v">18</td><td class="v">1</td><td class="v">5</td><td class="v">69%</td></tr>
+<tr><td class="k">zh_02 中国实验方剂学杂志</td><td class="v">중국어</td><td class="v">9</td><td class="v">197</td><td class="v">14</td><td class="v">6</td><td class="v">7</td><td class="v">21%</td></tr>
+</tbody></table></div>
+<p class="barlab">절 보존율 — 한 절이 한 청크에 온전히 담긴 비율 (B 절 단위, 그림 서술 32B 기준)</p>
+<div style="display:grid;grid-template-columns:90px 1fr;gap:6px 10px;align-items:center;margin-top:6px">
+ <span class="v" style="font:12.5px 'IBM Plex Mono'">ja_01</span><div class="bar"><i style="width:69%"></i><span>69% (11/16절)</span></div>
+ <span class="v" style="font:12.5px 'IBM Plex Mono'">ko_01</span><div class="bar"><i style="width:63%"></i><span>63% (15/24절)</span></div>
+ <span class="v" style="font:12.5px 'IBM Plex Mono'">en_02</span><div class="bar"><i style="width:50%"></i><span>50% (10/20절)</span></div>
+ <span class="v" style="font:12.5px 'IBM Plex Mono'">zh_02</span><div class="bar"><i style="width:21%;background:var(--bad)"></i><span>21% (3/14절)</span></div>
+</div>
+
+<h2><span class="no">03</span>두 방식 비교 (4편 합계, 그림 서술 32B)</h2>
+<div class="wrap"><table class="t">
+<thead><tr><th></th><th>A · PaperQA2 기본 5000자/250자</th><th>B · 현행 절 단위</th></tr></thead>
+<tbody>
+<tr><td class="k">자르는 기준</td><td>같은 docling 항목을 쪽별로 이어 붙인 뒤 5,000자마다. 앞 청크 마지막 250자를 다음 청크 앞에 겹침</td><td>docling 제목마다 절을 나누고 절 안에서 문단 단위로 목표 900토큰</td></tr>
+<tr><td class="k">청크 수</td><td class="v">36</td><td class="v">289</td></tr>
+<tr><td class="k">제목이 청크 중간</td><td class="v"><span class="tag bad">27</span></td><td class="v"><span class="tag ok">0</span> (항상 첫 줄 <code>## 부제</code>)</td></tr>
+<tr><td class="k">한 청크에 절 여러 개</td><td class="v"><span class="tag bad">27</span></td><td class="v"><span class="tag ok">0</span> (한 청크는 한 절)</td></tr>
+<tr><td class="k">항목이 경계에서 잘림</td><td class="v"><span class="tag bad">32</span> (본문 20 · 목록 7 · 표 2 · 그림 서술 3)</td><td class="v"><span class="tag ok">0</span></td></tr>
+<tr><td class="k">한 절의 본문이 흩어짐</td><td class="v">25</td><td class="v"><span class="tag warn">118</span> (900토큰 초과 절)</td></tr>
+<tr><td class="k">중복 텍스트가 든 청크</td><td class="v"><span class="tag bad">6</span> (en_02, 4,994자)</td><td class="v"><span class="tag bad">6</span> (en_02, 4,994자)</td></tr>
+<tr><td class="k">표 처리</td><td>본문 흐름에 셀 텍스트로 섞임, 창에 걸리면 잘림</td><td><span class="tag ok">11/11 독립 청크</span></td></tr>
+<tr><td class="k">캡션 분리</td><td class="v">5</td><td class="v"><span class="tag warn">7</span></td></tr>
+<tr><td class="k">겹침 중복</td><td>겹침 250자가 인접 청크에 그대로 중복</td><td>없음 (한 문단이 상한 초과 시에만 겹침). 다만 파싱 단계의 en_02 중복은 B에도 남는다</td></tr>
+</tbody></table></div>
+
+<h2><span class="no">04</span>확인한 것</h2>
+<div class="two">
+<div class="box bad"><b>A 5000/250은 구조를 보존하지 못한다</b>
+<ul class="pts" style="margin-top:6px">
+<li>창이 글자 수만 세므로 제목 앞에서 끊을 이유가 없다. 36개 청크 중 27개에 제목이 중간에 들어가고 절이 섞였다.</li>
+<li>항목 32곳(본문 20·목록 7·표 2·그림 서술 3)이 잘렸다. 잘린 표는 머리글과 값의 연결이 끊어진다.</li>
+<li>겹침 250자는 인접 청크에 같은 문장을 중복으로 남긴다.</li>
+</ul></div>
+<div class="box ok"><b>B 절 단위는 경계를 지키지만 긴 절에서 흩어진다</b>
+<ul class="pts" style="margin-top:6px">
+<li>한 청크는 한 절이고, 첫 줄에 <code>## 부제</code>가 붙으며, 항목이 잘리지 않는다.</li>
+<li>절이 900토큰을 넘으면 문단 경계에서 나뉜다. 절 보존율은 언어·조판에 따라 21~69%로 갈린다.</li>
+<li>표는 11개 모두 독립 청크로 행·열 관계가 남는다.</li>
+</ul></div>
+</div>
+<div class="box warn" style="margin-top:14px"><b>두 방식 공통 문제</b>
+<ul class="pts" style="margin-top:6px">
+<li><b>상위 제목이 사라진다.</b> docling이 제목 계층을 주지 않아 "2. Materials and Methods"처럼 본문 없이 부제만 거느린 제목은 청크를 만들지 못한다. 4편에서 6개.</li>
+<li><b>캡션이 표·그림과 떨어진다.</b> 캡션을 표 청크에 붙인 뒤에도 A 5건·B 7건이 남는다. 그림 캡션이 주된 사례다.</li>
+<li><b>제목 검출이 언어·조판에 좌우된다.</b> ko_01은 번호형 제목이 0개이고 저자·소속 줄이 제목으로 잡힌다. zh_02는 제목 14개 중 3개가 저널명 머리글이고 "2.10 …" 소제목은 본문으로 잡혀 절 보존율이 21%로 가장 낮다.</li>
+<li><b>쪽을 넘는 문단이 두 항목으로 나뉜다.</b> ko_01·ja_01에서 단어가 끊긴 채 이어지는 곳 4건.</li>
+<li><b>en_02에서는 반대로 통째로 중복된다.</b> 쪽을 넘는 문단 5개가 쪽마다 전체 텍스트로 기록되어 같은 문단이 두 번 들어간다. 4,994자로 그림 서술 전 본문 67,665자의 7.4%이며, 두 방식 모두 청크 6개에 중복이 그대로 남는다.</li>
+</ul></div>
+
+<h2><span class="no">05</span>그림 — 비어 있던 자리를 VLM으로 채웠다</h2>
+<div class="wrap"><table class="t">
+<thead><tr><th>파서</th><th>그림에 대해 내는 것</th><th>한계</th></tr></thead>
+<tbody>
+<tr><td class="k">docling</td><td>위치(좌표)만</td><td>내용이 비어 청크에 들어가지 않음 — 4편 30장 전부</td></tr>
+<tr><td class="k">MinerU (문서 VLM)</td><td>막대·선 그래프는 데이터 표로</td><td>사진·현미경 사진·도식은 비움</td></tr>
+<tr><td class="k">Qwen3-VL 32B (로컬, 채택)</td><td>그림 종류·축·군·수치·경향을 문장으로</td><td>수치는 축 눈금에서 읽은 추정치 · 장당 33초</td></tr>
+</tbody></table></div>
+<div class="box" style="margin-top:12px"><ul class="pts">
+<li><b>모델 선택 근거.</b> 그래프 수치는 MinerU 차트 표의 값 81개와 대조했다. 32B 81/81, 8B 79/81, GPT-5 64/81이 ±5 이내였다(GPT-4.1-mini는 제외하며 결과를 지워 같은 기준으로 다시 세지 못했고, 제외 전 측정에서는 32B·8B와 비슷했다). 결정적 차이는 데이터가 아닌 그림에서 났다. GPT-4.1-mini는 "check for updates" 아이콘과 "原著" 표시를 없는 막대그래프로 지어냈고, 32B·8B·GPT-5는 도식으로 정확히 판정했다. 로컬에서 돌아 논문이 외부로 나가지 않는 점까지 보아 <b>32B를 채택</b>하고 8B를 속도 대안으로 남겼다.</li>
+<li><b>서술을 넣으면 청크가 달라진다.</b> ko_01 기준 청크에 들어간 글자가 37,277→43,243자로 늘어 B 청크가 86→96개가 됐다. 그림이 있는 절이 900토큰을 넘어 더 잘게 나뉜 결과다.</li>
+<li><b>A에서는 그림 서술도 잘린다.</b> 4편에서 3건(플래그가 붙은 청크는 5개).</li>
+</ul></div>
+
+<h2><span class="no">06</span>개선 제안</h2>
+<div class="wrap"><table class="t">
+<thead><tr><th>문제</th><th>제안</th><th>확인 방법</th></tr></thead>
+<tbody>
+<tr><td class="k">상위 제목 유실</td><td>제목 번호 패턴(1. / 1.1 / Ⅰ. / 1))으로 계층을 복원해 청크에 경로를 붙인다</td><td>실험 2에서 접두 유무로 회수율 비교</td></tr>
+<tr><td class="k">제목 오검출·미검출</td><td>초록 이전 항목은 제목에서 제외하고, 번호 패턴이 있는 본문 줄은 제목으로 승격한다</td><td>절 보존율과 제목 수의 변화</td></tr>
+<tr><td class="k">캡션 분리</td><td>캡션을 표·그림 청크의 첫 줄로 옮긴다</td><td>표 값·그림 읽기 문항의 회수율</td></tr>
+<tr><td class="k">긴 절 분할</td><td>바닥 토큰을 올려 짧은 절을 병합하거나, 절 안에서만 문단 겹침을 허용한다</td><td>실험 3의 청킹 조건 후보</td></tr>
+<tr><td class="k">쪽 경계 분리</td><td>쪽을 넘는 인접 항목을 파싱 단계에서 병합한다</td><td>단어 끊김 건수</td></tr>
+<tr><td class="k">쪽 경계 중복</td><td>같은 번호·같은 텍스트 항목을 파싱 직후 하나로 합친다</td><td>중복 글자 수(en_02 4,994자)</td></tr>
+<tr><td class="k">머리글이 제목으로</td><td>같은 제목 텍스트가 여러 쪽에 반복되면 머리글로 보고 제목에서 제외한다</td><td>zh_02 절 수와 보존율</td></tr>
+</tbody></table></div>
+
+<h2><span class="no">07</span>다음 실험</h2>
+<div class="box"><ul class="pts">
+<li><b>실험 2 (제목·부제 삽입)</b>: 가설의 두 요소인 "제목을 앞에 붙인다"와 "제목 아래 내용을 묶는다"를 분리해 잰다. A(둘 다 아님) · B(둘 다) · B에서 접두만 뺀 조건 세 가지로 비교한다.</li>
+<li><b>실험 3 (5000/250 대안)</b>: ① 절 단위 ② 절 단위 + 캡션 병합 ③ 절 단위 + 짧은 절 병합 ④ 고정 1000/100. 5000/250은 기준선으로만 둔다.</li>
+<li><b>공통</b>: 문항을 언어별로 나눠 집계하고, 그림 서술 포함 여부를 조건으로 고정하거나 분리한다.</li>
+</ul></div>
+
+<footer>A는 PaperQA2 기본 커터를 같은 docling 입력에 적용한 조건이며, 원래 파이프라인의 파서 출력을 넣은 기준선은 아니다. 자료: <a href="exp1.html">1·2단계 파싱 확인 페이지</a>(4편 40쪽 지면 위 docling 항목, 그림 VLM 서술 비교) · <a href="exp1chunk.html">3~6단계 청킹 결과 페이지</a>(지면 위 청크 경계, 표본 대조, 길이 분포, 검증 플래그 8종). 수치는 그림 서술 Qwen3-VL 32B 기준이며 파서는 docling 2.118(OCR 끔)이다. 이 페이지는 논문 본문을 담지 않는다.</footer>
+</main><script src="edit.js?v=3"></script>
+</body></html>

@@ -1,0 +1,128 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>실험 1 · 청킹 시각화 — 1·2단계 파싱 확인</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--gray:#9aa3b3;--bad:#a3232b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.6 "IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;font-variant-numeric:tabular-nums}
+nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}nav.top b{font-size:14px}nav.top span{opacity:.7}
+main{max-width:1180px;margin:0 auto;padding:18px 18px 40px}
+h1{font-size:20px;margin:8px 0 6px}h2{font-size:16px;margin:28px 0 6px;display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint);letter-spacing:.06em}
+p.lede{color:var(--soft);margin:0 0 12px;max-width:84ch}
+.wrap{overflow-x:auto}table.t{border-collapse:collapse;width:100%;font-size:13px;background:var(--lift);border:1px solid var(--rule)}table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}table.t td{padding:7px 10px;border-top:1px solid var(--rule2);vertical-align:top}table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap}table.t td.k{font-weight:600}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:12px 0 10px}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ctl>.sum{white-space:nowrap}
+button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule);background:var(--lift);color:var(--soft);border-radius:999px;cursor:pointer}button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}select{border-radius:8px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--soft)}.legend i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.grid{display:grid;grid-template-columns:minmax(420px,720px) minmax(380px,1fr);gap:16px;align-items:start}@media (max-width:1000px){.grid{grid-template-columns:1fr}}
+.stage{position:relative;background:var(--lift);border:1px solid var(--rule);box-shadow:0 1px 4px rgba(0,0,0,.08);line-height:0;max-width:720px}.stage img{width:100%;height:auto;display:block}.ov{position:absolute;inset:0}
+.bx{position:absolute;cursor:pointer;border:1.3px solid var(--pm);background:rgba(42,120,214,.09)}
+.bx.section_header{border:2.5px solid var(--dl);background:rgba(31,111,92,.22)}
+.bx.list_item{border-style:dashed}
+.bx.caption{border-style:dotted;background:none}.bx.footnote{border:1.3px dotted var(--gray);background:none}
+.bx.table{border:4px double var(--tbl);background:rgba(122,79,181,.14)}
+.bx.picture{border:2px solid var(--gray);background:rgba(154,163,179,.18)}
+.bx.code,.bx.formula{border:1.3px solid var(--mu);background:rgba(235,104,52,.10)}
+.bx.dup{box-shadow:0 0 0 2px var(--bad) inset}
+.bx .n{position:absolute;left:-1px;top:-13px;font:9.5px/12px "IBM Plex Mono",monospace;background:var(--pm);color:#fff;padding:0 4px;border-radius:2px 2px 0 0;opacity:.9}
+.bx.section_header .n{background:var(--dl)}.bx.table .n{background:var(--tbl)}.bx.picture .n{background:var(--gray)}
+.hi{outline:3px solid #ffcc00;outline-offset:1px;z-index:2}
+.panel{background:var(--lift);border:1px solid var(--rule);border-radius:8px;max-height:760px;overflow:auto}
+.it{padding:7px 10px;border-radius:6px;margin:6px 10px;border-left:3px solid var(--pm);font-size:13px;white-space:pre-wrap;word-break:break-word}
+.it .k{font:600 11px "IBM Plex Mono",monospace;color:var(--faint);display:block;margin-bottom:2px;white-space:normal}
+.it.section_header{border-left-color:var(--dl);font-weight:700}.it.table{border-left-color:var(--tbl);white-space:normal}.it.picture{border-left-color:var(--mu);color:var(--ink);white-space:normal}.it.caption{border-left-style:dotted}.it.footnote{color:var(--faint);font-size:12px;border-left-style:dotted}.it.list_item{border-left-style:dashed}
+.it table{border-collapse:collapse;font-size:12px;line-height:1.3;margin-top:4px;max-width:100%}.it td,.it th{border:1px solid var(--rule);padding:2px 6px;vertical-align:top;font-weight:400}.it td[rowspan],.it td[colspan],.it th[rowspan],.it th[colspan]{background:rgba(122,79,181,.14)}
+.it.hi{background:#fff6cc}
+.it.onpage{background:#f4f7fb}.it.dim{opacity:.55}
+.pgsep{position:sticky;top:0;background:var(--sunk);font:600 11.5px "IBM Plex Mono",monospace;color:var(--soft);padding:4px 10px;border-bottom:1px solid var(--rule);z-index:1}
+.fv{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:14px;background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px;margin-bottom:14px}@media (max-width:900px){.fv{grid-template-columns:1fr}}
+.fv img{width:100%;height:auto;border:1px solid var(--rule);background:#fff}
+.fv .cap{font-size:12.5px;color:var(--soft);margin-top:6px;line-height:1.5}
+.fv .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.fv .col{background:var(--sunk);border-radius:8px;padding:9px 11px;font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.fv .col b{display:block;font:600 11px "IBM Plex Mono",monospace;color:var(--faint);margin-bottom:4px;white-space:normal}
+.fv .col.mu{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
+.rec{background:#1b1f27;color:#e6e9ef;border-radius:8px;padding:10px 12px;font:12px/1.5 "IBM Plex Mono",monospace;white-space:pre-wrap;word-break:break-all;margin-top:10px;max-height:220px;overflow:auto}
+.sum{font:12.5px "IBM Plex Mono",monospace;color:var(--faint)}
+.box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 18px}ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:6px;line-height:1.6}
+</style></head><body>
+<nav class="top"><b>실험 1 · 청킹 시각화</b><span>1단계 대상 논문 확정 · 2단계 파싱 확인</span><a href="exp1summary.html">요약</a><a href="exp23.html">실험 2·3 결과</a><a href="exp23how.html">실험 2·3 과정</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<main>
+<h1>1·2단계 — 대상 논문 4편과 docling 파싱 결과</h1>
+<p class="lede">언어별 1편씩 고른 4편을 docling으로 파싱한 항목을 지면 위에 그대로 놓았다. 오른쪽 목록은 저장된 그대로, 문서 전체 항목을 읽기 순번대로 한 줄로 늘어놓은 것이며 쪽은 그 안의 구분선일 뿐이다. 3단계부터 이 항목들이 어느 청크로 묶이는지를 같은 화면에 겹친다. 여기서는 청킹에 앞서 파서가 제목·본문·표·그림을 어떻게 나눴는지 확인한다.</p>
+
+<h2><span class="no">01</span>대상 논문</h2>
+<div class="wrap"><table class="t" id="docs"></table></div>
+<p class="lede" style="margin-top:8px">항목 수는 docling이 낸 블록 수다. 제목은 section_header 라벨이며, docling은 제목의 계층을 주지 않으므로 모두 같은 단계로 온다.</p>
+
+<h2><span class="no">02</span>지면 위 docling 항목</h2>
+<div class="ctl">
+  <select id="doc"></select>
+  <div class="grp"><button id="prev" type="button">◀</button><select id="page"></select><button id="next" type="button">▶</button></div>
+  <div class="legend"><span><i style="border:2.5px solid var(--dl);background:rgba(31,111,92,.22)"></i>제목 section_header</span><span><i style="border:1.3px solid var(--pm);background:rgba(42,120,214,.09)"></i>본문 text</span><span><i style="border:1.3px dashed var(--pm)"></i>목록 list_item</span><span><i style="border:1.3px dotted var(--pm)"></i>캡션 caption</span><span><i style="border:4px double var(--tbl);background:rgba(122,79,181,.14)"></i>표 table</span><span><i style="border:2px solid var(--gray);background:rgba(154,163,179,.18)"></i>그림 picture (목록에 VLM 서술 표시)</span><span><i style="border:1.3px dotted var(--gray)"></i>각주 footnote</span></div>
+  <div class="sum" id="pstat"></div>
+</div>
+<div class="grid">
+  <div><div class="stage"><img id="pg" alt="지면"><div class="ov" id="ov"></div></div><div class="sum" style="margin-top:8px">항목 하나의 실제 저장 레코드 (상자나 목록에 마우스를 올리면 바뀜)</div><div class="rec" id="rec">—</div></div>
+  <aside class="panel" id="items"></aside>
+</div>
+<p class="lede" style="margin-top:10px">상자의 번호는 문서 전체에서 매긴 docling 읽기 순번이며 쪽이 바뀌어도 이어진다. 쪽을 넘어가는 문단은 쪽마다 한 항목으로 나뉘어 연속 번호를 받는다. 상자나 오른쪽 항목에 마우스를 올리면 서로 강조된다. 표 항목은 docling의 HTML을 그대로 그린 것이며 병합 셀은 보라 배경이다.</p>
+
+<h2><span class="no">03</span>파싱 단계에서 미리 보이는 점</h2>
+<div class="box"><ul class="pts" id="notes"></ul></div>
+<h2><span class="no">04</span>그림 보완 — VLM 서술 비교 (ko_01 그림 9장)</h2>
+<p class="lede">docling은 그림의 위치만 주고 내용을 비운다. MinerU는 막대·선 그래프를 데이터 표로 바꾸지만 사진·도식은 비운다. 그래서 그림 영역을 캡션과 함께 잘라 로컬 VLM 두 가지(Qwen3-VL 32B·8B)에 같은 프롬프트로 서술을 받아 나란히 놓았다. 위 02의 그림 항목에도 같은 서술이 들어가 있다. 검수 결과 32B를 채택했고 8B는 속도 대안으로 남겼다. GPT-4.1-mini는 데이터가 아닌 아이콘·표시 그림 2장에서 없는 그래프를 지어내 제외했고, 상위 모델 GPT-5(추론 낮음)를 시험용으로 같은 30장에 돌렸다. 프롬프트: 그림 종류, 축·단위, 군 이름, 읽을 수 있는 수치, 군 사이 경향을 적고 캡션 반복과 값 추측을 금지.</p>
+<div id="figvlm"></div>
+</main>
+<script src="exp1/data.js?v=4"></script>
+<script src="exp1/figvlm.js?v=4"></script>
+<script>
+const $=s=>document.querySelector(s); const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const KN={section_header:'제목',text:'본문',list_item:'목록',caption:'캡션',table:'표',picture:'그림',footnote:'각주',code:'코드',formula:'수식'};
+const D=E1.docs; let di=0, cur=1;
+D.forEach(d=>{const c={}; d.items.forEach(it=>c[it.i]=(c[it.i]||0)+1); d.items.forEach((it,n)=>{it.n=n; it.dup=c[it.i]>1;}); d.dupCount=Object.values(c).filter(v=>v>1).length;});
+const FVMAP={}; if(typeof FV!=='undefined') FV.figs.forEach(f=>{FVMAP[f.doc+'#'+f.item]=f;});
+const MN={'qwen3-vl:32b-instruct':'Qwen3-VL 32B (채택)','qwen3-vl:8b-instruct':'Qwen3-VL 8B (대안)','gpt-5':'GPT-5 (시험)'};
+function picBody(doc,it){const f=FVMAP[doc+'#'+it.i]; if(!f) return '(그림 영역 — 내용 없음)'; let h='<div style="font-size:12px;color:var(--faint);margin-bottom:4px">그림 '+f.fig+' · VLM 서술</div>'; if(f.mineru_chart) h+='<div style="margin-bottom:6px"><b style="font:600 11px IBM Plex Mono,monospace;color:var(--tbl)">MinerU chart 표</b><div style="font:11.5px/1.4 IBM Plex Mono,monospace;white-space:pre-wrap">'+esc(f.mineru_chart)+'</div></div>'; Object.keys(MN).forEach(m=>{const o=f.out&&f.out[m]; if(!o) return; h+='<div style="margin-bottom:6px"><b style="font:600 11px IBM Plex Mono,monospace;color:var(--dl)">'+MN[m]+(o.seconds?' · '+o.seconds+'초':'')+'</b><div style="white-space:pre-wrap;color:var(--ink)">'+esc(o.error?'오류: '+o.error:o.text)+'</div></div>';}); if(!f.out||!Object.keys(f.out).length) h+='<div class="note">(VLM 실행 대기 중)</div>'; return h;}
+$('#docs').innerHTML=`<thead><tr><th>문서</th><th>언어</th><th>쪽</th><th>항목</th><th>제목</th><th>본문·목록</th><th>표</th><th>그림</th><th>캡션</th><th>골드 문항</th><th>docling 시간</th></tr></thead><tbody>`+
+ D.map(d=>{const c=d.counts;return `<tr><td class="k">${esc(d.title)}</td><td class="v">${d.lang}</td><td class="v">${d.pages}</td><td class="v">${d.items.length}</td><td class="v">${c.section_header||0}</td><td class="v">${(c.text||0)+(c.list_item||0)}</td><td class="v">${c.table||0}</td><td class="v">${c.picture||0}</td><td class="v">${c.caption||0}</td><td class="v">${d.qs}</td><td class="v">${d.docling_seconds?d.docling_seconds.toFixed?d.docling_seconds.toFixed(1)+'초':d.docling_seconds:'—'}</td></tr>`;}).join('')+`</tbody>`;
+const dsel=$('#doc'), psel=$('#page');
+D.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=d.title;dsel.appendChild(o);});
+function fillPages(){psel.innerHTML='';for(let i=1;i<=D[di].pages;i++){const o=document.createElement('option');o.value=i;o.textContent=`${i} / ${D[di].pages} 쪽`;psel.appendChild(o);}}
+function renderList(){const d=D[di]; let h='', lastp=0;
+ d.items.forEach(it=>{ if(it.p!==lastp){h+=`<div class="pgsep" data-p="${it.p}">— ${it.p}쪽 —</div>`; lastp=it.p;}
+  const body=it.k==='table'?(it.h||esc(it.t)||'(HTML 없음)'):it.k==='picture'?picBody(d.id,it):esc(it.t||'(내용 없음)');
+  h+=`<div class="it ${it.k}" data-id="i${it.n}" data-p="${it.p}"><span class="k">${it.i}${it.dup?' <b style="color:var(--bad)">· 같은 번호가 두 번 (쪽 넘김 중복 저장)</b>':''} · ${it.p}쪽 · ${KN[it.k]||it.k}${it.k==='table'&&!it.h?' · HTML 비어 있음':''}</span>${body}</div>`;});
+ $('#items').innerHTML=h;}
+function draw(){const d=D[di]; psel.value=cur; $('#pg').src=`exp1/${d.id}_p${String(cur).padStart(2,'0')}.png`;
+ const its=d.items.filter(it=>it.p===cur); let o='';
+ its.forEach(it=>{const[x0,y0,x1,y1]=it.b; o+=`<div class="bx ${it.k}${it.dup?' dup':''}" data-id="i${it.n}" style="left:${(x0*100).toFixed(2)}%;top:${(y0*100).toFixed(2)}%;width:${(Math.max(x1-x0,.004)*100).toFixed(2)}%;height:${(Math.max(y1-y0,.003)*100).toFixed(2)}%"><span class="n">${it.i}${it.dup?"*":""}</span></div>`;});
+ $('#ov').innerHTML=o;
+ document.querySelectorAll('#items .it').forEach(el=>{const on=+el.dataset.p===cur; el.classList.toggle('onpage',on); el.classList.toggle('dim',!on);});
+ const first=document.querySelector(`#items .it[data-p="${cur}"]`); if(first) first.scrollIntoView({block:'start'});
+ const c=k=>its.filter(i=>i.k===k).length;
+ $('#pstat').textContent=`이 쪽은 문서 항목 ${its.length?its[0].i+'~'+its[its.length-1].i+'번':'없음'} (전체 0~${Math.max(...d.items.map(x=>x.i))}${d.dupCount?`, 번호 중복 ${d.dupCount}개`:''}) · 항목 ${its.length} · 제목 ${c('section_header')} · 본문 ${c('text')+c('list_item')} · 표 ${c('table')} · 그림 ${c('picture')} · 캡션 ${c('caption')} · 글자 ${its.reduce((a,i)=>a+(i.t||'').length,0).toLocaleString()}`;}
+function showRec(id){const it=D[di].items.find(x=>'i'+x.n===id); if(!it) return; const r={i:it.i,label:it.k,page:it.p,bbox:it.b,text:(it.t||'').slice(0,160)+((it.t||'').length>160?' …':'')}; if(it.dup) r['주의']='같은 i가 두 번 저장됨 (쪽을 넘는 문단을 쪽마다 통째로 기록)'; if(it.k==='table') r.html=(it.h||'').slice(0,120)+' …'; $('#rec').textContent=JSON.stringify(r,null,1);}
+function hi(id,on){document.querySelectorAll(`[data-id="${id}"]`).forEach(el=>el.classList.toggle('hi',on)); if(on){showRec(id); const t=document.querySelector(`.it[data-id="${id}"]`); if(t) t.scrollIntoView({block:'nearest'});}}
+function wire(r){r.addEventListener('mouseover',e=>{const el=e.target.closest('[data-id]'); if(el) hi(el.dataset.id,true);}); r.addEventListener('mouseout',e=>{const el=e.target.closest('[data-id]'); if(el) hi(el.dataset.id,false);});}
+wire($('#ov')); wire($('#items'));
+$('#items').addEventListener('click',e=>{const el=e.target.closest('.it'); if(!el) return; const p=+el.dataset.p; if(p!==cur){cur=p; draw();} hi(el.dataset.id,true);});
+dsel.addEventListener('change',()=>{di=+dsel.value;cur=1;fillPages();renderList();draw();}); psel.addEventListener('change',()=>{cur=+psel.value;draw();});
+$('#prev').addEventListener('click',()=>{cur=(cur+D[di].pages-2)%D[di].pages+1;draw();}); $('#next').addEventListener('click',()=>{cur=cur%D[di].pages+1;draw();});
+document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return; if(e.key==='ArrowLeft'){cur=(cur+D[di].pages-2)%D[di].pages+1;draw();} if(e.key==='ArrowRight'){cur=cur%D[di].pages+1;draw();}});
+fillPages(); renderList(); draw();
+// 03 그림 VLM 비교
+(function(){ if(typeof FV==='undefined') return; const MN={'qwen3-vl:32b-instruct':'Qwen3-VL 32B (로컬 · 채택)','qwen3-vl:8b-instruct':'Qwen3-VL 8B (로컬 · 대안)','gpt-5':'GPT-5 (API · 시험)'};
+ $('#figvlm').innerHTML=FV.figs.map(f=>{const cols=[];
+  cols.push(`<div class="col mu"><b>MinerU chart 표</b>${f.mineru_chart?esc(f.mineru_chart):'(chart로 인식되지 않음 — 비어 있음)'}</div>`);
+  FV.models.forEach(m=>{const o=f.out[m]; cols.push(`<div class="col"><b>${MN[m]}${o&&o.seconds?` · ${o.seconds}초`:''}</b>${o?(o.error?'오류: '+esc(o.error):esc(o.text)):'(아직 실행 전)'}</div>`);});
+  return `<div class="fv"><div><img src="exp1/crops/${f.crop}" alt="그림 ${f.fig}"><div class="cap"><b>${f.doc} 그림 ${f.fig} · ${f.page}쪽 · 항목 ${f.item}</b><br>${esc(f.caption)}</div></div><div class="cols">${cols.join('')}</div></div>`;}).join('');
+})();
+// 04 메모: 문서별 제목 목록·빈 표
+$('#notes').innerHTML=D.map(d=>{const heads=d.items.filter(i=>i.k==='section_header'); const first=heads.slice(0,6).map(h=>h.t.slice(0,22)).join(' / '); const emptyT=d.items.filter(i=>i.k==='table'&&!i.h).length;
+ return `<li><b>${d.id}</b>: 제목 ${heads.length}개 (앞부분: ${esc(first)}${heads.length>6?' …':''}). 표 ${d.counts.table||0}개${emptyT?` 중 HTML 없음 ${emptyT}개`:''}, 그림 ${d.counts.picture||0}개는 위치만 있고 내용은 비어 있다.</li>`;}).join('')+
+ `<li><b>en_02의 쪽 넘김 중복</b>: 쪽을 넘는 문단 5개를 docling이 쪽마다 <b>통째로</b> 기록해 같은 번호·같은 텍스트 항목이 두 번 저장된다(4,994자, 본문의 7.5%). 상자에 빨간 테두리와 번호 뒤 *로 표시했다. 청킹 단계에서도 중복이 그대로 남는다.</li>
+ <li><b>공통</b>: 제목의 계층이 없어 "2. Materials and Methods"와 "2.1 Preparation"이 같은 단계로 온다. 논문 첫 쪽의 저자·소속·초록 머리 줄이 제목으로 잡히는 경우가 있다. 이것이 3단계 이후 절 단위 청킹의 경계가 된다.</li>`;
+</script><script src="edit.js?v=3"></script>
+</body></html>

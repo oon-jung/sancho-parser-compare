@@ -1,0 +1,264 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>실험 1 · 청킹 결과 — 3~6단계</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--gray:#9aa3b3;--bad:#a3232b}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.6 "IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;font-variant-numeric:tabular-nums}
+nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}nav.top b{font-size:14px}nav.top a{color:#fff;opacity:.7;text-decoration:none}nav.top span{opacity:.7}
+main{max-width:1180px;margin:0 auto;padding:18px 18px 40px}h1{font-size:20px;margin:8px 0 6px}h2{font-size:16px;margin:28px 0 6px;display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint);letter-spacing:.06em}h3{font-size:14px;margin:14px 0 6px}
+p.lede{color:var(--soft);margin:0 0 12px;max-width:84ch}
+.wrap{overflow-x:auto}table.t{border-collapse:collapse;width:100%;font-size:13px;background:var(--lift);border:1px solid var(--rule)}table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}table.t td{padding:7px 10px;border-top:1px solid var(--rule2);vertical-align:top}table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap}table.t td.k{font-weight:600}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:12px 0 10px}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ctl>.sum{white-space:nowrap}
+button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule);background:var(--lift);color:var(--soft);border-radius:999px;cursor:pointer}button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}select{border-radius:8px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--soft)}.legend i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.grid{display:grid;grid-template-columns:minmax(420px,720px) minmax(380px,1fr);gap:16px;align-items:start}@media (max-width:1000px){.grid{grid-template-columns:1fr}}
+.stage{position:relative;background:var(--lift);border:1px solid var(--rule);box-shadow:0 1px 4px rgba(0,0,0,.08);line-height:0;max-width:720px}.stage img{width:100%;height:auto;display:block}.ov{position:absolute;inset:0}
+.cb{position:absolute;cursor:pointer;border:1.5px solid;border-radius:2px;transition:opacity .15s}.cb.table{border-style:double;border-width:4px}.cb.section_header{border-width:2.5px}.cb.picture{border-style:solid;border-width:2.5px}
+.cb .n{position:absolute;left:-1px;top:-14px;font:10px/12px "IBM Plex Mono",monospace;color:#fff;padding:0 4px;border-radius:2px 2px 0 0}
+.cb .cut{position:absolute;left:0;right:0;height:5px;background:repeating-linear-gradient(90deg,var(--bad) 0 5px,#fff 5px 9px)}.cb .cut.h{top:-1px}.cb .cut.t{bottom:-1px}
+.un{position:absolute;border:2px dashed var(--gray);background:repeating-linear-gradient(45deg,rgba(154,163,179,.18) 0 6px,transparent 6px 12px);cursor:pointer}.un .n{position:absolute;left:-1px;top:-14px;font:10px/12px "IBM Plex Mono",monospace;color:#fff;background:var(--gray);padding:0 4px;border-radius:2px 2px 0 0}
+.focus .cb:not(.on),.focus .un{opacity:.12}
+.hi{outline:3px solid #ffcc00;outline-offset:1px;z-index:2}
+.panel{background:var(--lift);border:1px solid var(--rule);border-radius:8px;max-height:760px;overflow:auto}
+.it{padding:8px 10px;border-radius:6px;margin:6px 10px;border-left:4px solid transparent;font-size:12.5px;cursor:pointer}.it .k{font:600 11px "IBM Plex Mono",monospace;color:var(--faint);display:block;margin-bottom:2px}.it .sec{font-weight:600;margin-bottom:2px}.it .txt{white-space:pre-wrap;word-break:break-word;color:var(--soft);max-height:150px;overflow:auto;user-select:text}.fulltext .it .txt{max-height:none;overflow:visible}
+.cb.shpart{border-style:dashed}.cb .shl{position:absolute;right:-1px;bottom:-1px;font:9.5px/12px "IBM Plex Mono",monospace;background:var(--ink);color:#fff;padding:0 3px;border-radius:2px 0 0 0;opacity:.85}
+.it .ovh{background:#fde8d7;box-shadow:inset 2px 0 0 var(--mu)}
+.it .ovt{background:#e6f0fa;box-shadow:inset -2px 0 0 var(--pm)}
+.it mark.figtxt{background:#fbe8df;color:var(--ink);border-left:3px solid var(--mu);padding:2px 4px;display:inline-block}
+.it .txt[contenteditable="true"]{background:#fffdf5;outline:2px solid var(--mu);outline-offset:2px;cursor:text}
+.it .edited{border-left-color:var(--mu)!important}
+.it .editbar{display:none;gap:6px;margin:4px 0}
+.editing .it .editbar{display:flex}
+.it .editbar button{font:600 11px inherit;padding:2px 9px;border-radius:999px;border:1px solid var(--rule);background:var(--lift);color:var(--soft);cursor:pointer}
+.it .editbar .save{border-color:var(--dl);color:var(--dl)}
+.it .editbar .undo{border-color:var(--bad);color:var(--bad)}
+.editnote{background:#fffdf5;border:1px solid var(--mu);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--soft);margin:8px 0}
+.it .jump{font:600 11px inherit;padding:2px 9px;margin:2px 0 4px;border:1px solid var(--mu);color:var(--mu);background:var(--lift);border-radius:999px;cursor:pointer}
+.it.hi{background:#fff6cc}.it.onpage{background:#f4f7fb}.it.dim{opacity:.5}.it.on{outline:2px solid var(--ink)}
+.flag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--sunk);color:var(--soft);margin:2px 4px 2px 0}.flag.bad{background:#f6e4e5;color:var(--bad)}.flag.ok{background:#e4efeb;color:var(--dl)}.flag.warn{background:#fbe8df;color:var(--mu)}
+.sum{font:12.5px "IBM Plex Mono",monospace;color:var(--faint)}
+.rec{background:#1b1f27;color:#e6e9ef;border-radius:8px;padding:10px 12px;font:12px/1.5 "IBM Plex Mono",monospace;white-space:pre-wrap;word-break:break-all;margin-top:10px;max-height:260px;overflow:auto}
+.box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 18px}ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:6px;line-height:1.6}
+.samp{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;margin-bottom:12px}.samp h4{margin:0 0 6px;font-size:13px}
+.segtxt{font:12.5px/1.6 "IBM Plex Sans KR",sans-serif;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow:auto;background:var(--paper);border-radius:8px;padding:10px}
+.seg{border-bottom:2px solid;padding:0 1px}.seg.cut{background:#f6e4e5}.seg.shared{background:#fbe8df}
+.seglegend{font-size:12px;color:var(--soft);margin:6px 0}
+.hist{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media (max-width:900px){.hist{grid-template-columns:1fr}}
+.hist .h{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:12px 14px}.hist h4{margin:0 0 6px;font-size:13px}
+svg{display:block;width:100%;height:auto}
+</style></head><body>
+<nav class="top"><b>실험 1 · 청킹 시각화</b><a href="exp1.html">1·2단계 파싱 확인</a><span>3~6단계 청킹 결과·검증·관찰</span><a href="exp1summary.html">요약</a><a href="exp23.html">실험 2·3 결과</a><a href="exp23how.html">실험 2·3 과정</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<main>
+<h1>3~6단계 — 파서 결과가 실제로 어떻게 청크로 잘렸는가</h1>
+<p class="lede">2단계의 docling 항목을 두 방식으로 청킹했다. <b>A 기본 5000자/250자</b>는 PaperQA2의 기본 청커(<code>chunk_pdf</code>, 5,000자·겹침 250자)를 그대로 호출한 것이다. 다만 입력은 원래 파이프라인의 파서 출력이 아니라 <b>B와 같은 docling 항목을 쪽별로 줄바꿈으로 이어 붙인 텍스트</b>다. 두 방식의 차이를 자르는 규칙 하나로 좁히기 위해서이며, 따라서 A는 "현행 RAG 기준선"이 아니라 "같은 입력에 기본 커터를 적용한 조건"이다. 제목·문단·표 경계를 보지 않으므로 항목 중간에서 잘린다. <b>B 절 단위(현행)</b>는 docling 제목마다 절을 나누고 절 안에서 문단 단위로 모아 목표 900토큰에서 끊으며, 표는 따로 한 청크로 둔다. 그림은 VLM 서술을 "[그림 서술] …" 텍스트로 항목에 넣은 뒤 청킹했으며, 서술 소스(32B 채택 · 8B 대안 · 없음)를 전환할 수 있다.</p>
+
+<div class="ctl">
+  <select id="doc"></select>
+  <div class="grp" role="group"><button type="button" data-m="A" aria-pressed="true">A 기본 5000/250</button><button type="button" data-m="B" aria-pressed="false">B 절 단위(현행)</button></div>
+  <div class="grp" role="group" aria-label="그림 서술"><span class="sum">그림 서술</span><button type="button" data-s="32b" aria-pressed="true">Qwen3-VL 32B (채택)</button><button type="button" data-s="8b" aria-pressed="false">Qwen3-VL 8B (대안)</button><button type="button" data-s="none" aria-pressed="false">없음</button></div>
+</div>
+
+<h2><span class="no">01</span>요약 — 청크 수·길이·검증 플래그</h2>
+<div class="wrap"><table class="t" id="sum"></table></div>
+<p class="lede" style="margin-top:8px">플래그 정의는 05절에 있다. 표는 현재 고른 그림 서술 소스 기준이며, 소스를 바꾸면 다시 계산된다.</p>
+
+<h2><span class="no">02</span>지면 위 청크</h2>
+<div class="ctl">
+  <div class="grp"><button id="prev" type="button">◀</button><select id="page"></select><button id="next" type="button">▶</button></div>
+  <button id="fulltext" type="button" aria-pressed="false">청크 텍스트 펼치기</button>
+  <button id="editmode" type="button" aria-pressed="false">직접 고치기</button>
+  <button id="exportedits" type="button" hidden>고친 내용 내려받기</button>
+  <button id="unfocus" type="button" hidden>집중 보기 해제 (Esc)</button>
+  <div class="legend"><span><i style="border:1.5px solid var(--pm);background:rgba(42,120,214,.15)"></i>청크 (색은 청크마다 순환, 번호는 문서 전체 청크 순번)</span><span><i style="border:4px double var(--tbl)"></i>표 항목</span><span><i style="border:2.5px solid var(--mu);background:rgba(235,104,52,.15)"></i>그림 서술 항목</span><span><i style="height:5px;background:repeating-linear-gradient(90deg,var(--bad) 0 5px,#fff 5px 9px)"></i>항목이 청크 경계에서 잘린 자리</span><span><i style="background:linear-gradient(90deg,#2a78d6 50%,#eb6834 50%)"></i>항목 전체가 앞 청크와 겹침</span><span><i style="background:repeating-linear-gradient(45deg,#2a78d655 0 4px,#eb683422 4px 8px);border:1px dashed var(--soft)"></i>항목 일부만 겹침 (겹친 글자 수를 상자에 표시)</span><span><i style="border:2px dashed var(--gray);background:repeating-linear-gradient(45deg,rgba(154,163,179,.3) 0 3px,transparent 3px 6px)"></i>어느 청크에도 들어가지 않은 항목</span></div>
+  <div class="sum" id="pstat"></div>
+</div>
+<p class="lede" style="margin:0 0 8px">청크 상자나 목록 항목의 머리 부분을 누르면 그 청크만 남기고 나머지는 흐려진다(집중 보기). 본문 영역은 눌러도 집중 보기가 바뀌지 않으므로 글자를 끌어 복사할 수 있다. 목록에는 청크 텍스트가 <b>전부</b> 들어 있고, 그림 서술은 주황 배경으로 표시되며 "그림 서술로 이동" 버튼으로 바로 갈 수 있다. A 방식에서는 청크 텍스트의 <span class="ovh">앞 250자</span>가 앞 청크와, <span class="ovt">뒤 250자</span>가 뒤 청크와 글자 그대로 겹친다. 지면 상자의 겹침 표시는 항목 단위라 <b>항목 전체가 겹친 경우와 일부만 겹친 경우를 무늬로 구분</b>했다.</p>
+<div class="editnote">"직접 고치기"를 켜면 목록의 청크 텍스트를 그 자리에서 타이핑해 고칠 수 있다. 고친 뒤 "이 청크 저장"을 누르면 이 브라우저에 남고(다시 열어도 유지), "되돌리기"로 원래대로 돌린다. 고친 청크는 왼쪽 선이 주황으로 바뀐다. 원본 데이터 파일은 바뀌지 않으며, "고친 내용 내려받기"로 JSON을 받아 넘겨 주시면 제가 실제 청킹에 반영한다.</div>
+<div class="grid">
+  <div><div class="stage"><img id="pg" alt="지면"><div class="ov" id="ov"></div></div><div class="sum" style="margin-top:8px">청크 하나의 실제 저장 레코드</div><div class="rec" id="rec">—</div></div>
+  <aside class="panel" id="items"></aside>
+</div>
+
+<h2><span class="no">03</span>표본 대조 — 청크 텍스트가 지면 항목과 일치하는가</h2>
+<p class="lede">문서마다 청크 3개(첫 청크, 표가 든 청크, 그림 서술이 든 청크)를 골라 청크 텍스트를 항목별 조각으로 나눠 보인다. 조각의 밑줄 색은 항목 종류이고, <span class="seg cut" style="border-color:var(--bad)">빨간 배경</span>은 항목이 청크 경계에서 잘린 조각, <span class="seg shared" style="border-color:var(--mu)">주황 배경</span>은 앞 청크와 겹치는(중복) 조각이다. B는 항목이 통째로 들어가므로 잘림이 없다.</p>
+<div id="samples"></div>
+
+<h2><span class="no">04</span>길이 분포</h2>
+<div class="hist" id="hist"></div>
+
+<h2><span class="no">05</span>검증 플래그 — 정의와 문서별 표본</h2>
+<div class="wrap"><table class="t" id="flagdef"></table></div>
+<h3>문서별 플래그 청크 표본 (누르면 해당 쪽으로 이동)</h3>
+<div id="flagsamples"></div>
+
+<h2><span class="no">06</span>관찰 정리</h2>
+<p class="lede">아래 수치는 그림 서술 32B 기준이며, 소스를 바꾸면 "문서별 수치"만 다시 계산된다. 나머지 서술은 4편 전체를 보고 적은 것이다.</p>
+
+<h3>6-1. 제목·부제와 내용이 보존되는가</h3>
+<div class="box"><ul class="pts">
+<li><b>A 5000/250에서는 보존되지 않는다.</b> 4편 36개 청크 가운데 27개에 제목이 첫머리가 아닌 자리로 들어갔고, 같은 27개 청크에 절이 둘 이상 섞였다. 창이 글자 수만 세므로 제목 앞에서 끊을 이유가 없기 때문이다. 항목 32곳(본문 20·목록 7·표 2·그림 서술 3)이 경계에서 잘렸고, 앞 청크의 마지막 250자가 다음 청크 앞에 그대로 중복된다.</li>
+<li><b>B 절 단위에서는 절이 900토큰 이하일 때만 보존된다.</b> 한 절이 한 청크에 온전히 담긴 비율은 ja_01 69%(11/16), ko_01 63%(15/24), en_02 50%(10/20), zh_02 21%(3/14)다. 분모는 <b>본문이 있는 절</b>이며 본문 없는 제목 6개는 빠져 있다. 넘치면 문단 경계에서 끊기며 뒤 청크에도 같은 <code>## 부제</code>가 붙어 제목은 남지만 본문은 흩어진다. 4편에서 118개 청크가 이 경우다.</li>
+<li><b>상위 제목은 두 방식 모두 남지 않는다.</b> docling이 제목 계층을 주지 않아 "2. Materials and Methods"처럼 본문 없이 부제만 거느린 제목은 절이 비어 청크를 만들지 못한다. 4편에서 6개(ko_01·en_02·ja_01 각 2, zh_02 0)가 사라졌다.</li>
+</ul></div>
+
+<h3>6-2. 보존되지 않는 원인</h3>
+<div class="wrap"><table class="t">
+<thead><tr><th>원인</th><th>어디서</th><th>근거</th><th>고치는 방향</th></tr></thead>
+<tbody>
+<tr><td class="k">창이 구조를 보지 않음</td><td>A</td><td>제목 중간 26 · 절 섞임 26 · 잘린 항목 31 (4편 35청크)</td><td>글자 수 대신 항목 경계에서 끊는다. B가 이미 그 방식이다.</td></tr>
+<tr><td class="k">제목 계층 없음</td><td>A·B</td><td>docling section_header가 모두 같은 단계. 본문 없는 제목 6개</td><td>제목 번호 패턴(1. / 1.1 / Ⅰ. / 1))으로 계층을 복원해 상위 제목을 경로로 붙인다.</td></tr>
+<tr><td class="k">긴 절의 분할</td><td>B</td><td>절 보존율 21~69% · sub_split 118청크</td><td>목표 토큰을 올리거나, 분할 시 절 안에서만 문단 겹침을 허용한다.</td></tr>
+<tr><td class="k">제목 오검출·미검출</td><td>A·B</td><td>ko_01은 번호형 제목 0개(저자·소속 줄도 제목으로 잡힘), zh_02는 제목 14개 중 3개가 저널명 머리글이고 "2.10 …" 소제목은 본문으로 잡혀 절 보존율 21%</td><td>초록 이전 항목은 제목에서 제외하고, 번호 패턴이 있는 본문 줄은 제목으로 승격한다.</td></tr>
+<tr><td class="k">쪽 경계 분리</td><td>A·B</td><td>ko_01·ja_01에서 한 문단이 쪽마다 두 항목으로 나뉘어 단어가 끊긴 채 이어짐 4건</td><td>쪽을 넘는 인접 항목을 파싱 단계에서 병합한다.</td></tr>
+<tr><td class="k">쪽 경계 중복</td><td>A·B</td><td>en_02에서 쪽을 넘는 문단 5개를 docling이 쪽마다 <b>통째로</b> 저장해 같은 문단이 두 번 들어간다(4,994자, 본문의 7.5%)</td><td>같은 번호·같은 텍스트 항목을 파싱 직후 하나로 합친다.</td></tr>
+<tr><td class="k">머리글이 제목으로</td><td>B</td><td>zh_02의 저널명 "中国实验方剂学杂志"가 제목 3개로 잡혀 본문이 엉뚱한 절로 나뉜다</td><td>같은 제목 텍스트가 여러 쪽에 반복되면 머리글로 보고 제목에서 제외한다.</td></tr>
+</tbody></table></div>
+
+<h3>6-3. 표는 어떻게 들어갔나</h3>
+<div class="box"><ul class="pts">
+<li><b>B는 표를 통째로 한 청크에 둔다.</b> 4편 표 11개가 모두 독립 청크가 됐고, docling HTML을 <code>셀 | 셀</code> 행 텍스트로 바꿔 행·열 관계가 남는다. 상한 7,000토큰을 넘는 표가 없어 분할된 표는 없다.</li>
+<li><b>A는 표를 본문과 같은 흐름으로 취급한다.</b> 셀 텍스트가 5,000자 창 안에 섞여 들어가고, 창 경계에 걸리면 표가 둘로 잘린다(ko_01 1건, zh_02 2건). 잘린 표는 행 중간에서 끊겨 값과 머리글의 연결이 끊어진다.</li>
+<li><b>표 캡션은 표 청크에 붙였다.</b> 설계서대로 캡션을 표 청크 맨 앞에 넣도록 고쳤다. 남은 캡션 분리는 A 5건·B 7건이며 대부분 그림 캡션이다.</li>
+</ul></div>
+
+<h3>6-4. 그림은 어떻게 들어갔나</h3>
+<div class="box"><ul class="pts">
+<li><b>서술이 없으면 그림은 청크에 들어가지 않는다.</b> docling은 그림의 위치만 주고 내용을 비우므로, 소스를 "없음"으로 두면 4편 30장이 모두 청크 밖이고 캡션 한 줄만 본문에 남는다.</li>
+<li><b>VLM 서술을 넣으면 본문 문단처럼 들어간다.</b> 32B 서술을 넣자 B 청크가 ko_01 86→96, ja_01 32→37, zh_02 43→50으로 늘었다. 청크에 들어간 글자가 ko_01 기준 37,277→43,243자로 약 6,000자 늘어 그림이 있는 절이 900토큰을 넘어 더 잘게 나뉜 결과다.</li>
+<li><b>A에서는 그림 서술도 잘린다.</b> 서술이 창 경계에 걸린 항목이 4편에서 3개다.</li>
+<li><b>그림 캡션도 서술과 분리된다.</b> 표와 같은 이유이며, 서술에 캡션을 붙여 한 항목으로 두면 해결된다.</li>
+</ul></div>
+
+<h3>6-5. 문서별 수치</h3>
+<div class="box"><ul class="pts" id="notes"></ul></div>
+
+<h3>6-6. 실험 2·3에 넘길 것</h3>
+<div class="box"><ul class="pts">
+<li><b>실험 2 가설의 두 요소를 분리해 잰다.</b> "제목·부제를 앞에 붙인다"와 "제목 아래 내용을 묶는다"는 다른 변수다. A(붙이지 않고 묶지 않음) 대 B(붙이고 묶음)를 그대로 비교하면 둘이 섞이므로, 제목 접두만 뺀 조건을 하나 더 두어 각각의 몫을 본다.</li>
+<li><b>실험 3 후보는 네 가지다.</b> ① 절 단위 그대로 ② 절 단위 + 캡션을 표·그림 청크에 붙임 ③ 절 단위 + 짧은 절 병합(바닥 토큰 상향) ④ 고정 1000/100. 5000/250은 이번 관찰에서 구조를 가장 많이 깨뜨렸으므로 기준선으로만 둔다.</li>
+<li><b>언어별로 결과가 갈릴 수 있다.</b> zh_02는 제목 검출이 14개뿐이라 절 단위의 이점이 가장 적었다. 실험 2·3의 문항을 언어별로 나눠 집계해야 한다.</li>
+<li><b>그림 서술 포함 여부도 조건으로 둔다.</b> 서술을 넣으면 청크 수와 길이가 달라지므로, 회수율 비교에서 같은 조건으로 맞추거나 별도 조건으로 분리해야 한다.</li>
+</ul></div>
+</main>
+<script src="exp1/data.js?v=3"></script><script src="exp1/chunks.js?v=4"></script>
+<script>
+const $=s=>document.querySelector(s); const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const PAL=['#2a78d6','#1f6f5c','#eb6834','#4a3aa7','#0b7285','#a3232b','#2b8a3e','#e67700','#5c7cfa','#b4531c','#7a4fb5','#0c8599'];
+const KN={section_header:'제목',text:'본문',list_item:'목록',caption:'캡션',table:'표',picture:'그림',footnote:'각주',code:'코드'};
+const KC={section_header:'#1f6f5c',text:'#2a78d6',list_item:'#5c7cfa',caption:'#0b7285',table:'#7a4fb5',picture:'#eb6834',footnote:'#9aa3b3',code:'#b4531c'};
+const FD={head_mid:['제목이 청크 중간','제목이 청크 첫머리가 아닌 자리에 있어 앞 절 내용과 섞임','bad'],multi_section:['절 여러 개 섞임','한 청크에 둘 이상의 절이 들어감','bad'],sub_split:['부제·본문 분리','한 절의 본문이 둘 이상의 청크로 나뉨','warn'],table_cut:['표 잘림','표가 청크 경계에 걸려 나뉨','bad'],table_chunk:['표 독립 청크','표가 통째로 한 청크','ok'],caption_apart:['캡션 분리','표·그림과 그 캡션이 다른 청크에 있음','warn'],figure_cut:['그림 서술 잘림','그림 서술이 청크 경계에 걸려 나뉨','bad'],page_break_word:['쪽 넘김 단어 끊김','쪽 경계에서 문단이 두 항목으로 나뉘어 단어가 끊긴 채 이어짐','warn'],dup_text:['중복 텍스트','같은 문단이 두 번 저장되어 청크에 중복으로 들어감','bad'],running_head:['제목 중복','같은 제목 텍스트가 두 곳 이상에 나옴 (머리글 오검출 또는 반복 소제목)','warn']};
+const D=E1.docs; let di=0, cur=1, M='A', S='32b', FOCUS=null;
+const dsel=$('#doc'), psel=$('#page'); D.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=d.title;dsel.appendChild(o);});
+const doc=()=>D[di], DS=(id,s)=>CH.docs[id][s||S], chunks=()=>DS(doc().id)[M];
+function fillPages(){psel.innerHTML='';for(let i=1;i<=doc().pages;i++){const o=document.createElement('option');o.value=i;o.textContent=`${i} / ${doc().pages} 쪽`;psel.appendChild(o);}}
+function stats(id,m,s){const cs=DS(id,s)[m]; const lens=cs.map(c=>m==='A'?c.chars:c.tokens).sort((a,b)=>a-b); const p50=lens[Math.floor(lens.length/2)]||0;
+ const fc={}; cs.forEach(c=>(c.flags||[]).forEach(f=>fc[f]=(fc[f]||0)+1));
+ const secs={}; cs.forEach(c=>{if(c.kind==='body'&&c.section) secs[c.section]=(secs[c.section]||0)+1;}); fc.split_sections=Object.values(secs).filter(v=>v>1).length;
+ const r=DS(id,s); return {n:cs.length,p50,max:lens[lens.length-1]||0,span:cs.filter(c=>c.pages.length>1).length,cut:cs.reduce((a,c)=>a+c.items.filter(x=>x.cut_tail).length,0),fc,empty:r.empty_sections.length,un:r['un'+m].length,secs:m==='B'?r.sections:0,one:m==='B'?r.sections_one_chunk:0,dupc:r.dup_chars,dupi:r.dup_items.length};}
+function renderSum(){const cols=['head_mid','multi_section','sub_split','table_cut','table_chunk','caption_apart','figure_cut','page_break_word','dup_text','running_head'];
+ let h=`<thead><tr><th>문서</th><th>방식</th><th>청크</th><th>${'중앙값 / 최대'}</th><th>쪽 넘는 청크</th><th title="한 docling 항목(문단·표·그림 서술)이 청크 경계에 걸려 나뉜 수">잘린 항목</th><th>청크 밖 항목</th><th>본문 없는 제목</th><th title="본문이 있는 절만 분모. 본문 없는 제목은 제외">절 보존율</th>`+cols.map(c=>`<th title="${FD[c][1]}">${FD[c][0]}</th>`).join('')+`</tr></thead><tbody>`;
+ D.forEach(d=>['A','B'].forEach(m=>{const s=stats(d.id,m); h+=`<tr><td class="k">${m==='A'?esc(d.id):''}</td><td>${m==='A'?'A 5000/250 (자)':'B 절 단위 (토큰)'}</td><td class="v">${s.n}</td><td class="v">${s.p50.toLocaleString()} / ${s.max.toLocaleString()}</td><td class="v">${s.span}</td><td class="v">${m==='A'?s.cut:0}</td><td class="v">${s.un}</td><td class="v">${s.secs?Math.round(s.one/s.secs*100)+'% ('+s.one+'/'+s.secs+')':'—'}</td>`+cols.map(c=>`<td class="v">${s.fc[c]||0}${c==='sub_split'&&m==='B'?` <span class="sum">(절 ${s.fc.split_sections})</span>`:''}</td>`).join('')+`</tr>`;}));
+ $('#sum').innerHTML=h+'</tbody>';}
+function flagHtml(c){return (c.flags||[]).map(f=>`<span class="flag ${FD[f][2]}" title="${FD[f][1]}">${FD[f][0]}</span>`).join('');}
+function ovMark(t,head,tail){
+ // 글자 단위로 앞·뒤 겹침 구간을 감싼다 (esc 전에 잘라야 인덱스가 맞다)
+ const h=head||0, l=t.length, tl=tail||0;
+ const a=t.slice(0,h), b=t.slice(h, Math.max(h, l-tl)), c=t.slice(Math.max(h, l-tl));
+ return (a?`<span class="ovh" title="앞 청크와 겹치는 ${h}자">${esc(a)}</span>`:'')+esc(b)+(c&&tl?`<span class="ovt" title="뒤 청크와 겹치는 ${tl}자">${esc(c)}</span>`:esc(c));}
+function mark(t){const parts=esc(t).split('[그림 서술]');
+ if(parts.length===1) return parts[0];
+ let out=parts[0];
+ for(let i=1;i<parts.length;i++){const seg=parts[i]; const end=seg.search(/\n\s*\n|$/); const head=seg.slice(0,end<0?seg.length:end); const rest=seg.slice(head.length);
+  out+=`<mark class="figtxt">[그림 서술]${head}</mark>${rest}`;}
+ return out;}
+function markOv(c){const h=c.ov_head||0, tl=c.ov_tail||0, t=c.text, l=t.length;
+ const a=t.slice(0,h), mid=t.slice(h, Math.max(h,l-tl)), z=t.slice(Math.max(h,l-tl));
+ return (a?`<span class="ovh" title="앞 청크와 겹치는 ${h}자">${mark(a)}</span>`:'')+mark(mid)+(z&&tl?`<span class="ovt" title="뒤 청크와 겹치는 ${tl}자">${mark(z)}</span>`:mark(z));}
+function renderList(){const cs=chunks(); let h='';
+ cs.forEach((c,ci)=>{const col=PAL[ci%PAL.length]; const extra=[]; if(c.pages.length>1) extra.push(`<span class="flag">${c.pages.join('·')}쪽에 걸침</span>`); const pics=c.items.filter(x=>x.k==='picture').length; if(pics) extra.push(`<span class="flag ok">그림 서술 ${pics}개 포함</span>`); const sh=c.items.filter(x=>x.shared).length; if(sh) extra.push(`<span class="flag">앞 청크와 항목 ${sh}개 공유</span>`);
+  const jump=pics?`<button type="button" class="jump" data-j="c${ci}">그림 서술로 이동</button>`:'';
+  h+=`<div class="it" data-id="c${ci}" data-pages="${c.pages.join(',')}" style="border-left-color:${col}"><span class="k">청크 ${ci} · ${c.kind} · ${c.chars.toLocaleString()}자 · ${c.tokens} 토큰 · ${c.pages.join('·')}쪽 · 항목 ${c.items.length}개</span>${c.section?`<div class="sec">${esc(c.section)}</div>`:''}${flagHtml(c)}${extra.join('')}${jump}<div class="editbar"><button type="button" class="save" data-e="c${ci}">이 청크 저장</button><button type="button" class="undo" data-u="c${ci}">되돌리기</button></div><div class="txt">${M==='A'?markOv(c):mark(c.text)}</div></div>`;});
+ $('#items').innerHTML=h;}
+function draw(){const d=doc(); psel.value=cur; $('#pg').src=`exp1/${d.id}_p${String(cur).padStart(2,'0')}.png`; const cs=chunks(); let o='', n=0;
+ cs.forEach((c,ci)=>{const col=PAL[ci%PAL.length]; const its=c.items.filter(x=>x.p===cur); if(!its.length) return; n++;
+  its.forEach((x,k)=>{const[x0,y0,x1,y1]=x.b; const prev=PAL[(ci-1+PAL.length)%PAL.length];
+   const bg=x.shared?(x.share_all?`linear-gradient(90deg,${prev}55 50%,${col}55 50%)`:`repeating-linear-gradient(45deg,${prev}44 0 6px,${col}22 6px 12px)`):(x.k==='table'?'':col+'26');
+   const tip=x.shared?`항목 ${x.i} · 앞 청크와 ${x.share}자 공유 (${x.share_all?'이 청크 안 이 항목 전체':'이 항목 일부만'})`:`항목 ${x.i} · ${KN[x.k]||x.k}`;
+   o+=`<div class="cb ${x.k}${x.shared?(x.share_all?' shall':' shpart'):''}${FOCUS==='c'+ci?' on':''}" data-id="c${ci}" title="${tip}" style="left:${(x0*100).toFixed(2)}%;top:${(y0*100).toFixed(2)}%;width:${(Math.max(x1-x0,.004)*100).toFixed(2)}%;height:${(Math.max(y1-y0,.003)*100).toFixed(2)}%;border-color:${x.k==='picture'?'var(--mu)':col};background:${bg}">${k===0?`<span class="n" style="background:${col}">${ci}</span>`:''}${x.cut_head?'<span class="cut h"></span>':''}${x.cut_tail?'<span class="cut t"></span>':''}${x.shared&&!x.share_all?`<span class="shl">${x.share}자</span>`:''}</div>`;});});
+ const un=(DS(d.id)['un'+M]||[]).filter(u=>u.p===cur); un.forEach(u=>{const[x0,y0,x1,y1]=u.b; o+=`<div class="un" data-id="u${u.i}" title="항목 ${u.i} · ${KN[u.k]||u.k} · 청크에 없음" style="left:${(x0*100).toFixed(2)}%;top:${(y0*100).toFixed(2)}%;width:${(Math.max(x1-x0,.004)*100).toFixed(2)}%;height:${(Math.max(y1-y0,.003)*100).toFixed(2)}%"><span class="n">${u.i} ${KN[u.k]||u.k}</span></div>`;});
+ $('#ov').innerHTML=o; $('#ov').classList.toggle('focus',!!FOCUS); $('#unfocus').hidden=!FOCUS;
+ document.querySelectorAll('#items .it').forEach(el=>{const on=el.dataset.pages.split(',').map(Number).includes(cur); el.classList.toggle('onpage',on); el.classList.toggle('dim',!on); el.classList.toggle('on',FOCUS===el.dataset.id);});
+ const first=document.querySelector(FOCUS?`#items .it[data-id="${FOCUS}"]`:'#items .it.onpage'); if(first) first.scrollIntoView({block:'start'});
+ $('#pstat').textContent=`${M==='A'?'A 5000/250':'B 절 단위'} · 그림 서술 ${S==='none'?'없음':S==='32b'?'32B':'8B'} · 이 쪽에 걸친 청크 ${n}개 · 문서 전체 ${cs.length}개 · 이 쪽에서 청크에 들어가지 않은 항목 ${un.length}개`;}
+function showRec(id){const ci=+id.slice(1); const c=chunks()[ci]; if(!c) return; const r={chunk_id:c.id,kind:c.kind,chars:c.chars,token_count:c.tokens,pages:c.pages}; if(c.section!==undefined) r.section_path=[c.section]; r.flags=c.flags; r.items=c.items.map(x=>x.i+(x.cut_head?'(앞 잘림)':'')+(x.cut_tail?'(뒤 잘림)':'')+(x.shared?'(앞 청크와 공유)':'')); r.text=c.text.slice(0,300)+(c.text.length>300?' …':''); $('#rec').textContent=JSON.stringify(r,null,1);}
+function hi(id,on){document.querySelectorAll(`[data-id="${id}"]`).forEach(el=>el.classList.toggle('hi',on)); if(on&&id[0]==='c'){showRec(id); const t=document.querySelector(`.it[data-id="${id}"]`); if(t&&!FOCUS) t.scrollIntoView({block:'nearest'});}}
+function wire(r){r.addEventListener('mouseover',e=>{const el=e.target.closest('[data-id]'); if(el) hi(el.dataset.id,true);}); r.addEventListener('mouseout',e=>{const el=e.target.closest('[data-id]'); if(el) hi(el.dataset.id,false);});}
+wire($('#ov')); wire($('#items'));
+function setFocus(id){FOCUS=(FOCUS===id)?null:id; draw();}
+$('#ov').addEventListener('click',e=>{const el=e.target.closest('.cb'); if(!el) return; setFocus(el.dataset.id);});
+$('#items').addEventListener('click',e=>{
+ const j=e.target.closest('.jump');
+ if(j){const box=document.querySelector(`.it[data-id="${j.dataset.j}"] .txt`); const m=box&&box.querySelector('mark.figtxt'); if(m){box.scrollTop=m.offsetTop-box.offsetTop-8; m.animate([{background:'#ffd8a8'},{background:'#fbe8df'}],{duration:900});} e.stopPropagation(); return;}
+ if(e.target.closest('.txt')) return;               // 텍스트 안을 누를 때는 선택만
+ if((window.getSelection()||{}).toString()) return; // 드래그 선택 중이면 무시
+ const el=e.target.closest('.it'); if(!el) return; const p=+el.dataset.pages.split(',')[0]; if(!el.dataset.pages.split(',').map(Number).includes(cur)) cur=p; setFocus(el.dataset.id);});
+$('#unfocus').addEventListener('click',()=>{FOCUS=null;draw();}); document.addEventListener('keydown',e=>{if(e.key==='Escape'&&FOCUS){FOCUS=null;draw();}});
+$('#fulltext').addEventListener('click',e=>{const on=e.target.getAttribute('aria-pressed')!=='true'; e.target.setAttribute('aria-pressed',on); document.body.classList.toggle('fulltext',on);});
+function goto(ci,p){FOCUS='c'+ci; cur=p; draw(); document.getElementById('page').scrollIntoView({block:'start'});}
+// 03 표본 대조
+function renderSamples(){const d=doc(); const cs=chunks(); const picks=[]; const add=(label,ci)=>{if(ci>=0&&!picks.some(p=>p.ci===ci)) picks.push({label,ci});};
+ add('첫 청크',0); add('표가 든 청크',cs.findIndex(c=>c.items.some(x=>x.k==='table'))); add('그림 서술이 든 청크',cs.findIndex(c=>c.items.some(x=>x.k==='picture')));
+ const byi={}; d.items.forEach(it=>byi[it.i]=it);
+ $('#samples').innerHTML=picks.map(({label,ci})=>{const c=cs[ci]; let inner='';
+  if(M==='A'&&c.segs){let pos=0; c.segs.forEach(sg=>{if(sg.a>pos) inner+=esc(c.text.slice(pos,sg.a)); const txt=c.text.slice(sg.a,sg.b); const x=c.items.find(y=>y.i===sg.i); inner+=`<span class="seg${(sg.cut_head||sg.cut_tail)?' cut':''}${x&&x.shared?' shared':''}" style="border-color:${KC[sg.k]||'#999'}" title="항목 ${sg.i} · ${KN[sg.k]||sg.k}${sg.cut_head?' · 앞 잘림':''}${sg.cut_tail?' · 뒤 잘림':''}${x&&x.shared?' · 앞 청크와 공유':''}">${esc(txt)}</span>`; pos=sg.b;}); inner+=esc(c.text.slice(pos));}
+  else {const prefix=c.section?`## ${c.section}\n`:''; inner+=`<span class="seg" style="border-color:${KC.section_header}" title="절 제목 접두">${esc(prefix)}</span>`; c.items.forEach(x=>{if(x.heading) return; const it=byi[x.i]; const t=it?(it.k==='table'?'(표 HTML → 셀 | 셀 텍스트)':it.t):''; inner+=`<span class="seg" style="border-color:${KC[x.k]||'#999'}" title="항목 ${x.i} · ${KN[x.k]||x.k}">${esc(t)}</span>\n`;});}
+  const items=c.items.map(x=>`${x.i}${x.cut_head?'(앞 잘림)':''}${x.cut_tail?'(뒤 잘림)':''}${x.shared?'(공유)':''}`).join(', ');
+  return `<div class="samp"><h4>${label} — 청크 ${ci} · ${c.kind} · ${c.chars.toLocaleString()}자 · ${c.pages.join('·')}쪽 · 항목 [${items}] <button type="button" style="padding:2px 9px;font-size:11.5px" onclick="goto(${ci},${c.pages[0]})">지면에서 보기</button></h4><div class="segtxt">${inner}</div></div>`;}).join('')||'<p class="lede">표본 없음</p>';}
+// 04 히스토그램
+function histSvg(vals,bins,unit,label){const mx=Math.max(...vals,1); const edges=[]; for(let i=0;i<=bins;i++) edges.push(Math.round(mx*i/bins)); const counts=new Array(bins).fill(0); vals.forEach(v=>{let b=Math.min(bins-1,Math.floor(v/mx*bins)); counts[b]++;}); const W=520,H=170,L=30,B=36,PW=W-L-10,PH=H-B-10; const cm=Math.max(...counts,1); let g='';
+ counts.forEach((c,i)=>{const x=L+i*PW/bins,h=c/cm*PH; g+=`<rect x="${x+1}" y="${10+PH-h}" width="${PW/bins-2}" height="${h}" fill="#2a78d6" opacity=".8"/><text x="${x+PW/bins/2}" y="${10+PH-h-3}" text-anchor="middle" style="font:10px IBM Plex Mono;fill:#4a5160">${c||''}</text>`;});
+ edges.forEach((e,i)=>{if(i%2===0||i===bins) g+=`<text x="${L+i*PW/bins}" y="${H-18}" text-anchor="middle" style="font:9.5px IBM Plex Mono;fill:#737c8c">${e.toLocaleString()}</text>`;});
+ g+=`<text x="${L+PW/2}" y="${H-4}" text-anchor="middle" style="font:11px IBM Plex Sans KR;fill:#4a5160">${label} (${unit}) · n=${vals.length}</text>`; return `<svg viewBox="0 0 ${W} ${H}">${g}</svg>`;}
+function renderHist(){const d=doc(); const A=DS(d.id).A.map(c=>c.chars), B=DS(d.id).B.map(c=>c.tokens);
+ $('#hist').innerHTML=`<div class="h"><h4>A 5000/250 — 청크 글자 수</h4>${histSvg(A,10,'자','청크 길이')}<p class="sum">5,000자 고정 창이라 마지막 청크만 짧다.</p></div><div class="h"><h4>B 절 단위 — 청크 토큰 수</h4>${histSvg(B,12,'토큰','청크 길이')}<p class="sum">목표 900·바닥 120·상한 7,000토큰. 표·참고문헌 청크는 짧고, 긴 절은 900 근처에서 끊긴다.</p></div>`;}
+// 05 플래그 정의 + 표본
+function renderFlags(){let h=`<thead><tr><th>플래그</th><th>뜻</th><th>적용 방식</th><th>판정 규칙</th></tr></thead><tbody>`;
+ const rule={dup_text:['A·B','같은 항목 번호가 두 번 저장되고 텍스트가 동일하다 (docling이 쪽을 넘는 문단을 쪽마다 통째로 기록)'],running_head:['B','같은 제목 텍스트가 두 쪽 이상에 나온다'],head_mid:['A','section_header 항목이 청크의 첫 항목이 아니다'],multi_section:['A','청크의 항목들이 둘 이상의 제목 아래에 속한다'],sub_split:['A·B','A: 청크 안 제목의 본문 항목이 다른 청크에도 있다. B: 같은 절의 body 청크가 둘 이상이다'],table_cut:['A','table 항목이 앞 또는 뒤에서 잘렸다'],table_chunk:['B','kind가 table인 청크'],caption_apart:['A·B','표·그림과 가장 가까운 캡션이 같은 청크에 없다'],figure_cut:['A','그림 서술 항목이 앞 또는 뒤에서 잘렸다'],page_break_word:['A·B','쪽 경계에서 앞 항목이 종결 부호 없이 끝나고 다음 쪽 첫 항목이 소문자·한글·가나로 시작한다']};
+ Object.keys(FD).forEach(f=>{h+=`<tr><td class="k"><span class="flag ${FD[f][2]}">${FD[f][0]}</span></td><td>${FD[f][1]}</td><td class="v">${rule[f][0]}</td><td>${rule[f][1]}</td></tr>`;});
+ $('#flagdef').innerHTML=h+'</tbody>';
+ $('#flagsamples').innerHTML=D.map(d=>{const cs=DS(d.id)[M]; const fl=cs.map((c,ci)=>({c,ci})).filter(x=>(x.c.flags||[]).some(f=>FD[f][2]!=='ok')).slice(0,5);
+  return `<div class="samp"><h4>${esc(d.id)} · ${M==='A'?'A':'B'} · 플래그 있는 청크 ${cs.filter(c=>(c.flags||[]).some(f=>FD[f][2]!=='ok')).length}개 중 5개</h4>${fl.map(({c,ci})=>`<div class="it" style="margin:4px 0;border-left-color:${PAL[ci%PAL.length]}" onclick="dsel.value=${D.indexOf(d)};di=${D.indexOf(d)};fillPages();renderList();goto(${ci},${c.pages[0]})"><span class="k">청크 ${ci} · ${c.pages.join('·')}쪽 · ${c.chars.toLocaleString()}자</span>${flagHtml(c)}<div class="txt" style="max-height:60px">${esc(c.text.slice(0,200))} …</div></div>`).join('')||'<span class="sum">없음</span>'}</div>`;}).join('');}
+function renderNotes(){$('#notes').innerHTML=D.map(d=>{const a=stats(d.id,'A'), b=stats(d.id,'B'); return `<li><b>${d.id}</b>: A는 ${a.n}개 청크에 제목이 중간에 든 청크 ${a.fc.head_mid||0}개, 절이 섞인 청크 ${a.fc.multi_section||0}개, 잘린 항목 ${a.cut}개, 잘린 표 ${a.fc.table_cut||0}개, 잘린 그림 서술 ${a.fc.figure_cut||0}개. B는 ${b.n}개 청크(표 청크 ${b.fc.table_chunk||0}개), 절 보존율 ${Math.round(b.one/b.secs*100)}%(${b.one}/${b.secs}), 캡션 분리 ${b.fc.caption_apart||0}개, 본문 없는 제목 ${b.empty}개${b.dupi?`, 중복 텍스트 ${b.dupi}개 ${b.dupc.toLocaleString()}자`:''}${b.fc.running_head?`, 제목 중복 청크 ${b.fc.running_head}개`:''}.</li>`;}).join('')+
+ `<li><b>공통</b>: 그림 서술을 넣으면(32B·8B) 그림이 본문 문단처럼 청크에 들어가고 A에서는 창 경계에서 잘릴 수 있다. 서술이 없으면 그림은 어느 청크에도 들어가지 않고 캡션만 남는다. 표는 A에서는 셀 텍스트가 이어진 채 잘릴 수 있고, B에서는 통째로 한 청크이나 캡션은 앞 본문 청크에 남는다.</li>`;}
+function renderAll(){renderSum();renderList();draw();renderSamples();renderHist();renderFlags();renderNotes();}
+dsel.addEventListener('change',()=>{di=+dsel.value;cur=1;FOCUS=null;fillPages();renderAll();}); psel.addEventListener('change',()=>{cur=+psel.value;draw();});
+document.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{M=b.dataset.m;FOCUS=null;document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderAll();}));
+document.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{S=b.dataset.s;FOCUS=null;document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderAll();}));
+$('#prev').addEventListener('click',()=>{cur=(cur+doc().pages-2)%doc().pages+1;draw();}); $('#next').addEventListener('click',()=>{cur=cur%doc().pages+1;draw();});
+document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return; if(e.key==='ArrowLeft'){cur=(cur+doc().pages-2)%doc().pages+1;draw();} if(e.key==='ArrowRight'){cur=cur%doc().pages+1;draw();}});
+// ---- 직접 고치기 ----
+const EDITS=JSON.parse(localStorage.getItem('exp1edits')||'{}');
+function key(ci){return `${doc().id}|${S}|${M}|${ci}`;}
+function applyEdits(){const cs=chunks(); document.querySelectorAll('#items .it').forEach(el=>{const ci=+el.dataset.id.slice(1); const e=EDITS[key(ci)];
+ if(e!==undefined){const t=el.querySelector('.txt'); t.textContent=e; el.classList.add('edited');}});}
+function setEditMode(on){document.body.classList.toggle('editing',on);
+ document.querySelectorAll('#items .it .txt').forEach(t=>t.setAttribute('contenteditable',on?'true':'false'));
+ $('#editmode').setAttribute('aria-pressed',on); $('#exportedits').hidden=!Object.keys(EDITS).length;}
+$('#editmode').addEventListener('click',()=>setEditMode($('#editmode').getAttribute('aria-pressed')!=='true'));
+$('#items').addEventListener('click',e=>{
+ const sv=e.target.closest('.save'), ud=e.target.closest('.undo');
+ if(sv){const ci=+sv.dataset.e.slice(1); const el=document.querySelector(`.it[data-id="c${ci}"]`); EDITS[key(ci)]=el.querySelector('.txt').textContent;
+  localStorage.setItem('exp1edits',JSON.stringify(EDITS)); el.classList.add('edited'); $('#exportedits').hidden=false; e.stopPropagation(); return;}
+ if(ud){const ci=+ud.dataset.u.slice(1); delete EDITS[key(ci)]; localStorage.setItem('exp1edits',JSON.stringify(EDITS));
+  renderList(); applyEdits(); setEditMode(document.body.classList.contains('editing')); e.stopPropagation(); return;}
+},true);
+$('#exportedits').addEventListener('click',()=>{
+ const rows=Object.entries(EDITS).map(([k,v])=>{const [d,s,m,ci]=k.split('|'); return {doc:d,figsrc:s,method:m,chunk:+ci,text:v};});
+ const blob=new Blob([JSON.stringify(rows,null,1)],{type:'application/json'}); const a=document.createElement('a');
+ a.href=URL.createObjectURL(blob); a.download='exp1_edits.json'; a.click();});
+const _renderAll=renderAll; renderAll=function(){_renderAll(); applyEdits(); setEditMode(document.body.classList.contains('editing'));};
+fillPages(); renderAll();
+</script><script src="edit.js?v=3"></script>
+</body></html>

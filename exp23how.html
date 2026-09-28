@@ -1,0 +1,154 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>실험 2·3은 어떻게 돌렸나 — 과정과 제목 접두</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--bad:#a3232b}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.65 "IBM Plex Sans KR",-apple-system,sans-serif;font-variant-numeric:tabular-nums}
+nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}nav.top b{font-size:14px}nav.top a{color:#fff;opacity:.7;text-decoration:none}nav.top a:hover{opacity:1}nav.top span{opacity:.7}
+main{max-width:1160px;margin:0 auto;padding:20px 18px 50px}h1{font-size:21px;margin:6px 0 4px}
+h2{font-size:16px;margin:30px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint)}
+h3{font-size:14px;margin:18px 0 6px}
+p.lede{color:var(--soft);margin:0 0 12px;max-width:86ch}
+.wrap{overflow-x:auto}table.t{border-collapse:collapse;width:100%;font-size:13px;background:var(--lift);border:1px solid var(--rule)}
+table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:7px 9px;font-weight:600;white-space:nowrap}
+table.t td{padding:7px 9px;border-top:1px solid var(--rule2);vertical-align:top}table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap}table.t td.k{font-weight:600;white-space:nowrap}
+.box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 18px}
+.box.key{border-left:4px solid var(--dl);border-radius:0 10px 10px 0}.box.warn{border-left:4px solid var(--mu);border-radius:0 10px 10px 0}
+ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:7px;line-height:1.65}
+code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;border-radius:4px}
+footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule)}
+/* 파이프라인 */
+.pipe{display:grid;gap:0;margin:6px 0 4px}
+.stg{display:grid;grid-template-columns:38px 1fr 176px;gap:14px;align-items:start;background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:12px 14px}
+.stg .num{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font:600 13px "IBM Plex Mono",monospace}
+.stg .ttl{font-weight:600;margin-bottom:2px}
+.stg .dsc{color:var(--soft);font-size:13px}
+.stg .fil{font:11.5px "IBM Plex Mono",monospace;color:var(--faint);overflow-wrap:anywhere;text-align:right}
+.stg .val{display:inline-block;margin-left:8px;font:600 12px "IBM Plex Mono",monospace;color:var(--dl);background:#e4efeb;border-radius:4px;padding:0 6px;vertical-align:1px}
+.arw{height:16px;display:flex;justify-content:center;align-items:center;color:var(--rule);font-size:13px;line-height:1}
+.arw::before{content:"";width:2px;height:16px;background:var(--rule)}
+.stg.fork{border-left:4px solid var(--dl)}
+/* 접두 예시 */
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px;margin-top:8px}
+.cd{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:11px 13px;overflow:hidden}
+.cd h4{margin:0 0 6px;font-size:12px;color:var(--faint);font-weight:600;display:flex;justify-content:space-between;gap:8px}
+.cd .tx{font:12px/1.6 "IBM Plex Mono",monospace;white-space:pre-wrap;word-break:break-word;color:var(--soft)}
+.pf{background:#fdebd6;color:#8a4a10;border-radius:3px;padding:0 3px;font-weight:600}
+.rep{background:#fbe3e4;color:var(--bad);border-radius:3px;padding:0 3px;font-weight:600}
+.stack{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:860px){.row3{grid-template-columns:1fr}.stg{grid-template-columns:34px 1fr}.stg .fil{grid-column:2;text-align:left}}
+.mini{font-size:12px;color:var(--faint);margin:4px 0 0}
+.barw{display:flex;height:13px;border-radius:3px;overflow:hidden;background:var(--sunk);min-width:120px}
+.barw i{display:block;height:100%}
+</style></head><body>
+<nav class="top"><b>실험 2·3 과정</b><a href="exp23.html">실험 2·3 결과</a><a href="exp1summary.html">실험 1 요약</a><a href="exp1.html">파싱</a><a href="exp1chunk.html">청킹</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<main>
+<h1>실험 2·3은 어떻게 돌렸나</h1>
+<p class="lede">앞 단계에서 무엇을 고정하고 어디서만 조건을 갈랐는지, 그리고 "제목 접두"가 청크 글을 실제로 어떻게 바꾸는지 보여준다. 수치와 예시는 모두 실제 실행 파일에서 읽어 온 것이다.</p>
+
+<h2><span class="no">01</span>전체 흐름 — 5번까지는 모든 조건이 같다</h2>
+<p class="lede">1번부터 4번까지의 산출물은 한 번 만들어 캐시했고 12개 조건이 같은 파일을 읽는다. 조건이 갈리는 곳은 5번 청킹 하나뿐이다. 따라서 결과 차이는 자르는 규칙과 제목 붙이는 규칙에서만 온다.</p>
+<div class="pipe" id="pipe"></div>
+
+<h2><span class="no">02</span>제목 접두는 청크 글을 어떻게 바꾸는가</h2>
+<p class="lede">접두는 메타데이터가 아니라 <b>청크 글 자체의 첫 줄</b>이다. 그 글이 그대로 BGE-M3에 들어가 벡터가 되고, 검색에서 질문과 비교되며, 답변 단계에서 모델에게 발췌로 전달된다. 그래서 한 줄을 붙이는 것만으로 세 곳이 동시에 바뀐다.</p>
+<div class="wrap"><table class="t" id="rules"></table></div>
+
+<h3>같은 절의 연속한 세 청크 — 접두가 어떻게 반복되는가</h3>
+<p class="lede" id="exhead"></p>
+<div class="stack" id="ex"></div>
+
+<h3>제목 경로는 번호가 있어야만 생긴다</h3>
+<p class="lede">상위 제목까지 붙이려면 "2.1"처럼 번호로 계층을 알아내야 한다. 번호 없는 제목은 계층을 만들 수 없어 절 제목 한 줄과 같아진다. 그래서 제목 경로 조건은 12편 중 3편에서만 절 제목 조건과 달라진다.</p>
+<div class="cmp" id="expath"></div>
+<div class="wrap" style="margin-top:10px"><table class="t" id="pathdoc"></table></div>
+
+<h3>고정 5,000자에서의 접두</h3>
+<p class="lede">고정 창은 절을 넘나들며 잘리므로 "이 청크의 절"이 하나로 정해지지 않는다. 창이 시작한 지점의 절 제목 하나만 붙였다.</p>
+<div class="cmp" id="exfix"></div>
+
+<h2><span class="no">03</span>접두가 결과를 어떻게 바꿨나</h2>
+<div class="wrap"><table class="t" id="effect"></table></div>
+<div class="box key" style="margin-top:12px" id="effnote"></div>
+<h3>절 제목을 붙여서 6위 밖으로 밀린 문항</h3>
+<p class="lede" id="drophead"></p>
+<div class="wrap"><table class="t" id="drop"></table></div>
+
+<h2><span class="no">04</span>무엇을 맞혔다고 보았나</h2>
+<p class="lede">채점은 두 갈래다. 어느 쪽도 사람이 매 문항을 다시 보지는 않았다.</p>
+<div class="row3" id="score"></div>
+<div class="box warn" style="margin-top:12px"><b>이 설계가 보지 못하는 것</b>
+<ul class="pts" style="margin-top:4px">
+<li>정답 발췌가 청크 경계에 걸쳐 잘리면 어느 청크에도 문자열이 온전히 남지 않아 "못 찾음"이 된다. 작은 청크일수록 불리한 채점이다. 절 단위가 이 조건에서도 이겼다는 점은 유리한 방향의 증거다.</li>
+<li>그림 문항은 서술의 내용이 맞는지 보지 않고 그 서술이 든 청크가 올라왔는지만 본다. 서술을 만든 모델과 채점하는 모델이 같아지는 순환을 피하려는 선택이다.</li>
+<li>답변과 채점을 모두 gpt-4.1-mini가 했다. 자기 답에 관대할 수 있어 사람 표본 검수가 남아 있다.</li>
+</ul></div>
+
+<footer>데이터 <code>lab/exp23how.js</code> · 빌더 <code>exp23/build_how.py</code> · 청크 <code>exp23/chunks/*.jsonl</code> · 결과 <code>exp23/results.json</code>. 페이지 글은 직접 고칠 수 있다.</footer>
+</main>
+<script src="exp23how.js?v=1"></script>
+<script>
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+// 01 파이프라인
+document.getElementById('pipe').innerHTML=HOW.pipe.map((s,i)=>
+ `${i?'<div class="arw"></div>':''}<div class="stg${s.n==='8'?' fork':''}"><div class="num">${s.n}</div>
+  <div><div class="ttl">${esc(s.t)}<span class="val">${esc(s.v)}</span></div><div class="dsc">${esc(s.d)}</div></div>
+  <div class="fil">${esc(s.f)}</div></div>`).join('');
+// 02 규칙표
+{const r=HOW.rules;
+ document.getElementById('rules').innerHTML=`<thead><tr><th>조건</th><th>붙이는 규칙</th><th>접두 붙은 청크</th><th>그중 반복</th><th>늘어난 토큰</th></tr></thead><tbody>`+
+ r.map(x=>`<tr><td class="k">${esc(x.label)}<div class="mini">${x.name}</div></td><td>${esc(x.rule||'청크 글은 본문뿐이다.')}</td>
+  <td class="v">${x.st.pre} / ${x.st.chunks}</td><td class="v">${x.st.rep||'—'}</td>
+  <td class="v">${x.st.extra?('+'+x.st.extra.toLocaleString()+' ('+(x.st.extra/(x.st.total-x.st.extra)*100).toFixed(1)+'%)'):'—'}</td></tr>`).join('')+'</tbody>';}
+// 02 예시
+{const e=HOW.ex, d=e[0];
+ document.getElementById('exhead').innerHTML=`${esc(d.doc)}의 "${esc(d.path.join(' > '))}" 절은 ${HOW.exn}개의 청크로 쪼개졌다. 아래는 그중 연속한 세 개다. <span class="pf">주황</span>은 그 절에서 제목이 처음 붙은 자리, <span class="rep">빨강</span>은 같은 줄이 다시 들어간 자리다.`;
+ document.getElementById('ex').innerHTML=e.map((x,i)=>`<div class="cmp">
+  ${[['접두 없음',x.none,x.tok[0],0],['절 제목',x.sub,x.tok[1],i],['제목 경로',x.path_t,x.tok[2],i]].map(([t,tx,tk,rep])=>{
+   const m=tx.match(/^## [^\n]*\n/);
+   const head=m?`<span class="${rep?'rep':'pf'}">${esc(m[0].trim())}</span>\n`:'';
+   return `<div class="cd"><h4><span>청크 ${i+1} · ${t}</span><span>${tk} 토큰</span></h4><div class="tx">${head}${esc(m?tx.slice(m[0].length):tx)}…</div></div>`;}).join('')}
+  </div>`).join('');}
+// 02 경로 예시
+{const x=HOW.expath;
+ document.getElementById('expath').innerHTML=[['접두 없음',x.none,x.tok[0]],['절 제목',x.sub,x.tok[1]],['제목 경로',x.path_t,x.tok[2]]].map(([t,tx,tk])=>{
+  const m=tx.match(/^## [^\n]*\n/);
+  return `<div class="cd"><h4><span>${esc(x.doc)} · ${t}</span><span>${tk} 토큰</span></h4><div class="tx">${m?'<span class="pf">'+esc(m[0].trim())+'</span>\n':''}${esc(m?tx.slice(m[0].length):tx)}…</div></div>`;}).join('');}
+{const p=HOW.pathdoc;
+ document.getElementById('pathdoc').innerHTML=`<thead><tr><th>문서</th><th>경로가 2단 이상인 청크</th><th style="width:40%"></th><th>절 제목 조건과</th></tr></thead><tbody>`+
+ p.map(x=>`<tr><td class="k">${esc(x.doc)}</td><td class="v">${x.multi} / ${x.all}</td>
+  <td><div class="barw"><i style="width:${(x.multi/x.all*100).toFixed(1)}%;background:var(--tbl)"></i></div></td>
+  <td>${x.multi?'다름':'완전히 같음'}</td></tr>`).join('')+'</tbody>';}
+// 02 고정창 예시
+{const f=HOW.exfix.fix2||{fix:HOW.exfix.fix,fixh:HOW.exfix.fixh,sec:HOW.exfix.sec,tok:[0,0]};
+ document.getElementById('exfix').innerHTML=[['접두 없음',f.fix,f.tok[0]],['창 시작 절 제목',f.fixh,f.tok[1]]].map(([t,tx,tk])=>{
+  const m=tx.match(/^## [^\n]*\n/);
+  return `<div class="cd"><h4><span>ko_01 · ${t}</span><span>${tk} 토큰</span></h4><div class="tx">${m?'<span class="pf">'+esc(m[0].trim())+'</span>\n':''}${esc(m?tx.slice(m[0].length):tx)}…</div></div>`;}).join('');}
+// 03 효과
+{const e=HOW.effect, mx=k=>Math.max(...e.map(x=>x[k]));
+ document.getElementById('effect').innerHTML=`<thead><tr><th>조건</th><th>1위 적중</th><th>3위 안</th><th>6위 안</th><th>MRR</th><th>그림 6위 안</th><th>예산 6,000 적중</th></tr></thead><tbody>`+
+ e.map(x=>`<tr><td class="k">${esc(x.label)}</td>`+
+  [['r1',45],['r3',45],['r6',45]].map(([k,n])=>`<td class="v">${x[k]===mx(k)?'<span style="background:#e4efeb;border-radius:4px;padding:0 5px;font-weight:600">'+x[k]+'</span>':x[k]}/${n}</td>`).join('')+
+  `<td class="v">${x.mrr.toFixed(3)}</td><td class="v">${x.fig6}/12</td><td class="v">${x.b6000}/57</td></tr>`).join('')+'</tbody>';}
+document.getElementById('effnote').innerHTML=`<b>접두는 위를 올리고 아래를 깎는다</b>
+<ul class="pts" style="margin-top:4px">
+<li><b>상위 1~3위는 좋아진다.</b> 절 단위에서 1위 적중이 16에서 18로 오르고 MRR은 .488에서 .503으로 오른다. 고정 창에서도 12에서 15로 오른다.</li>
+<li><b>6위까지 넓히면 나빠진다.</b> 절 단위 6위 안이 31에서 27로 떨어진다. 순위가 오른 문항 ${HOW.move.up}개, 내린 문항 ${HOW.move.down}개, 그대로 ${HOW.move.same}개다.</li>
+<li><b>새로 6위 안에 들어온 문항은 ${HOW.move.into}개다.</b> 밀려난 문항만 있고 얻은 문항은 없다.</li>
+<li><b>대가는 토큰이다.</b> 절 제목 조건은 본문보다 토큰이 ${(HOW.rules[1].st.extra/(HOW.rules[1].st.total-HOW.rules[1].st.extra)*100).toFixed(1)}% 많다. 그 늘어난 분량의 ${Math.round(HOW.rules[1].st.rep/HOW.rules[1].st.pre*100)}%는 같은 제목의 반복이다.</li>
+</ul>`;
+{const d=HOW.drop;
+ document.getElementById('drophead').innerHTML=`${d.length}개 문항이 접두 때문에 6위 밖으로 밀렸고, 반대로 들어온 문항은 ${HOW.move.into}개다. 다섯 개 모두 원래 5~6위였다. 경계에 있던 문항이 밀린 것이지 잘 찾던 문항이 무너진 것은 아니다.`;
+ document.getElementById('drop').innerHTML=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>질문</th><th>접두 없음</th><th>절 제목</th></tr></thead><tbody>`+
+ d.map(x=>`<tr><td class="v">${esc(x.qid)}</td><td class="v">${esc(x.doc)}</td><td>${({methods:'실험 방법',table:'표 값',reference:'참고문헌',body:'본문 서술',figure:'그림'})[x.type]||x.type}</td>
+  <td>${esc(x.q)}</td><td class="v">${x.none}위</td><td class="v" style="color:var(--bad)">${x.sub}위</td></tr>`).join('')+'</tbody>';}
+// 04 채점
+document.getElementById('score').innerHTML=[
+ ['골드 45문항','사람이 검토해 둔 정답 발췌 문자열이 청크 글 안에 통째로 들어 있으면 적중으로 본다. 비교 전에 공백·따옴표·붙임표를 지우고 유니코드를 정규화한다.','실험 방법 '+HOW.gtype.methods+' · 본문 서술 '+HOW.gtype.body+' · 표 값 '+HOW.gtype.table+' · 참고문헌 '+HOW.gtype.reference],
+ ['그림 12문항','그 그림의 서술이 들어간 청크가 상위 k에 있으면 적중으로 본다. 서술 내용의 정확성은 채점하지 않는다.','값을 읽을 그래프가 있는 8편에서만 출제'],
+ ['답변 정확도','상위 청크를 발췌로 묶어 gpt-4.1-mini에 주고 두 문장 이내로 답하게 한 뒤, 같은 모델이 정답과 대조해 정답·부분·오답으로 채점한다.','같은 예산 6,000토큰 · 상위 6개 두 방식']
+].map(([t,d,m])=>`<div class="box"><b>${t}</b><p style="margin:6px 0 0;color:var(--soft);font-size:13px">${d}</p><p class="mini" style="margin-top:6px">${m}</p></div>`).join('');
+</script>
+<script src="edit.js?v=3"></script>
+</body></html>
