@@ -77,7 +77,7 @@ details.more[open] summary{margin-bottom:10px}
 <div class="wrap"><table class="t" id="qtab"></table></div>
 
 <h2><span class="no">03</span>발췌 분량과 조각 개수</h2>
-<p class="lede">검색만 보면 고정 5,000자가 낫다. 정답이 든 조각이 상위 6개에 드는 문항이 33개로 가장 많다. 그런데 답을 만들게 하면 23문항으로 가장 적다.</p>
+<p class="lede">검색만 보면 고정 5,000자가 낫다. 정답이 든 조각이 6등 안에 드는 문항이 33개로 가장 많다. 그런데 답을 만들게 하면 23문항으로 가장 적다.</p>
 <p class="lede">고정 5,000자는 조각 하나가 논문 약 3쪽 분량을 거의 다 차지해서 한 개만 들어간다. 절 단위는 같은 분량에 열한 개가 들어간다.</p>
 <div class="wrap"><table class="t" id="budget"></table></div>
 <div class="box key" style="margin-top:12px"><b>한 조각이 분량을 다 쓴다</b>
@@ -106,7 +106,7 @@ details.more[open] summary{margin-bottom:10px}
 
 <details class="more"><summary>그 밖에 돌려 본 조건 (전체 13가지)</summary>
 <div class="wrap"><table class="t" id="allc"></table></div>
-<p class="mini" style="margin-top:8px">절 이름 태그 때문에 6위 밖으로 밀린 문항 <span id="flipn"></span>개, 반대로 들어온 문항 0개.</p>
+<p class="mini" style="margin-top:8px">절 이름 태그 때문에 정답 조각이 6등 밖으로 밀린 문항 <span id="flipn"></span>개, 반대로 들어온 문항 0개.</p>
 <div class="wrap"><table class="t" id="flips"></table></div>
 </details>
 
@@ -130,7 +130,7 @@ const B=(v,m)=>v===m?`<span class="best">${v}</span>`:v;
 {const mx=f=>Math.max(...MAIN.map(([n])=>f(n)||0));
  const m6=mx(n=>by[n].gold.r6),mb=mx(n=>by[n].gold.b6000+by[n].figure.b6000),
        ma=mx(n=>AB[n]&&AB[n]['정답']),mk=mx(n=>AK[n]&&AK[n]['정답']);
- let h=`<thead><tr><th>방식</th><th>변경점</th><th>끊는 지점</th><th>절 이름 태그</th><th>조각 크기</th><th>조각 수</th><th>검색 6위 안</th><th>같은 분량에 담기는 조각</th><th>같은 분량 안에 정답 조각</th><th>같은 분량 답변 정답</th><th>상위 6개 답변 정답</th></tr></thead><tbody>`;
+ let h=`<thead><tr><th>방식</th><th>변경점</th><th>끊는 지점</th><th>절 이름 태그</th><th>조각 크기</th><th>조각 수</th><th>정답 조각 6등 안</th><th>같은 분량에 담기는 조각</th><th>같은 분량 안에 정답 조각</th><th>같은 분량 답변 정답</th><th>상위 6개 답변 정답</th></tr></thead><tbody>`;
  MAIN.forEach(([n,lb,ch,cut,nm,tg],i)=>{const c=by[n],a=AB[n],k=AK[n];
   h+=`<tr${i?'':''}><td class="k">${lb}</td><td>${ch}</td><td class="v">${cut}</td><td class="v">${nm}</td><td class="v">${tg}</td>
    <td class="v">${c.chunks}</td><td class="v">${B(c.gold.r6,m6)}/45</td><td class="v">${a?a.chunk_med:'—'}개</td>
@@ -142,7 +142,7 @@ const B=(v,m)=>v===m?`<span class="best">${v}</span>`:v;
 document.getElementById('defs').innerHTML='<thead><tr><th style="width:190px">열 이름</th><th>설명</th></tr></thead><tbody>'
  +[['조각 수','k','논문 12편을 그 방식으로 잘랐을 때 나오는 조각의 총 개수'],
    ['조각 크기','k','조각 하나의 길이. 가운데 값으로 적었다'],
-   ['검색 6위 안','6개','질문과 가장 닮은 조각 6개 안에 정답 문장이 든 조각이 있으면 1문항 적중. 조각의 크기는 보지 않는다'],
+   ['정답 조각 6등 안','6개','조각을 질문과 닮은 순서대로 줄 세웠을 때, 정답 문장이 든 조각이 6등 안에 들면 1문항 적중. 조각의 크기는 보지 않는다'],
    ['같은 분량에 담기는 조각','분량','6,000토큰까지 조각을 담았을 때 들어가는 조각 수. 조각이 크면 적게 들어간다'],
    ['같은 분량 안에 정답 조각','분량','그렇게 담은 조각 안에 정답 문장이 있으면 1문항 적중'],
    ['같은 분량 답변 정답','분량','그 조각들을 AI에게 주고 답을 쓰게 한 뒤, 답이 맞으면 1문항 정답'],
@@ -151,7 +151,7 @@ document.getElementById('defs').innerHTML='<thead><tr><th style="width:190px">�
 // 01 세 질문
 document.getElementById('q3').innerHTML=[
  ['① 절 단위 청킹의 효과','고정 5,000자 청킹 > 절 단위 청킹',
-  '같은 분량 답변 정답 <b>23 → 50</b><br>검색 6위 안 33 → 31 (골드 45문항)',
+  '같은 분량 답변 정답 <b>23 → 50</b><br>정답 조각 6등 안 33 → 31 (골드 45문항)',
   '고정 청킹보다 절 단위 청킹에서 답변 정답이 27문항 증가했다.','dl'],
  ['② 절 이름 태그의 효과','이름 태그 없음 > 있음',
   '같은 분량 답변 정답 <b>50 → 46</b><br>상위 6개 답변 정답 43 → 45',
@@ -214,7 +214,7 @@ function grid(id,key,names){
  document.getElementById(id).innerHTML=h+'</tbody>';}
 grid('bytype','by_type',TN); grid('bylang','by_lang',LN);
 // 부록
-{let h=`<thead><tr><th>이름</th><th>설명</th><th>끊는 지점</th><th>절 이름 태그</th><th>조각 크기</th><th>조각 수</th><th>중앙 토큰</th><th>1위</th><th>6위 안</th><th>MRR</th><th>분량 6,000</th><th>답변 (분량)</th></tr></thead><tbody>`;
+{let h=`<thead><tr><th>이름</th><th>설명</th><th>끊는 지점</th><th>절 이름 태그</th><th>조각 크기</th><th>조각 수</th><th>중앙 토큰</th><th>정답 조각 1등</th><th>6등 안</th><th>MRR</th><th>분량 6,000</th><th>답변 (분량)</th></tr></thead><tbody>`;
  EX.conds.forEach(c=>{const a=AB[c.name];
   h+=`<tr><td class="k">${esc(c.label)}</td><td>${esc(c.note)}</td><td class="v">${c.name.startsWith('FIX')?'글자 수':'절'}</td>
    <td class="v">${esc(c.namerow)}</td><td class="v">${esc(c.target)}</td><td class="v">${c.chunks}</td><td class="v">${c.tok_med.toLocaleString()}</td>
