@@ -5,13 +5,13 @@
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--bad:#a3232b}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.65 "IBM Plex Sans KR",-apple-system,sans-serif;font-variant-numeric:tabular-nums}
 nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}nav.top b{font-size:14px}nav.top a{color:#fff;opacity:.7;text-decoration:none}nav.top a:hover{opacity:1}nav.top a.on{opacity:1;font-weight:600;border-bottom:2px solid #fff;padding-bottom:1px}nav.top span{opacity:.7}
-main{max-width:1160px;margin:0 auto;padding:20px 18px 50px}h1{font-size:21px;margin:6px 0 4px}
-h2{font-size:16px;margin:30px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint)}
-h3{font-size:14px;margin:18px 0 6px}
+main{max-width:1160px;margin:0 auto;padding:20px 18px 50px}h1{font-size:25px;line-height:1.35;margin:10px 0 8px;letter-spacing:-.01em}
+h2{font-size:17px;margin:38px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--ink);display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:#fff;background:var(--ink);border-radius:4px;padding:2px 6px;line-height:1.2}
+h3{font-size:14px;margin:22px 0 7px;color:var(--soft)}
 p.lede{color:var(--soft);margin:0 0 12px;max-width:86ch}
 .wrap{overflow-x:auto}table.t{border-collapse:collapse;width:100%;font-size:13px;background:var(--lift);border:1px solid var(--rule)}
-table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:7px 9px;font-weight:600;white-space:nowrap}
-table.t td{padding:7px 9px;border-top:1px solid var(--rule2);vertical-align:top}table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap}table.t td.k{font-weight:600;white-space:nowrap}
+table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}table.t thead th{border-bottom:1px solid var(--rule)}
+table.t td{padding:8px 10px;border-top:1px solid var(--rule2);vertical-align:top}table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap;text-align:right;width:1%}table.t th{text-align:left}table.t td.k{font-weight:600;white-space:nowrap}table.t tbody tr:hover td{background:#fafbfd}#main4 th:nth-child(n+6),#main4 td:nth-child(n+6){text-align:right}#main4 th:nth-child(-n+2),#main4 td:nth-child(-n+2){white-space:normal}#main4 td:nth-child(2){color:var(--soft)}
 tr.grp2 td{border-top:2px solid var(--rule)}
 .best{background:#e4efeb;border-radius:4px;padding:0 5px;font-weight:600}
 .box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 18px}
@@ -21,6 +21,18 @@ ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:7px;line-height:1.65}
 .tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--sunk);color:var(--soft)}
 .tag.e2{background:#e6f0fa;color:var(--pm)}.tag.e3{background:#f0ecf8;color:var(--tbl)}
 svg{display:block;width:100%;height:auto}
+details.fold{margin-top:10px;background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:0 16px}
+details.fold summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--soft);padding:11px 0;list-style:none;display:flex;align-items:center;gap:7px}
+details.fold summary::-webkit-details-marker{display:none}
+details.fold summary::before{content:"+";font:600 13px "IBM Plex Mono",monospace;color:var(--tbl)}
+details.fold[open] summary::before{content:"\2212"}
+details.fold[open] summary{border-bottom:1px solid var(--rule2)}
+details.fold .foldlede{color:var(--soft);font-size:13px;line-height:1.65;margin:11px 0 0;max-width:80ch}
+details.fold .wrap{margin:10px 0 16px}
+table.tdef{table-layout:fixed}
+table.tdef td{font-size:12.5px;line-height:1.6}
+table.tdef td.k{white-space:normal;vertical-align:top}
+.unit{display:inline-block;margin-left:6px;font:600 10.5px "IBM Plex Mono",monospace;color:var(--tbl);background:#f0ecf8;border-radius:3px;padding:1px 5px;vertical-align:1px}
 footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule)}
 code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;border-radius:4px}
 
@@ -52,9 +64,10 @@ details.more[open] summary{margin-bottom:10px}
 <h2><span class="no">01</span>4가지 청킹 방식 비교</h2>
 <div class="wrap"><table class="t" id="main4"></table></div>
 <p class="mini" style="margin-top:6px">답변 정답은 gpt-4.1-mini가 채점했다.</p>
-<div class="box" style="margin-top:10px"><b>표의 숫자가 뜻하는 것</b>
-<p class="mini" style="margin-top:6px;color:var(--soft);font-size:13px"><b>검색</b> — 질문이 들어오면 조각들 중에서 질문과 닮은 것을 골라내는 단계.<br><b>분량</b> — 그렇게 고른 조각을 AI에게 붙여 줄 때 넘기는 글의 양. 전부 줄 수는 없어 이 실험에서는 6,000토큰, 논문 약 3쪽까지만 주었다.</p>
-<div class="wrap" style="margin-top:8px"><table class="t" id="defs"></table></div></div>
+<details class="fold"><summary>열 이름 풀이</summary>
+<p class="foldlede"><b>검색</b>은 질문과 닮은 조각을 골라내는 단계다. <b>분량</b>은 그렇게 고른 조각을 AI에게 붙여 줄 때 넘기는 글의 양이다. 전부 줄 수는 없어 이 실험에서는 6,000토큰, 논문 약 3쪽까지만 주었다.</p>
+<div class="wrap"><table class="t tdef" id="defs"></table></div></details>
+
 
 <div class="row3 q3" id="q3" style="margin-top:14px"></div>
 
@@ -127,16 +140,16 @@ const B=(v,m)=>v===m?`<span class="best">${v}</span>`:v;
    <td class="v">${a?B(a['정답'],ma)+'/57':'—'}</td><td class="v">${k?B(k['정답'],mk)+'/57':'—'}</td></tr>`;});
  document.getElementById('main4').innerHTML=h+'</tbody>';}
 
-// 표의 숫자 뜻풀이
-document.getElementById('defs').innerHTML='<thead><tr><th>열 이름</th><th>세는 방법</th><th>무엇을 뜻하나</th></tr></thead><tbody>'
- +[['조각 수','—','논문 12편을 그 방식으로 잘랐을 때 나오는 조각의 총 개수'],
-   ['조각 크기','—','조각 하나의 길이. 가운데 값으로 적었다'],
-   ['검색 6위 안','조각 6개','질문과 가장 닮은 조각 6개 안에 정답 문장이 든 조각이 있으면 1문항 적중. 조각의 크기는 보지 않는다'],
-   ['같은 분량에 담기는 조각','분량 6,000토큰','합계 6,000토큰(논문 약 3쪽)까지 조각을 담았을 때 들어가는 조각 수. 조각이 크면 적게 들어간다'],
-   ['같은 분량 안에 정답 조각','분량 6,000토큰','그렇게 담은 조각 안에 정답 문장이 있으면 1문항 적중'],
-   ['같은 분량 답변 정답','분량 6,000토큰','그 조각들을 AI에게 주고 답을 쓰게 한 뒤, 답이 맞으면 1문항 정답'],
-   ['상위 6개 답변 정답','조각 6개','토큰을 제한하지 않고 상위 6개를 통째로 주었을 때의 답변 정답 수. 조각이 크면 그만큼 많이 읽는다']]
-  .map(([a,b,c])=>`<tr><td class="k">${a}</td><td class="v">${b}</td><td>${c}</td></tr>`).join('')+'</tbody>';
+// 열 이름 풀이
+document.getElementById('defs').innerHTML='<thead><tr><th style="width:190px">열 이름</th><th>설명</th></tr></thead><tbody>'
+ +[['조각 수','k','논문 12편을 그 방식으로 잘랐을 때 나오는 조각의 총 개수'],
+   ['조각 크기','k','조각 하나의 길이. 가운데 값으로 적었다'],
+   ['검색 6위 안','6개','질문과 가장 닮은 조각 6개 안에 정답 문장이 든 조각이 있으면 1문항 적중. 조각의 크기는 보지 않는다'],
+   ['같은 분량에 담기는 조각','분량','6,000토큰까지 조각을 담았을 때 들어가는 조각 수. 조각이 크면 적게 들어간다'],
+   ['같은 분량 안에 정답 조각','분량','그렇게 담은 조각 안에 정답 문장이 있으면 1문항 적중'],
+   ['같은 분량 답변 정답','분량','그 조각들을 AI에게 주고 답을 쓰게 한 뒤, 답이 맞으면 1문항 정답'],
+   ['상위 6개 답변 정답','6개','분량을 제한하지 않고 상위 6개를 통째로 주었을 때의 답변 정답 수. 조각이 크면 그만큼 많이 읽는다']]
+  .map(([a,b,c])=>`<tr><td class="k">${a}${b==='k'?'':`<span class="unit">${b}</span>`}</td><td>${c}</td></tr>`).join('')+'</tbody>';
 // 01 세 질문
 document.getElementById('q3').innerHTML=[
  ['① 절 단위 청킹의 효과','변경점 : 고정 5,000자 청킹 → 절 단위 청킹',
