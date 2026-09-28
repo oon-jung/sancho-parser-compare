@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>청크 경계 보기 — 두 방식이 지면을 어떻게 자르는가</title>
+<title>같은 지면을 두 방식이 어떻게 자르는가</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--gray:#9aa3b3;--bad:#a3232b}
@@ -51,7 +51,8 @@ svg{display:block;width:100%;height:auto}
 </style></head><body>
 <nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html">방법 — 어떻게 쟀나</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html" class="on">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
-<h1>같은 지면을 두 방식이 어떻게 잘랐는가</h1>
+<h1>같은 지면을 두 방식이 어떻게 자르는가</h1>
+<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">고정 5,000자 청킹은 글자 수만 세므로 문장과 표 중간에서 끊는다. <b>절 단위 청킹은 절 경계에서 끊어 항목을 자르지 않는다.</b></p>
 <p class="lede">2단계의 docling 항목을 두 방식으로 청킹했다. <b>A 기본 5000자/250자</b>는 PaperQA2의 기본 청커(<code>chunk_pdf</code>, 5,000자·겹침 250자)를 그대로 호출한 것이다. 다만 입력은 원래 파이프라인의 파서 출력이 아니라 <b>B와 같은 docling 항목을 쪽별로 줄바꿈으로 이어 붙인 텍스트</b>다. 두 방식의 차이를 자르는 규칙 하나로 좁히기 위해서이며, 따라서 A는 "현행 RAG 기준선"이 아니라 "같은 입력에 기본 커터를 적용한 조건"이다. 제목·문단·표 경계를 보지 않으므로 항목 중간에서 잘린다. <b>B 절 단위(현행)</b>는 docling 제목마다 절을 나누고 절 안에서 문단 단위로 모아 목표 900토큰에서 끊으며, 표는 따로 한 청크로 둔다. 그림은 VLM 서술을 "[그림 서술] …" 텍스트로 항목에 넣은 뒤 청킹했으며, 서술 소스(32B 채택 · 8B 대안 · 없음)를 전환할 수 있다.</p>
 
 <div class="ctl">

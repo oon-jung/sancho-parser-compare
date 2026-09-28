@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>청킹 방식 비교 — 실험을 어떻게 진행했나</title>
+<title>이 결과를 어떻게 쟀는가</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--bad:#a3232b}
@@ -44,7 +44,8 @@ footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;paddi
 </style></head><body>
 <nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html" class="on">방법 — 어떻게 쟀나</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
-<h1>이 실험을 어떻게 진행했나</h1>
+<h1>이 결과를 어떻게 쟀는가</h1>
+<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">논문 12편을 한 번만 파싱해 두고 <b>자르는 규칙만</b> 바꿨다. 파싱·그림 서술·임베딩은 모두 같은 것을 썼으므로, 조건 사이의 차이는 자르는 규칙에서만 온다.</p>
 <p class="lede">앞 단계에서 무엇을 고정하고 어디서만 조건을 갈랐는지, 그리고 "절 이름 줄"이 청크 글을 실제로 어떻게 바꾸는지 보여준다. 수치와 예시는 모두 실제 실행 파일에서 읽어 온 것이다.</p>
 
 <h2><span class="no">01</span>전체 흐름 — 5번까지는 모든 조건이 같다</h2>
