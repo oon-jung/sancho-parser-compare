@@ -84,7 +84,7 @@ details.more[open] summary{margin-bottom:10px}
 <ul class="pts" style="margin-top:4px">
 <li><b>고정 5,000자는 조각 하나가 중앙값 1,845토큰, 최대 7,745토큰을 가지는 청크를 제작한다.</b> 6,000토큰 분량에 중앙값 <b>1개</b>만 들어간다. 그 하나에 답이 없으면 오답으로 처리한다. 오답 29개 중 16개가 "근거 없음"이었다.</li>
 <li><b>절 단위 청킹은 고정 5,000자와 같은 분량일 때 10개 넘게 들어간다.</b> 여러 곳에서 근거를 모으므로 하나의 청크에 정답이 없어도 다른 청크에서 보완이 가능하다.</li>
-<li><b>고정 5,000자는 중앙값 19,789토큰을 읽고 34개를 맞히고, 절 단위는 3,278토큰을 읽고 43개를 맞힌다.</li>
+<li><b>상위 6개를 그냥 주면 읽는 양이 갈린다.</b> 고정 5,000자는 중앙값 19,789토큰을 읽고 34개를 맞히고, 절 단위는 3,278토큰을 읽고 43개를 맞힌다.</li>
 </ul></div>
 
 <h2><span class="no">04</span>유형별·언어별 정답 수</h2>
@@ -94,7 +94,7 @@ details.more[open] summary{margin-bottom:10px}
 <h3>언어별</h3>
 <div class="wrap"><table class="t" id="bylang"></table></div>
 <div class="box" style="margin-top:12px"><b>차이는 거의 전부 실험 방법 문항에서 난다</b>
-<p style="margin:5px 0 0;color:var(--soft)">실험 방법 24문항에서 고정 5,000자는 6개, 절 단위는 21개로 정답 답변을 맞혔다. 나머지 유형의 격차는 2~5개다. 실험 방법 문항은 답이 재료·농도·기간처럼 한 문장 안에 존재해, 큰 조각 하나에 걸리지 않으면 그대로 오답이 된다.</p></div>
+<p style="margin:5px 0 0;color:var(--soft)">실험 방법 24문항에서 고정 5,000자는 6개, 절 단위는 21개로 정답 답변을 맞혔다. 나머지 유형의 격차는 표 값 2개, 참고문헌 1개, 본문 서술 4개, 그림 5개다. 실험 방법 문항은 답이 재료·농도·기간처럼 한 문장 안에 존재해, 큰 조각 하나에 걸리지 않으면 그대로 오답이 된다.</p></div>
 
 <h2><span class="no">05</span>결론</h2>
 <div class="box key"><ul class="pts">
@@ -110,7 +110,7 @@ details.more[open] summary{margin-bottom:10px}
 <div class="wrap"><table class="t" id="flips"></table></div>
 </details>
 
-<footer>데이터 <code>lab/exp23.js</code> · <code>lab/exp23ans.js</code>(빌더 <code>exp23/build_web.py</code>) · 원천 <code>exp23/{results,answers,answers_k6}.json</code> · 절 통계 <code>exp23/section_stats.py</code>. 페이지 글과 제목은 오른쪽 아래에서 직접 고칠 수 있다.</footer>
+<footer>데이터 <code>lab/exp23.js</code> · <code>lab/exp23ans.js</code>(빌더 <code>exp23/build_web.py</code>) · 원천 <code>exp23/{results,answers,answers_k6}.json</code> · 절 통계 <code>exp23/section_stats.py</code>.</footer>
 </main>
 <script src="exp23.js?v=2"></script><script src="exp23ans.js?v=2"></script>
 <script>
@@ -159,8 +159,8 @@ document.getElementById('q3').innerHTML=[
   +"짧은 조각에 '## 서 론' 한 줄이 끼어들어 본문 몫이 줄어들어 오히려 답변 정답 문항의 수가 줄었다. "
   +'상위 6개만 보면 2문항 이득이지만, 실제로는 넘길 분량이 정해져 있으므로 분량 기준을 따른다.','mu'],
  ['③ 조각 크기의 효과','목표 900토큰 > 600토큰',
-  '같은 분량 답변 정답 <b>50 → 47</b><br>상위 6개 답변 정답 43 → 40',
-  '600토큰으로 청킹을 진행했을 때 읽는 양은 19% 줄지만, 조각 하나에 담기는 앞뒤 맥락도 같이 잘린다.','bad']
+  '같은 분량 답변 정답 <b>50 → 47</b><br>상위 6개 답변 정답 43 → 43<br><span style="color:var(--faint)">둘 다 이름 태그 없음 기준</span>',
+  '600토큰으로 청킹을 진행했을 때 읽는 양은 19% 줄지만, 같은 분량 답변 정답이 3문항 줄고 상위 6개는 그대로다. 조각 하나에 담기는 앞뒤 맥락이 같이 잘린다.','bad']
 ].map(([q,cond,num,ans,col])=>`<div class="box" style="border-left:4px solid var(--${col});border-radius:0 10px 10px 0">
  <b>${q}</b><p class="mini" style="margin:3px 0 7px">${cond}</p>
  <p style="margin:0 0 7px;font-size:13px;color:var(--soft)">${num}</p>

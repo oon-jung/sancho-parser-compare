@@ -27,13 +27,8 @@ button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule
 .it .ovh{background:#fde8d7;box-shadow:inset 2px 0 0 var(--mu)}
 .it .ovt{background:#e6f0fa;box-shadow:inset -2px 0 0 var(--pm)}
 .it mark.figtxt{background:#fbe8df;color:var(--ink);border-left:3px solid var(--mu);padding:2px 4px;display:inline-block}
-.it .txt[contenteditable="true"]{background:#fffdf5;outline:2px solid var(--mu);outline-offset:2px;cursor:text}
-.it .edited{border-left-color:var(--mu)!important}
-.it .editbar{display:none;gap:6px;margin:4px 0}
-.editing .it .editbar{display:flex}
-.it .editbar button{font:600 11px inherit;padding:2px 9px;border-radius:999px;border:1px solid var(--rule);background:var(--lift);color:var(--soft);cursor:pointer}
-.it .editbar .save{border-color:var(--dl);color:var(--dl)}
-.it .editbar .undo{border-color:var(--bad);color:var(--bad)}
+.it 
+.it 
 .editnote{background:#fffdf5;border:1px solid var(--mu);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--soft);margin:8px 0}
 .it .jump{font:600 11px inherit;padding:2px 9px;margin:2px 0 4px;border:1px solid var(--mu);color:var(--mu);background:var(--lift);border-radius:999px;cursor:pointer}
 .it.hi{background:#fff6cc}.it.onpage{background:#f4f7fb}.it.dim{opacity:.5}.it.on{outline:2px solid var(--ink)}
@@ -68,9 +63,7 @@ svg{display:block;width:100%;height:auto}
 <div class="ctl">
   <div class="grp"><button id="prev" type="button">◀</button><select id="page"></select><button id="next" type="button">▶</button></div>
   <button id="fulltext" type="button" aria-pressed="false">청크 텍스트 펼치기</button>
-  <button id="editmode" type="button" aria-pressed="false">직접 고치기</button>
-  <button id="exportedits" type="button" hidden>고친 내용 내려받기</button>
-  <button id="unfocus" type="button" hidden>집중 보기 해제 (Esc)</button>
+      <button id="unfocus" type="button" hidden>집중 보기 해제 (Esc)</button>
   <div class="legend"><span><i style="border:1.5px solid var(--pm);background:rgba(42,120,214,.15)"></i>청크 (색은 청크마다 순환, 번호는 문서 전체 청크 순번)</span><span><i style="border:4px double var(--tbl)"></i>표 항목</span><span><i style="border:2.5px solid var(--mu);background:rgba(235,104,52,.15)"></i>그림 서술 항목</span><span><i style="height:5px;background:repeating-linear-gradient(90deg,var(--bad) 0 5px,#fff 5px 9px)"></i>항목이 청크 경계에서 잘린 자리</span><span><i style="background:linear-gradient(90deg,#2a78d6 50%,#eb6834 50%)"></i>항목 전체가 앞 청크와 겹침</span><span><i style="background:repeating-linear-gradient(45deg,#2a78d655 0 4px,#eb683422 4px 8px);border:1px dashed var(--soft)"></i>항목 일부만 겹침 (겹친 글자 수를 상자에 표시)</span><span><i style="border:2px dashed var(--gray);background:repeating-linear-gradient(45deg,rgba(154,163,179,.3) 0 3px,transparent 3px 6px)"></i>어느 청크에도 들어가지 않은 항목</span></div>
   <div class="sum" id="pstat"></div>
 </div>
@@ -106,12 +99,12 @@ svg{display:block;width:100%;height:auto}
 <div class="wrap"><table class="t">
 <thead><tr><th>원인</th><th>어디서</th><th>근거</th><th>고치는 방향</th></tr></thead>
 <tbody>
-<tr><td class="k">창이 구조를 보지 않음</td><td>A</td><td>제목 중간 26 · 절 섞임 26 · 잘린 항목 31 (4편 35청크)</td><td>글자 수 대신 항목 경계에서 끊는다. B가 이미 그 방식이다.</td></tr>
+<tr><td class="k">창이 구조를 보지 않음</td><td>A</td><td>제목 중간 27 · 절 섞임 27 · 잘린 항목 32 (4편 36청크)</td><td>글자 수 대신 항목 경계에서 끊는다. B가 이미 그 방식이다.</td></tr>
 <tr><td class="k">제목 계층 없음</td><td>A·B</td><td>docling section_header가 모두 같은 단계. 본문 없는 제목 6개</td><td>제목 번호 패턴(1. / 1.1 / Ⅰ. / 1))으로 계층을 복원해 상위 제목을 경로로 붙인다.</td></tr>
 <tr><td class="k">긴 절의 분할</td><td>B</td><td>절 보존율 21~69% · sub_split 118청크</td><td>목표 토큰을 올리거나, 분할 시 절 안에서만 문단 겹침을 허용한다.</td></tr>
 <tr><td class="k">제목 오검출·미검출</td><td>A·B</td><td>ko_01은 번호형 제목 0개(저자·소속 줄도 제목으로 잡힘), zh_02는 제목 14개 중 3개가 저널명 머리글이고 "2.10 …" 소제목은 본문으로 잡혀 절 보존율 21%</td><td>초록 이전 항목은 제목에서 제외하고, 번호 패턴이 있는 본문 줄은 제목으로 승격한다.</td></tr>
 <tr><td class="k">쪽 경계 분리</td><td>A·B</td><td>ko_01·ja_01에서 한 문단이 쪽마다 두 항목으로 나뉘어 단어가 끊긴 채 이어짐 4건</td><td>쪽을 넘는 인접 항목을 파싱 단계에서 병합한다.</td></tr>
-<tr><td class="k">쪽 경계 중복</td><td>A·B</td><td>en_02에서 쪽을 넘는 문단 5개를 docling이 쪽마다 <b>통째로</b> 저장해 같은 문단이 두 번 들어간다(4,994자, 본문의 7.5%)</td><td>같은 번호·같은 텍스트 항목을 파싱 직후 하나로 합친다.</td></tr>
+<tr><td class="k">쪽 경계 중복</td><td>A·B</td><td>en_02에서 쪽을 넘는 문단 5개를 docling이 쪽마다 <b>통째로</b> 저장해 같은 문단이 두 번 들어간다(4,994자, 본문의 7.4%)</td><td>같은 번호·같은 텍스트 항목을 파싱 직후 하나로 합친다.</td></tr>
 <tr><td class="k">머리글이 제목으로</td><td>B</td><td>zh_02의 저널명 "中国实验方剂学杂志"가 제목 3개로 잡혀 본문이 엉뚱한 절로 나뉜다</td><td>같은 제목 텍스트가 여러 쪽에 반복되면 머리글로 보고 제목에서 제외한다.</td></tr>
 </tbody></table></div>
 
@@ -177,7 +170,7 @@ function markOv(c){const h=c.ov_head||0, tl=c.ov_tail||0, t=c.text, l=t.length;
 function renderList(){const cs=chunks(); let h='';
  cs.forEach((c,ci)=>{const col=PAL[ci%PAL.length]; const extra=[]; if(c.pages.length>1) extra.push(`<span class="flag">${c.pages.join('·')}쪽에 걸침</span>`); const pics=c.items.filter(x=>x.k==='picture').length; if(pics) extra.push(`<span class="flag ok">그림 서술 ${pics}개 포함</span>`); const sh=c.items.filter(x=>x.shared).length; if(sh) extra.push(`<span class="flag">앞 청크와 항목 ${sh}개 공유</span>`);
   const jump=pics?`<button type="button" class="jump" data-j="c${ci}">그림 서술로 이동</button>`:'';
-  h+=`<div class="it" data-id="c${ci}" data-pages="${c.pages.join(',')}" style="border-left-color:${col}"><span class="k">청크 ${ci} · ${c.kind} · ${c.chars.toLocaleString()}자 · ${c.tokens} 토큰 · ${c.pages.join('·')}쪽 · 항목 ${c.items.length}개</span>${c.section?`<div class="sec">${esc(c.section)}</div>`:''}${flagHtml(c)}${extra.join('')}${jump}<div class="editbar"><button type="button" class="save" data-e="c${ci}">이 청크 저장</button><button type="button" class="undo" data-u="c${ci}">되돌리기</button></div><div class="txt">${M==='A'?markOv(c):mark(c.text)}</div></div>`;});
+  h+=`<div class="it" data-id="c${ci}" data-pages="${c.pages.join(',')}" style="border-left-color:${col}"><span class="k">청크 ${ci} · ${c.kind} · ${c.chars.toLocaleString()}자 · ${c.tokens} 토큰 · ${c.pages.join('·')}쪽 · 항목 ${c.items.length}개</span>${c.section?`<div class="sec">${esc(c.section)}</div>`:''}${flagHtml(c)}${extra.join('')}${jump}<div class="txt">${M==='A'?markOv(c):mark(c.text)}</div></div>`;});
  $('#items').innerHTML=h;}
 function draw(){const d=doc(); psel.value=cur; $('#pg').src=`exp1/${d.id}_p${String(cur).padStart(2,'0')}.png`; const cs=chunks(); let o='', n=0;
  cs.forEach((c,ci)=>{const col=PAL[ci%PAL.length]; const its=c.items.filter(x=>x.p===cur); if(!its.length) return; n++;
@@ -211,7 +204,7 @@ function renderSamples(){const d=doc(); const cs=chunks(); const picks=[]; const
  const byi={}; d.items.forEach(it=>byi[it.i]=it);
  $('#samples').innerHTML=picks.map(({label,ci})=>{const c=cs[ci]; let inner='';
   if(M==='A'&&c.segs){let pos=0; c.segs.forEach(sg=>{if(sg.a>pos) inner+=esc(c.text.slice(pos,sg.a)); const txt=c.text.slice(sg.a,sg.b); const x=c.items.find(y=>y.i===sg.i); inner+=`<span class="seg${(sg.cut_head||sg.cut_tail)?' cut':''}${x&&x.shared?' shared':''}" style="border-color:${KC[sg.k]||'#999'}" title="항목 ${sg.i} · ${KN[sg.k]||sg.k}${sg.cut_head?' · 앞 잘림':''}${sg.cut_tail?' · 뒤 잘림':''}${x&&x.shared?' · 앞 청크와 공유':''}">${esc(txt)}</span>`; pos=sg.b;}); inner+=esc(c.text.slice(pos));}
-  else {const prefix=c.section?`## ${c.section}\n`:''; inner+=`<span class="seg" style="border-color:${KC.section_header}" title="절 절 이름 태그">${esc(prefix)}</span>`; c.items.forEach(x=>{if(x.heading) return; const it=byi[x.i]; const t=it?(it.k==='table'?'(표 HTML → 셀 | 셀 텍스트)':it.t):''; inner+=`<span class="seg" style="border-color:${KC[x.k]||'#999'}" title="항목 ${x.i} · ${KN[x.k]||x.k}">${esc(t)}</span>\n`;});}
+  else {const prefix=c.section?`## ${c.section}\n`:''; inner+=`<span class="seg" style="border-color:${KC.section_header}" title="절 이름 태그">${esc(prefix)}</span>`; c.items.forEach(x=>{if(x.heading) return; const it=byi[x.i]; const t=it?(it.k==='table'?'(표 HTML → 셀 | 셀 텍스트)':it.t):''; inner+=`<span class="seg" style="border-color:${KC[x.k]||'#999'}" title="항목 ${x.i} · ${KN[x.k]||x.k}">${esc(t)}</span>\n`;});}
   const items=c.items.map(x=>`${x.i}${x.cut_head?'(앞 잘림)':''}${x.cut_tail?'(뒤 잘림)':''}${x.shared?'(공유)':''}`).join(', ');
   return `<div class="samp"><h4>${label} — 청크 ${ci} · ${c.kind} · ${c.chars.toLocaleString()}자 · ${c.pages.join('·')}쪽 · 항목 [${items}] <button type="button" style="padding:2px 9px;font-size:11.5px" onclick="goto(${ci},${c.pages[0]})">지면에서 보기</button></h4><div class="segtxt">${inner}</div></div>`;}).join('')||'<p class="lede">표본 없음</p>';}
 // 04 히스토그램
@@ -236,27 +229,6 @@ document.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>
 document.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{S=b.dataset.s;FOCUS=null;document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderAll();}));
 $('#prev').addEventListener('click',()=>{cur=(cur+doc().pages-2)%doc().pages+1;draw();}); $('#next').addEventListener('click',()=>{cur=cur%doc().pages+1;draw();});
 document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return; if(e.key==='ArrowLeft'){cur=(cur+doc().pages-2)%doc().pages+1;draw();} if(e.key==='ArrowRight'){cur=cur%doc().pages+1;draw();}});
-// ---- 직접 고치기 ----
-const EDITS=JSON.parse(localStorage.getItem('exp1edits')||'{}');
-function key(ci){return `${doc().id}|${S}|${M}|${ci}`;}
-function applyEdits(){const cs=chunks(); document.querySelectorAll('#items .it').forEach(el=>{const ci=+el.dataset.id.slice(1); const e=EDITS[key(ci)];
- if(e!==undefined){const t=el.querySelector('.txt'); t.textContent=e; el.classList.add('edited');}});}
-function setEditMode(on){document.body.classList.toggle('editing',on);
- document.querySelectorAll('#items .it .txt').forEach(t=>t.setAttribute('contenteditable',on?'true':'false'));
- $('#editmode').setAttribute('aria-pressed',on); $('#exportedits').hidden=!Object.keys(EDITS).length;}
-$('#editmode').addEventListener('click',()=>setEditMode($('#editmode').getAttribute('aria-pressed')!=='true'));
-$('#items').addEventListener('click',e=>{
- const sv=e.target.closest('.save'), ud=e.target.closest('.undo');
- if(sv){const ci=+sv.dataset.e.slice(1); const el=document.querySelector(`.it[data-id="c${ci}"]`); EDITS[key(ci)]=el.querySelector('.txt').textContent;
-  localStorage.setItem('exp1edits',JSON.stringify(EDITS)); el.classList.add('edited'); $('#exportedits').hidden=false; e.stopPropagation(); return;}
- if(ud){const ci=+ud.dataset.u.slice(1); delete EDITS[key(ci)]; localStorage.setItem('exp1edits',JSON.stringify(EDITS));
-  renderList(); applyEdits(); setEditMode(document.body.classList.contains('editing')); e.stopPropagation(); return;}
-},true);
-$('#exportedits').addEventListener('click',()=>{
- const rows=Object.entries(EDITS).map(([k,v])=>{const [d,s,m,ci]=k.split('|'); return {doc:d,figsrc:s,method:m,chunk:+ci,text:v};});
- const blob=new Blob([JSON.stringify(rows,null,1)],{type:'application/json'}); const a=document.createElement('a');
- a.href=URL.createObjectURL(blob); a.download='exp1_edits.json'; a.click();});
-const _renderAll=renderAll; renderAll=function(){_renderAll(); applyEdits(); setEditMode(document.body.classList.contains('editing'));};
 fillPages(); renderAll();
 </script>
 </body></html>
