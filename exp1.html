@@ -50,8 +50,8 @@ button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule
 <nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과</a><a href="exp23how.html">방법</a><a href="exp1.html" class="on">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>docling 파싱 결과 — 항목과 지면 대조</h1>
-<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">제목·본문·목록·표·그림이 지면 좌표와 함께 나온다. <b>다만 제목의 등급은 나오지 않는다.</b> 대제목과 소제목을 구분할 수 없다는 뜻이다.</p>
-<p class="lede">언어별 1편씩 고른 4편을 docling으로 파싱한 항목을 지면 위에 그대로 놓았다. 오른쪽 목록은 저장된 그대로, 문서 전체 항목을 읽기 순번대로 한 줄로 늘어놓은 것이며 쪽은 그 안의 구분선일 뿐이다. 3단계부터 이 항목들이 어느 청크로 묶이는지를 같은 화면에 겹친다. 여기서는 청킹에 앞서 파서가 제목·본문·표·그림을 어떻게 나눴는지 확인한다.</p>
+<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">제목·본문·목록·표·그림이 지면 좌표와 함께 나온다. <b>하지만 docling은 논문 속 대제목과 소제목을 구분하지 못한다.</b></p>
+<p class="lede">언어별 1편씩 고른 4편을 docling으로 파싱한 항목을 논문 지면 위에 시각화한 페이지다. 오른쪽 목록은 파싱 결과로 저장된 내용을 문서 전체 항목의 읽기 순번대로 한 줄로 늘어놓은 것이며, 쪽은 구분선이다.</p>
 
 <h2><span class="no">01</span>대상 논문</h2>
 <div class="wrap"><table class="t" id="docs"></table></div>
@@ -72,8 +72,10 @@ button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule
 
 <h2><span class="no">03</span>파싱 단계에서 미리 보이는 점</h2>
 <div class="box"><ul class="pts" id="notes"></ul></div>
-<h2><span class="no">04</span>그림 보완 — VLM 서술 비교 (ko_01 그림 9장)</h2>
-<p class="lede">docling은 그림의 위치만 주고 내용을 비운다. MinerU는 막대·선 그래프를 데이터 표로 바꾸지만 사진·도식은 비운다. 그래서 그림 영역을 캡션과 함께 잘라 로컬 VLM 두 가지(Qwen3-VL 32B·8B)에 같은 프롬프트로 서술을 받아 나란히 놓았다. 위 02의 그림 항목에도 같은 서술이 들어가 있다. 검수 결과 32B를 채택했고 8B는 속도 대안으로 남겼다. GPT-4.1-mini는 데이터가 아닌 아이콘·표시 그림 2장에서 없는 그래프를 지어내 제외했고, 상위 모델 GPT-5(추론 낮음)를 시험용으로 같은 30장에 돌렸다. 프롬프트: 그림 종류, 축·단위, 군 이름, 읽을 수 있는 수치, 군 사이 경향을 적고 캡션 반복과 값 추측을 금지.</p>
+<h2><span class="no">04</span>그림 보완 — VLM 서술 비교 (논문 12편 그림 140장)</h2>
+<p class="lede">docling은 그림의 위치만 주고 그림을 해석하거나 이해하지 못한다. MinerU는 막대·선 그래프를 데이터 표로 바꾸지만 사진·도식은 비운다. 그래서 그림 영역을 캡션과 함께 잘라 로컬 VLM 두 가지(Qwen3-VL 32B·8B)에 같은 지시문으로 서술을 받은 결과를 비교해 두었다. 위 02의 그림 항목에도 같은 서술이 들어가 있다. 검수 결과, 이번 실험에서는 32B를 채택하고 8B는 속도 대안으로 남겼다.</p>
+<p class="lede"><b>모델에게 시킨 것.</b> 그림 종류(막대 그래프·선 그래프·사진·현미경 사진·도식 중 무엇인지), 가로세로 축의 이름과 단위, 범례에 적힌 실험군 이름, 그림에서 읽을 수 있는 숫자, 실험군 사이의 증가·감소 경향을 적으라고 했다. 캡션에 이미 있는 문장은 되풀이하지 말고, 읽을 수 없는 값은 지어내지 말고 "판독 불가"라고 쓰라고 했다.</p>
+<p class="lede"><b>모델 비교.</b> GPT-4.1-mini는 데이터가 아닌 아이콘·표시 그림 2장에서 없는 그래프를 지어내 제외했다. OpenAI의 상위 모델 GPT-5도 시험 삼아 돌려 봤다. 추론을 적게 쓰는 설정으로 <b>그림 문항 12개가 가리키는 그림과 문서마다 2장</b>, 모두 46장에만 적용했다. 나머지 그림에서 GPT-5 칸이 비어 있는 것은 표본에 넣지 않았기 때문이다.</p>
 <div id="figvlm"></div>
 </main>
 <script src="exp1/data.js?v=4"></script>
@@ -114,10 +116,13 @@ $('#prev').addEventListener('click',()=>{cur=(cur+D[di].pages-2)%D[di].pages+1;d
 document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return; if(e.key==='ArrowLeft'){cur=(cur+D[di].pages-2)%D[di].pages+1;draw();} if(e.key==='ArrowRight'){cur=cur%D[di].pages+1;draw();}});
 fillPages(); renderList(); draw();
 // 03 그림 VLM 비교
-(function(){ if(typeof FV==='undefined') return; const MN={'qwen3-vl:32b-instruct':'Qwen3-VL 32B (로컬 · 채택)','qwen3-vl:8b-instruct':'Qwen3-VL 8B (로컬 · 대안)','gpt-5':'GPT-5 (API · 시험)'};
+(function(){ if(typeof FV==='undefined') return; const MN={'qwen3-vl:32b-instruct':'Qwen3-VL 32B (로컬 · 채택)','qwen3-vl:8b-instruct':'Qwen3-VL 8B (로컬 · 대안)','gpt-5':'GPT-5 (API · 표본 시험)'};
  $('#figvlm').innerHTML=FV.figs.map(f=>{const cols=[];
   cols.push(`<div class="col mu"><b>MinerU chart 표</b>${f.mineru_chart?esc(f.mineru_chart):'(chart로 인식되지 않음 — 비어 있음)'}</div>`);
-  FV.models.forEach(m=>{const o=f.out[m]; cols.push(`<div class="col"><b>${MN[m]}${o&&o.seconds?` · ${o.seconds}초`:''}</b>${o?(o.error?'오류: '+esc(o.error):esc(o.text)):'(아직 실행 전)'}</div>`);});
+  // gpt-5는 비용 때문에 일부 그림에만 돌렸다. 빈 칸을 "실행 전"이 아니라 "대상 아님"으로 적는다.
+  FV.models.forEach(m=>{const o=f.out[m];
+   const blank = m==='gpt-5' ? '(표본에 넣지 않은 그림 — 일부에만 돌렸다)' : '(아직 실행 전)';
+   cols.push(`<div class="col"><b>${MN[m]}${o&&o.seconds?` · ${o.seconds}초`:''}</b>${o?(o.error?'오류: '+esc(o.error):esc(o.text)):blank}</div>`);});
   return `<div class="fv"><div><img src="exp1/crops/${f.crop}" alt="그림 ${f.fig}"><div class="cap"><b>${f.doc} 그림 ${f.fig} · ${f.page}쪽 · 항목 ${f.item}</b><br>${esc(f.caption)}</div></div><div class="cols">${cols.join('')}</div></div>`;}).join('');
 })();
 // 04 메모: 문서별 제목 목록·빈 표
