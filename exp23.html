@@ -53,28 +53,29 @@ details.more[open] summary{margin-bottom:10px}
 <div class="wrap"><table class="t" id="main4"></table></div>
 <p class="mini" style="margin-top:6px">답변 정답은 gpt-4.1-mini가 채점했다.</p>
 <div class="box" style="margin-top:10px"><b>표의 숫자가 뜻하는 것</b>
-<p class="mini" style="margin-top:6px;color:var(--soft);font-size:13px">세는 방법이 두 가지다. 하나는 <b>조각 몇 개</b>를 보느냐, 다른 하나는 <b>글자 몇 토큰</b>까지 주느냐다. 이 둘이 서로 다른 답을 낸다.</p>
+<p class="mini" style="margin-top:6px;color:var(--soft);font-size:13px"><b>검색</b> — 질문이 들어오면 조각들 중에서 질문과 닮은 것을 골라내는 단계.<br><b>분량</b> — 그렇게 고른 조각을 AI에게 붙여 줄 때 넘기는 글의 양. 전부 줄 수는 없어 이 실험에서는 6,000토큰, 논문 약 3쪽까지만 주었다.</p>
 <div class="wrap" style="margin-top:8px"><table class="t" id="defs"></table></div></div>
 
 <div class="row3 q3" id="q3" style="margin-top:14px"></div>
 
 <h2><span class="no">02</span>문항별 답변 대조 57건</h2>
-<p class="lede">57문항에 네 방식이 각각 어떻게 답했는지 그대로 싣는다. 줄을 누르면 정답과 네 답변이 펼쳐진다. 채점이 맞는지, 어느 방식이 나은지 여기서 직접 판단하면 된다. 발췌는 모두 같은 토큰 예산 6,000으로 맞췄다.</p>
+<p class="lede">57문항에 네 방식이 각각 어떻게 답했는지 그대로 싣는다. 줄을 누르면 정답과 네 답변이 펼쳐진다. 채점이 맞는지, 어느 방식이 나은지 여기서 직접 판단하면 된다. 발췌는 모두 같은 분량 6,000토큰으로 맞췄다.</p>
 <div class="ctl" id="qfilter"></div>
 <div class="wrap"><table class="t" id="qtab"></table></div>
 
-<h2><span class="no">03</span>토큰 예산과 발췌 개수</h2>
-<p class="lede">검색 순위만 보면 고정 5,000자가 나쁘지 않다. 6위 안에 정답 청크가 드는 문항이 33개로 가장 많다. 그런데 답변을 만들게 하면 꼴찌가 된다. 이유는 답변에 넘길 수 있는 양이 정해져 있기 때문이다.</p>
+<h2><span class="no">03</span>발췌 분량과 조각 개수</h2>
+<p class="lede">검색만 보면 고정 5,000자가 낫다. 정답이 든 조각이 상위 6개에 드는 문항이 33개로 가장 많다. 그런데 답을 만들게 하면 23문항으로 가장 적다.</p>
+<p class="lede">조각을 전부 줄 수는 없기 때문이다. 고정 5,000자는 조각 하나가 논문 약 3쪽 분량을 거의 다 차지해서 한 개만 들어간다. 절 단위는 같은 분량에 열한 개가 들어간다.</p>
 <div class="wrap"><table class="t" id="budget"></table></div>
-<div class="box key" style="margin-top:12px"><b>한 조각이 예산을 다 쓴다</b>
+<div class="box key" style="margin-top:12px"><b>한 조각이 분량을 다 쓴다</b>
 <ul class="pts" style="margin-top:4px">
-<li><b>고정 5,000자는 조각 하나가 중앙값 1,845토큰, 최대 7,745토큰이다.</b> 6,000토큰 예산에 중앙값 <b>1개</b>만 들어간다. 그 하나에 답이 없으면 끝이다. 오답 29개 중 16개가 "근거 없음"이었다.</li>
-<li><b>절 단위는 같은 예산에 10개 넘게 들어간다.</b> 여러 곳에서 근거를 모으므로 한 번 빗나가도 다른 조각이 받쳐 준다.</li>
+<li><b>고정 5,000자는 조각 하나가 중앙값 1,845토큰, 최대 7,745토큰이다.</b> 6,000토큰 분량에 중앙값 <b>1개</b>만 들어간다. 그 하나에 답이 없으면 끝이다. 오답 29개 중 16개가 "근거 없음"이었다.</li>
+<li><b>절 단위는 같은 분량에 10개 넘게 들어간다.</b> 여러 곳에서 근거를 모으므로 한 번 빗나가도 다른 조각이 받쳐 준다.</li>
 <li><b>상위 6개를 그냥 주면 읽는 양이 갈린다.</b> 고정 5,000자는 중앙값 19,789토큰을 읽고 34개를 맞히고, 절 단위는 3,278토큰을 읽고 43개를 맞힌다.</li>
 </ul></div>
 
 <h2><span class="no">04</span>유형별·언어별 정답 수</h2>
-<p class="lede">같은 예산 6,000토큰에서 유형별·언어별 정답 수다. 분모는 그 유형·언어의 문항 수다.</p>
+<p class="lede">같은 분량 6,000토큰에서 유형별·언어별 정답 수다. 분모는 그 유형·언어의 문항 수다.</p>
 <h3>유형별</h3>
 <div class="wrap"><table class="t" id="bytype"></table></div>
 <h3>언어별</h3>
@@ -84,8 +85,8 @@ details.more[open] summary{margin-bottom:10px}
 
 <h2><span class="no">05</span>결론</h2>
 <div class="box key"><ul class="pts">
-<li><b>절 단위 청킹으로 바꾼다.</b> 이것 하나가 거의 전부다. 고정 5,000자에서 바꾸면 같은 예산 답변 정답이 23개에서 50개로 간다. 나머지 선택은 여기에 비하면 잔돈이다.</li>
-<li><b>절 이름 태그는 붙이지 않는다.</b> 같은 예산에서 50개 대 46개다. 상위 6개만 볼 때는 반대로 43개 대 45개인데, 답변에 넘길 양이 정해진 실제 상황에서는 예산 기준이 맞다.</li>
+<li><b>절 단위 청킹으로 바꾼다.</b> 이것 하나가 거의 전부다. 고정 5,000자에서 바꾸면 같은 분량 답변 정답이 23개에서 50개로 간다. 나머지 선택은 여기에 비하면 잔돈이다.</li>
+<li><b>절 이름 태그는 붙이지 않는다.</b> 같은 분량에서 50개 대 46개다. 상위 6개만 볼 때는 반대로 43개 대 45개인데, 답변에 넘길 양이 정해진 실제 상황에서는 분량 기준이 맞다.</li>
 <li><b>목표 토큰은 900을 그대로 둔다.</b> 600을 돌려 봤으나 답변 정답이 50개에서 47개로 내려갔다. 앞서 600을 권했던 것은 검색 순위만 보고 내린 판단이라 철회한다. 다만 900도 측정으로 정해진 값은 아니다.</li>
 <li><b>남은 병목은 중국어 제목 검출이다.</b> zh_02는 제목 14개 중 3개가 쪽마다 반복되는 머리글이라 절이 제대로 잡히지 않는다. 자르는 규칙을 더 손대기보다 파싱을 고치는 것이 먼저다.</li>
 <li><b>확인해야 할 것.</b> 채점을 답변 모델과 같은 gpt-4.1-mini가 했다. 표본을 읽어 보니 다시 봐야 할 문항이 최소 3개, 경계 사례까지 5개 나왔다. 02절에서 직접 확인할 수 있다.</li>
@@ -118,7 +119,7 @@ const B=(v,m)=>v===m?`<span class="best">${v}</span>`:v;
 {const mx=f=>Math.max(...MAIN.map(([n])=>f(n)||0));
  const m6=mx(n=>by[n].gold.r6),mb=mx(n=>by[n].gold.b6000+by[n].figure.b6000),
        ma=mx(n=>AB[n]&&AB[n]['정답']),mk=mx(n=>AK[n]&&AK[n]['정답']);
- let h=`<thead><tr><th>방식</th><th>변경점</th><th>끊는 지점</th><th>절 이름 태그</th><th>조각 크기</th><th>조각 수</th><th>검색 6위 안</th><th>같은 예산에 담기는 조각</th><th>같은 예산 안에 정답 조각</th><th>같은 예산 답변 정답</th><th>상위 6개 답변 정답</th></tr></thead><tbody>`;
+ let h=`<thead><tr><th>방식</th><th>변경점</th><th>끊는 지점</th><th>절 이름 태그</th><th>조각 크기</th><th>조각 수</th><th>검색 6위 안</th><th>같은 분량에 담기는 조각</th><th>같은 분량 안에 정답 조각</th><th>같은 분량 답변 정답</th><th>상위 6개 답변 정답</th></tr></thead><tbody>`;
  MAIN.forEach(([n,lb,ch,cut,nm,tg],i)=>{const c=by[n],a=AB[n],k=AK[n];
   h+=`<tr${i?'':''}><td class="k">${lb}</td><td>${ch}</td><td class="v">${cut}</td><td class="v">${nm}</td><td class="v">${tg}</td>
    <td class="v">${c.chunks}</td><td class="v">${B(c.gold.r6,m6)}/45</td><td class="v">${a?a.chunk_med:'—'}개</td>
@@ -131,25 +132,25 @@ document.getElementById('defs').innerHTML='<thead><tr><th>열 이름</th><th>세
  +[['조각 수','—','논문 12편을 그 방식으로 잘랐을 때 나오는 조각의 총 개수'],
    ['조각 크기','—','조각 하나의 길이. 가운데 값으로 적었다'],
    ['검색 6위 안','조각 6개','질문과 가장 닮은 조각 6개 안에 정답 문장이 든 조각이 있으면 1문항 적중. 조각의 크기는 보지 않는다'],
-   ['같은 예산에 담기는 조각','6,000토큰','합계 6,000토큰까지 조각을 담았을 때 들어가는 조각 수. 조각이 크면 적게 들어간다'],
-   ['같은 예산 안에 정답 조각','6,000토큰','그렇게 담은 조각 안에 정답 문장이 있으면 1문항 적중'],
-   ['같은 예산 답변 정답','6,000토큰','그 조각들을 AI에게 주고 답을 쓰게 한 뒤, 답이 맞으면 1문항 정답'],
+   ['같은 분량에 담기는 조각','분량 6,000토큰','합계 6,000토큰(논문 약 3쪽)까지 조각을 담았을 때 들어가는 조각 수. 조각이 크면 적게 들어간다'],
+   ['같은 분량 안에 정답 조각','분량 6,000토큰','그렇게 담은 조각 안에 정답 문장이 있으면 1문항 적중'],
+   ['같은 분량 답변 정답','분량 6,000토큰','그 조각들을 AI에게 주고 답을 쓰게 한 뒤, 답이 맞으면 1문항 정답'],
    ['상위 6개 답변 정답','조각 6개','토큰을 제한하지 않고 상위 6개를 통째로 주었을 때의 답변 정답 수. 조각이 크면 그만큼 많이 읽는다']]
   .map(([a,b,c])=>`<tr><td class="k">${a}</td><td class="v">${b}</td><td>${c}</td></tr>`).join('')+'</tbody>';
 // 01 세 질문
 document.getElementById('q3').innerHTML=[
  ['① 절 단위 청킹의 효과','변경점 : 고정 5,000자 청킹 → 절 단위 청킹',
-  '같은 예산 답변 정답 <b>23 → 50</b><br>검색 6위 안 33 → 31 (골드 45문항)',
+  '같은 분량 답변 정답 <b>23 → 50</b><br>검색 6위 안 33 → 31 (골드 45문항)',
   '<b>바꾼다.</b> 답변 정답이 27문항 오른다. 세 변경점 중 가장 크다.<br>'
   +'검색 순위가 내려간 것은 따지지 않아도 된다. 그 지표는 조각을 6개만 세고 크기를 보지 않는데, '
   +'실제로는 6,000토큰만 넘기므로 큰 조각은 1개, 절 단위는 11개가 들어간다.','dl'],
  ['② 절 이름 태그의 효과','변경점 : 이름 태그 없음 → 있음',
-  '같은 예산 답변 정답 <b>50 → 46</b><br>상위 6개 답변 정답 43 → 45',
-  '<b>붙이지 않는다.</b> 같은 예산에서 4문항을 잃는다.<br>'
+  '같은 분량 답변 정답 <b>50 → 46</b><br>상위 6개 답변 정답 43 → 45',
+  '<b>붙이지 않는다.</b> 같은 분량에서 4문항을 잃는다.<br>'
   +"짧은 조각에 '## 서 론' 한 줄이 끼어들어 본문 몫이 줄기 때문이다. "
-  +'상위 6개만 보면 2문항 이득이지만, 실제로는 넘길 양이 정해져 있으므로 예산 기준을 따른다.','mu'],
+  +'상위 6개만 보면 2문항 이득이지만, 실제로는 넘길 분량이 정해져 있으므로 분량 기준을 따른다.','mu'],
  ['③ 조각 크기의 효과','변경점 : 목표 900토큰 → 600토큰',
-  '같은 예산 답변 정답 <b>50 → 47</b><br>상위 6개 답변 정답 43 → 40',
+  '같은 분량 답변 정답 <b>50 → 47</b><br>상위 6개 답변 정답 43 → 40',
   '<b>900을 유지한다.</b> 두 기준 모두 정답이 준다.<br>'
   +'잘게 쪼개면 읽는 양은 19% 줄지만, 조각 하나에 담기는 앞뒤 맥락도 같이 잘린다.','bad']
 ].map(([q,cond,num,ans,col])=>`<div class="box" style="border-left:4px solid var(--${col});border-radius:0 10px 10px 0">
@@ -186,8 +187,8 @@ document.getElementById('qtab').addEventListener('click',e=>{
  if(document.body.classList.contains('ed-on')) return;
  const tr=e.target.closest('tr.qr'); if(!tr) return;
  const d=document.querySelector(`tr.qd[data-d="${tr.dataset.q}"]`); if(d) d.hidden=!d.hidden;});
-// 03 예산
-{let h=`<thead><tr><th>방식</th><th>조각 중앙 토큰</th><th>조각 최대</th><th>같은 예산에 담기는 조각</th><th>실제 읽은 토큰</th><th>같은 예산 답변 정답</th><th>상위 6개 읽은 토큰</th><th>상위 6개 답변 정답</th></tr></thead><tbody>`;
+// 03 분량
+{let h=`<thead><tr><th>방식</th><th>조각 중앙 토큰</th><th>조각 최대</th><th>같은 분량에 담기는 조각</th><th>실제 읽은 토큰</th><th>같은 분량 답변 정답</th><th>상위 6개 읽은 토큰</th><th>상위 6개 답변 정답</th></tr></thead><tbody>`;
  MAIN.forEach(([n,lb])=>{const c=by[n],a=AB[n],k=AK[n];
   h+=`<tr><td class="k">${lb}</td><td class="v">${c.tok_med.toLocaleString()}</td><td class="v">${c.tok_max.toLocaleString()}</td>
    <td class="v">${a?a.chunk_med:'—'}개</td><td class="v">${a?a.tok_med.toLocaleString():'—'}</td><td class="v">${a?a['정답']+'/57':'—'}</td>
@@ -205,7 +206,7 @@ function grid(id,key,names){
  document.getElementById(id).innerHTML=h+'</tbody>';}
 grid('bytype','by_type',TN); grid('bylang','by_lang',LN);
 // 부록
-{let h=`<thead><tr><th>이름</th><th>설명</th><th>끊는 지점</th><th>절 이름 태그</th><th>조각 크기</th><th>조각 수</th><th>중앙 토큰</th><th>1위</th><th>6위 안</th><th>MRR</th><th>예산 6,000</th><th>답변 (예산)</th></tr></thead><tbody>`;
+{let h=`<thead><tr><th>이름</th><th>설명</th><th>끊는 지점</th><th>절 이름 태그</th><th>조각 크기</th><th>조각 수</th><th>중앙 토큰</th><th>1위</th><th>6위 안</th><th>MRR</th><th>분량 6,000</th><th>답변 (분량)</th></tr></thead><tbody>`;
  EX.conds.forEach(c=>{const a=AB[c.name];
   h+=`<tr><td class="k">${esc(c.label)}</td><td>${esc(c.note)}</td><td class="v">${c.name.startsWith('FIX')?'글자 수':'절'}</td>
    <td class="v">${esc(c.namerow)}</td><td class="v">${esc(c.target)}</td><td class="v">${c.chunks}</td><td class="v">${c.tok_med.toLocaleString()}</td>

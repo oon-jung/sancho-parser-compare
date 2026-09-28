@@ -129,7 +129,7 @@ document.getElementById('pipe').innerHTML=HOW.pipe.map((s,i)=>
   return `<div class="cd"><h4><span>ko_01 · ${t}</span><span>${tk} 토큰</span></h4><div class="tx">${m?'<span class="pf">'+esc(m[0].trim())+'</span>\n':''}${esc(m?tx.slice(m[0].length):tx)}…</div></div>`;}).join('');}
 // 03 효과
 {const e=HOW.effect, mx=k=>Math.max(...e.map(x=>x[k]));
- document.getElementById('effect').innerHTML=`<thead><tr><th>조건</th><th>1위 적중</th><th>3위 안</th><th>6위 안</th><th>MRR</th><th>그림 6위 안</th><th>예산 6,000 적중</th></tr></thead><tbody>`+
+ document.getElementById('effect').innerHTML=`<thead><tr><th>조건</th><th>1위 적중</th><th>3위 안</th><th>6위 안</th><th>MRR</th><th>그림 6위 안</th><th>분량 6,000 적중</th></tr></thead><tbody>`+
  e.map(x=>`<tr><td class="k">${esc(x.label)}</td>`+
   [['r1',45],['r3',45],['r6',45]].map(([k,n])=>`<td class="v">${x[k]===mx(k)?'<span style="background:#e4efeb;border-radius:4px;padding:0 5px;font-weight:600">'+x[k]+'</span>':x[k]}/${n}</td>`).join('')+
   `<td class="v">${x.mrr.toFixed(3)}</td><td class="v">${x.fig6}/12</td><td class="v">${x.b6000}/57</td></tr>`).join('')+'</tbody>';}
@@ -149,7 +149,7 @@ document.getElementById('effnote').innerHTML=`<b>절 이름 태그는 위를 올
 document.getElementById('score').innerHTML=[
  ['골드 45문항','사람이 검토해 둔 정답 발췌 문자열이 청크 글 안에 통째로 들어 있으면 적중으로 본다. 비교 전에 공백·따옴표·붙임표를 지우고 유니코드를 정규화한다.','실험 방법 '+HOW.gtype.methods+' · 본문 서술 '+HOW.gtype.body+' · 표 값 '+HOW.gtype.table+' · 참고문헌 '+HOW.gtype.reference],
  ['그림 12문항','그 그림의 서술이 들어간 청크가 상위 k에 있으면 적중으로 본다. 서술 내용의 정확성은 채점하지 않는다.','값을 읽을 그래프가 있는 8편에서만 출제'],
- ['답변 정확도','상위 청크를 발췌로 묶어 gpt-4.1-mini에 주고 두 문장 이내로 답하게 한 뒤, 같은 모델이 정답과 대조해 정답·부분·오답으로 채점한다.','같은 예산 6,000토큰 · 상위 6개 두 방식']
+ ['답변 정확도','상위 청크를 발췌로 묶어 gpt-4.1-mini에 주고 두 문장 이내로 답하게 한 뒤, 같은 모델이 정답과 대조해 정답·부분·오답으로 채점한다.','같은 분량 6,000토큰 · 상위 6개 두 방식']
 ].map(([t,d,m])=>`<div class="box"><b>${t}</b><p style="margin:6px 0 0;color:var(--soft);font-size:13px">${d}</p><p class="mini" style="margin-top:6px">${m}</p></div>`).join('');
 </script>
 <script src="edit.js?v=14"></script>
