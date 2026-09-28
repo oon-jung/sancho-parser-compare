@@ -45,29 +45,28 @@ footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;paddi
 <nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과</a><a href="exp23how.html" class="on">방법</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>측정 방법 — 파이프라인과 절 이름 태그의 작동</h1>
-<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">논문 12편을 한 번만 파싱해 두고 <b>자르는 규칙만</b> 바꿨다. 파싱·그림 서술·임베딩은 모두 같은 것을 썼으므로, 조건 사이의 차이는 자르는 규칙에서만 온다.</p>
-<p class="lede">앞 단계에서 무엇을 고정하고 어디서만 조건을 갈랐는지, 그리고 "절 이름 태그"이 청크 글을 실제로 어떻게 바꾸는지 보여준다. 수치와 예시는 모두 실제 실행 파일에서 읽어 온 것이다.</p>
+<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">논문 12편을 파싱 후 청킹 방법 비교. 파싱·그림 서술·임베딩은 모두 동일, <b>청킹 방법만 변경</b>.</p>
 
-<h2><span class="no">01</span>전체 흐름 — 5번까지는 모든 조건이 같다</h2>
+<h2><span class="no">01</span>전체 흐름</h2>
 <p class="lede">1번부터 4번까지의 산출물은 한 번 만들어 캐시했고 12개 조건이 같은 파일을 읽는다. 조건이 갈리는 곳은 5번 청킹 하나뿐이다. 따라서 결과 차이는 자르는 규칙과 제목 붙이는 규칙에서만 온다.</p>
 <div class="pipe" id="pipe"></div>
 
 <h2><span class="no">02</span>절 이름 태그 — 조각마다 어느 절에서 나왔는지 붙이기</h2>
-<p class="lede"><b>절 이름 태그는 자르는 규칙이 아니다.</b> 자르는 일은 이미 끝난 뒤에, 잘린 조각마다 "이 조각은 어느 절에서 나왔다"를 한 줄 적어 넣는 것이다. 예를 들어 서론에서 나온 조각이면 그 조각의 맨 앞에 <code>## 서 론</code>이라는 줄이 들어간다. 큰 제목을 기준으로 자른다는 뜻이 아니다.</p>
-<p class="lede"><b>태그라고 부르지만 따로 붙는 딱지가 아니다.</b> 이 한 줄은 조각의 글 그 자체의 첫 줄이 된다. 그 글이 그대로 임베딩 모델에 들어가 벡터가 되고, 검색에서 질문과 비교되며, 답변 단계에서 모델에게 발췌로 전달된다. 그래서 한 줄을 넣는 것만으로 세 곳이 동시에 바뀐다.</p>
+<p class="lede">절 이름 태그는 청킹 후 잘린 조각마다 "이 조각은 어느 절에서 나왔다"를 한 줄 적어 넣는 것이다. 예를 들어 서론에서 나온 조각이면 그 조각의 맨 앞에 <code>## 서 론</code>이라는 줄이 들어간다.</p><p class="lede"><b>도입 이유.</b> docling 절 단위 청킹에서는 소제목을 함께 절로 묶어 청킹하는데, 대제목(서론 등)은 따로 분리되어 청킹됨을 확인했다. 여기서 <b>"대제목 혹은 논문 속 큰 카테고리를 태그 형식으로 지정하면 정답 답변을 제작하는 데 더 효율적일 것이다"</b>라는 가설을 세운 후 실험을 진행했다.</p>
+<p class="lede"><b>태그라고 부르지만 따로 붙는 딱지가 아니다.</b> 이 한 줄은 조각의 글 그 자체의 첫 줄이 된다. 그 글이 그대로 임베딩 모델에 들어가 벡터가 되고, 검색에서 질문과 비교되며, 답변 단계에서 모델에게 발췌로 전달된다.</p>
 <div class="wrap"><table class="t" id="rules"></table></div>
 
 <h3>같은 절의 연속한 세 조각 — 절 이름 태그의 반복</h3>
 <p class="lede" id="exhead"></p>
 <div class="stack" id="ex"></div>
 
-<h3>상위 절까지 이름 태그는 번호가 있어야만 생긴다</h3>
-<p class="lede">상위 제목까지 붙이려면 "2.1"처럼 번호로 계층을 알아내야 한다. 번호 없는 제목은 계층을 만들 수 없어 절 이름 태그 한 줄과 같아진다. 그래서 상위 절까지 이름 태그 조건은 12편 중 3편(en_02·zh_01·zh_03)에서만, 862개 청크 중 62개에서만 절 이름 태그 조건과 달라진다. 나머지 9편은 글자 하나까지 같다.</p>
+<h3>상위 절까지 이름 태그는 번호가 있어야 생성된다</h3>
+<p class="lede">상위 제목까지 붙이려면 "2.1"처럼 번호로 계층을 알아내야 한다. 번호 없는 제목은 계층을 만들 수 없어 절 이름 태그 한 줄과 같아진다. 그래서 상위 절까지 이름 태그 조건은 12편 중 3편(en_02·zh_01·zh_03)에서만, 862개 청크 중 62개에서만 절 이름 태그 조건과 달라진다. 나머지 9편은 동일하다.</p>
 <div class="cmp" id="expath"></div>
 <div class="wrap" style="margin-top:10px"><table class="t" id="pathdoc"></table></div>
 
 <h3>고정 5,000자에서의 절 이름 태그</h3>
-<p class="lede">고정 창은 절을 넘나들며 잘리므로 "이 청크의 절"이 하나로 정해지지 않는다. 창이 시작한 지점의 절 이름 태그 하나만 붙였다.</p>
+<p class="lede">고정 창은 절을 넘나들며 잘리므로 "이 청크의 절"이 하나로 정해지지 않는다. 고정 창이 시작한 지점의 절 이름 태그 하나만 붙였다.</p>
 <div class="cmp" id="exfix"></div>
 
 <h2><span class="no">03</span>절 이름 태그가 결과에 미친 영향</h2>
@@ -133,12 +132,13 @@ document.getElementById('pipe').innerHTML=HOW.pipe.map((s,i)=>
  e.map(x=>`<tr><td class="k">${esc(x.label)}</td>`+
   [['r1',45],['r3',45],['r6',45]].map(([k,n])=>`<td class="v">${x[k]===mx(k)?'<span style="background:#e4efeb;border-radius:4px;padding:0 5px;font-weight:600">'+x[k]+'</span>':x[k]}/${n}</td>`).join('')+
   `<td class="v">${x.mrr.toFixed(3)}</td><td class="v">${x.fig6}/12</td><td class="v">${x.b6000}/57</td></tr>`).join('')+'</tbody>';}
-document.getElementById('effnote').innerHTML=`<b>절 이름 태그는 위를 올리고 아래를 깎는다</b>
-<ul class="pts" style="margin-top:4px">
+document.getElementById('effnote').innerHTML=`<ul class="pts" style="margin-top:4px">
 <li><b>정답 조각을 위쪽으로 끌어올린다.</b> 조각을 닮은 순서대로 줄 세웠을 때, 정답이 든 조각이 1등에 오는 문항이 절 단위에서 16개에서 18개로 는다. 고정 창에서도 12개에서 15개로 는다.</li>
+<li><b>그런데 1등으로 올라간 것은 실제로 이득이 아니다.</b> 답을 만들 때는 1등 하나만 주지 않고 여러 개를 함께 넘긴다. 1등으로 올라온 6문항은 태그를 붙이기 전에도 이미 2~3등이어서 어차피 넘어갈 조각이었다. 2등이 1등이 되어도 넘기는 발췌는 그대로다.</li>
+<li><b>반면 6등 밖으로 밀리면 아예 넘어가지 않는다.</b> 그래서 6등까지 넓혀 보는 것이다. 실제로 몇 개를 넘기느냐가 6개 안팎이기 때문이다.</li>
 <li><b>그런데 6등까지 넓혀 보면 줄어든다.</b> 정답 조각이 6등 안에 드는 문항이 골드 45문항에서 31개에서 27개로 준다. 그림 12문항까지 합치면 밖으로 밀린 문항이 5개다. 이름 태그 없음에서 절 이름 태그로 바꿨을 때 순위가 오른 문항 ${HOW.move.up}개, 내린 문항 ${HOW.move.down}개, 그대로 ${HOW.move.same}개다. 자르는 크기를 바꿨을 때의 수치와는 다른 비교다.</li>
-<li><b>새로 6등 안에 들어온 문항은 ${HOW.move.into}개다.</b> 문항마다 조각을 따로 줄 세우므로 한 문항이 밀린다고 다른 문항이 올라오지는 않는다. 태그를 붙여서 6등 안으로 들어온 문항은 하나도 없고, 밖으로 나간 문항만 5개다.</li>
-<li><b>대가는 토큰이다.</b> 절 이름 태그 조건은 본문보다 토큰이 ${(HOW.rules[1].st.extra/(HOW.rules[1].st.total-HOW.rules[1].st.extra)*100).toFixed(1)}% 많다. 그 늘어난 분량의 ${Math.round(HOW.rules[1].st.rep/HOW.rules[1].st.pre*100)}%는 같은 제목의 반복이다.</li>
+<li><b>새로 6등 안에 들어온 문항은 ${HOW.move.into}개다.</b> 이름 태그를 붙임으로써 붙이기 전보다 후순위로 밀려난 문항만 있고 새로 얻은 문항은 없다. 문항마다 조각을 따로 줄 세우므로, 한 문항이 밀린다고 다른 문항이 그 자리로 올라오지는 않는다.</li>
+<li><b>절 이름 태그 조건은 본문보다 토큰이 ${(HOW.rules[1].st.extra/(HOW.rules[1].st.total-HOW.rules[1].st.extra)*100).toFixed(1)}% 많다. 늘어난 분량의 ${Math.round(HOW.rules[1].st.rep/HOW.rules[1].st.pre*100)}%는 같은 제목의 반복이었다.</li>
 </ul>`;
 {const d=HOW.drop;
  document.getElementById('drophead').innerHTML=`${d.length}개 문항이 절 이름 태그 때문에 6등 밖으로 밀렸고, 반대로 들어온 문항은 ${HOW.move.into}개다. 다섯 개 모두 원래 5~6등이었다. 경계에 있던 문항이 밀린 것이지 잘 찾던 문항이 무너진 것은 아니다.`;
