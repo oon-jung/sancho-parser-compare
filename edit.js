@@ -46,11 +46,58 @@
   try{localStorage.setItem(SKEY,JSON.stringify(SIZES));}catch(e){}
   szn(); }
  function szn(){const n=Object.keys(SIZES).length; szreset.hidden=!n; szreset.textContent=`크기 ${n}곳 되돌리기`;}
- // 끌기가 끝나면 저장한다. ResizeObserver는 탭이 그려지지 않을 때 콜백이 멈추므로 이 경로를 함께 둔다.
- document.addEventListener('pointerup',e=>{
-  if(!document.body.classList.contains('ed-resize')) return;
+
+ // ── 직접 만든 크기 손잡이 ─────────────────────────────
+ let wlabel=null, wnum=null;   // 도구막대가 만들어진 뒤 채운다
+ const grip=document.createElement('div'); grip.className='ed-grip'; document.body.append(grip);
+ let gripTarget=null, drag=null;
+ function placeGrip(el){
+  gripTarget=el;
+  if(!el){grip.classList.remove('on'); return;}
+  const r=el.getBoundingClientRect();
+  grip.style.left=(r.right+scrollX-10)+'px';
+  grip.style.top=(r.bottom+scrollY-10)+'px';
+  grip.classList.add('on');
+  if(wnum&&!drag){wlabel.hidden=false; wnum.value=Math.round(r.width);}
+ }
+ document.addEventListener('pointerover',e=>{
+  if(!document.body.classList.contains('ed-resize')||drag) return;
   const el=e.target.closest&&e.target.closest('[data-ed]');
-  if(el) setTimeout(()=>saveSize(el),0);},true);
+  if(el&&!el.matches('td,th')&&!el.closest('nav.top')) placeGrip(el);
+ });
+ // 누름은 pointer·mouse 양쪽으로 받고, 이동과 놓기는 document에서 듣는다(포인터 캡처보다 안전하다).
+ function startDrag(x,y){
+  if(!gripTarget) return;
+  const r=gripTarget.getBoundingClientRect();
+  drag={el:gripTarget,x,y,w:r.width,h:r.height};
+  gripTarget.style.maxWidth='none';          // 여기서 최대 너비 제한을 푼다
+  document.body.classList.add('ed-grabbing');
+  document.addEventListener('pointermove',moveDrag,true);
+  document.addEventListener('mousemove',moveDrag,true);
+  document.addEventListener('pointerup',endDrag,true);
+  document.addEventListener('mouseup',endDrag,true);
+ }
+ function moveDrag(e){
+  if(!drag) return;
+  e.preventDefault();
+  drag.el.style.width=Math.max(90,Math.round(drag.w+e.clientX-drag.x))+'px';
+  drag.el.style.height=Math.max(24,Math.round(drag.h+e.clientY-drag.y))+'px';
+  placeGrip(drag.el);
+ }
+ function endDrag(){
+  if(!drag) return;
+  const el=drag.el; drag=null;
+  document.body.classList.remove('ed-grabbing');
+  document.removeEventListener('pointermove',moveDrag,true);
+  document.removeEventListener('mousemove',moveDrag,true);
+  document.removeEventListener('pointerup',endDrag,true);
+  document.removeEventListener('mouseup',endDrag,true);
+  saveSize(el); placeGrip(el);
+ }
+ ['pointerdown','mousedown'].forEach(t=>grip.addEventListener(t,e=>{
+  if(drag) return; e.preventDefault(); e.stopPropagation(); startDrag(e.clientX,e.clientY);}));
+ window.addEventListener('scroll',()=>{if(gripTarget&&!drag) placeGrip(gripTarget);},true);
+ window.addEventListener('resize',()=>{if(gripTarget&&!drag) placeGrip(gripTarget);});
  // 끌어서 크기를 바꾼 것을 알아채 저장한다.
  let RO=null;
  function watchSizes(){
@@ -65,6 +112,7 @@
   document.body.classList.toggle('ed-on',on);
   nodes.forEach(el=>{if(on) el.setAttribute('contenteditable','true'); else el.removeAttribute('contenteditable');});
   document.body.classList.toggle('ed-resize',on&&szbtn.getAttribute('aria-pressed')==='true');
+  if(!on){grip.classList.remove('on'); gripTarget=null; if(wlabel) wlabel.hidden=true;}
   if(on) watchSizes(); else if(RO) RO.disconnect();
   btn.setAttribute('aria-pressed',on); bar.hidden=!on; count();
  }
@@ -74,7 +122,8 @@
  // 도구막대
  const bar=document.createElement('div'); bar.className='ed-bar'; bar.hidden=true;
  bar.innerHTML='<span><b>이 브라우저에만 저장됩니다.</b> 원본 파일과 공개 사이트는 그대로입니다. 반영하려면 아래에서 내려받거나 복사해 전달하세요.</span>'
-  +'<label class="ed-tl">탭 제목 <input type="text" class="ed-title"></label>';
+  +'<label class="ed-tl">탭 제목 <input type="text" class="ed-title"></label>'
+  +'<label class="ed-tl ed-wl" hidden>고른 박스 너비 <input type="number" class="ed-wnum" min="90" step="20"> px</label>';
  const dl=document.createElement('button'); dl.className='ed-dl'; dl.hidden=true;
  const szbtn=document.createElement('button'); szbtn.className='ed-sz'; szbtn.type='button'; szbtn.textContent='박스 크기 조절'; szbtn.setAttribute('aria-pressed','false');
  const szreset=document.createElement('button'); szreset.className='ed-szreset'; szreset.hidden=true;
@@ -111,6 +160,15 @@ body.ed-resize main{max-width:none!important;padding-right:40px}
  function applyTitle(){try{const v=localStorage.getItem(TKEY); if(v) document.title=v;}catch(e){}}
  applyTitle();
 
+ wlabel=bar.querySelector('.ed-wl'); wnum=bar.querySelector('.ed-wnum');
+ if(wnum) wnum.addEventListener('input',()=>{
+  if(!gripTarget) return;
+  const v=Math.max(90,parseInt(wnum.value||'0',10));
+  if(!v) return;
+  gripTarget.style.maxWidth='none'; gripTarget.style.width=v+'px';
+  saveSize(gripTarget);
+  const r=gripTarget.getBoundingClientRect();
+  grip.style.left=(r.right+scrollX-10)+'px'; grip.style.top=(r.bottom+scrollY-10)+'px';});
  const btn=document.createElement('button'); btn.className='ed-btn'; btn.type='button'; btn.textContent='본문 고치기'; btn.setAttribute('aria-pressed','false');
  const style=document.createElement('style');
  style.textContent=`.ed-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:600 13px "IBM Plex Sans KR",sans-serif;padding:9px 16px;border-radius:999px;border:1px solid var(--rule,#d5d9e2);background:#fff;color:#4a5160;box-shadow:0 2px 8px rgba(0,0,0,.14);cursor:pointer}
@@ -124,11 +182,17 @@ body.ed-resize main{max-width:none!important;padding-right:40px}
  .ed-bar .ed-szreset{border-color:#7a4fb5;color:#7a4fb5}
  /* 끌어서 크기 바꾸기: 오른쪽 아래 모서리를 잡아당긴다. 표 칸은 브라우저가 지원하지 않아 제외한다. */
  /* 최대 너비 제한이 걸려 있으면 끌어도 가로로 커지지 않는다. 조절 중에는 제한을 푼다. */
- body.ed-resize [data-ed]:not(td):not(th):not(nav.top *){resize:both;overflow:auto;min-width:90px;min-height:1.7em;max-width:none!important}
- body.ed-resize [data-ed]:not(td):not(th):not(nav.top *)::-webkit-resizer{background:#7a4fb5}
+ body.ed-resize [data-ed]:not(td):not(th):not(nav.top *){outline-color:rgba(122,79,181,.55)}
+ /* 직접 만든 손잡이. 브라우저 기본 resize는 모서리에서 이벤트를 삼켜 최대 너비 제한을 풀 수 없다. */
+ .ed-grip{position:absolute;width:20px;height:20px;z-index:48;background:#7a4fb5;border:2px solid #fff;border-radius:4px;
+  box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:nwse-resize;display:none;touch-action:none}
+ body.ed-resize .ed-grip.on{display:block}
+ body.ed-grabbing{cursor:nwse-resize!important;user-select:none!important}
  body [data-ed].ed-sized{box-shadow:inset 0 0 0 1px rgba(122,79,181,.35);max-width:none!important}
+ /* 손잡이를 쉽게 잡도록 모서리를 키운다 */
  .ed-bar .ed-tl{display:flex;gap:6px;align-items:center;font:12px inherit;color:#737c8c}
  .ed-bar .ed-title{font:13px "IBM Plex Sans KR",sans-serif;padding:4px 9px;border:1px solid #d5d9e2;border-radius:6px;min-width:260px;background:#fff;color:#16181d}
+ .ed-bar .ed-wnum{font:13px "IBM Plex Sans KR",sans-serif;padding:4px 7px;border:1px solid #7a4fb5;border-radius:6px;width:96px;background:#fff;color:#16181d}
  body.ed-on nav.top [data-ed]{outline:1px dashed rgba(255,255,255,.55);outline-offset:2px;cursor:text}
  body.ed-on nav.top [data-ed]:focus{outline:2px solid #eb6834;background:rgba(255,255,255,.18);color:#fff}
  body.ed-on nav.top [data-ed]{opacity:1}
@@ -173,9 +237,10 @@ body.ed-resize main{max-width:none!important;padding-right:40px}
  szbtn.addEventListener('click',()=>{
   const on=szbtn.getAttribute('aria-pressed')!=='true';
   szbtn.setAttribute('aria-pressed',on);
-  document.body.classList.toggle('ed-resize',on&&document.body.classList.contains('ed-on'));});
+  document.body.classList.toggle('ed-resize',on&&document.body.classList.contains('ed-on'));
+  if(!on){grip.classList.remove('on'); gripTarget=null; if(wlabel) wlabel.hidden=true;}});
  szreset.addEventListener('click',()=>{
-  nodes.forEach(el=>{el.style.width='';el.style.height='';el.classList.remove('ed-sized');});
+  nodes.forEach(el=>{el.style.width='';el.style.height='';el.style.maxWidth='';el.classList.remove('ed-sized');});
   SIZES={}; try{localStorage.setItem(SKEY,'{}');}catch(e){} szn();});
  cp.addEventListener('click',async()=>{
   const lines=[`[${PAGE}] 고친 글`];
