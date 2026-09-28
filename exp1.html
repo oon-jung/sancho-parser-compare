@@ -4,11 +4,11 @@
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--gray:#9aa3b3;--bad:#a3232b}
 *{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.6 "IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;font-variant-numeric:tabular-nums}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.6 "IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;font-variant-numeric:tabular-nums;word-break:keep-all;overflow-wrap:break-word}
 nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}nav.top b{font-size:14px}nav.top span{opacity:.7}
 main{max-width:1180px;margin:0 auto;padding:18px 18px 40px}
 h1{font-size:20px;margin:8px 0 6px}h2{font-size:16px;margin:28px 0 6px;display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint);letter-spacing:.06em}
-p.lede{color:var(--soft);margin:0 0 12px;max-width:84ch}
+p.lede{color:var(--soft);margin:0 0 12px;max-width:108ch}
 .wrap{overflow-x:auto}table.t{border-collapse:collapse;width:100%;font-size:13px;background:var(--lift);border:1px solid var(--rule)}table.t th{background:var(--sunk);font-size:11.5px;color:var(--faint);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}table.t td{padding:7px 10px;border-top:1px solid var(--rule2);vertical-align:top}table.t td.v{font-family:"IBM Plex Mono",monospace;white-space:nowrap}table.t td.k{font-weight:600}
 .ctl{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:12px 0 10px}
 .grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
@@ -50,7 +50,7 @@ button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule
 <nav class="top"><b>청킹 방식 비교</b><a href="exp1.html" class="on">① 파싱</a><a href="exp1chunk.html">② 청크 경계</a><a href="exp1summary.html">③ 언어별 요약</a><a href="figq.html">④ 그림 문항</a><a href="exp23how.html">⑤ 측정 방법</a><a href="exp23.html">⑥ 결과</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>docling 파싱 결과 — 항목과 지면 대조</h1>
-<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">제목·본문·목록·표·그림이 지면 좌표와 함께 나온다. <b>하지만 docling은 논문 속 대제목과 소제목을 구분하지 못한다.</b></p>
+<p class="lede" style="font-size:15px;color:var(--ink);max-width:100ch">제목·본문·목록·표·그림이 지면 좌표와 함께 나온다. <b>하지만 docling은 논문 속 대제목과 소제목을 구분하지 못한다.</b></p>
 <p class="lede">언어별 1편씩 고른 4편을 docling으로 파싱한 항목을 논문 지면 위에 시각화한 페이지다. 오른쪽 목록은 파싱 결과로 저장된 내용을 문서 전체 항목의 읽기 순번대로 한 줄로 늘어놓은 것이며, 쪽은 구분선이다.</p>
 
 <h2><span class="no">01</span>대상 논문</h2>
