@@ -12,6 +12,7 @@
  // 그래서 "자식이 또 대상이면 부모는 제외" 판단에는 BLOCK만 쓴다.
  const SEL=BLOCK+',nav.top a,nav.top b';
  const KEY='pageedits:'+PAGE;
+ const TKEY='pagetitle:'+PAGE;
  const EDITS=JSON.parse(localStorage.getItem(KEY)||'{}');
  let nodes=[];
  function fp(t){return (t||'').replace(/\s+/g,' ').trim().slice(0,40);}
@@ -23,22 +24,33 @@
   nodes.forEach((el,i)=>{el.dataset.ed=i; if(!el.dataset.orig) el.dataset.orig=el.innerHTML;});
   return nodes.length;
  }
- function apply(){nodes.forEach((el,i)=>{const e=EDITS[i];
-  if(e&&fp(e.fp)===fp(el.dataset.orig.replace(/<[^>]*>/g,''))){el.innerHTML=e.html; el.classList.add('ed-changed');}});}
+ // 원본 글이 바뀌어 더 이상 붙일 곳이 없는 수정은 지운다. 그대로 두면 세어지고 내려받기에도 섞인다.
+ function apply(){
+  const live=new Set();
+  nodes.forEach((el,i)=>{const e=EDITS[i];
+   if(e&&fp(e.fp)===fp(el.dataset.orig.replace(/<[^>]*>/g,''))){el.innerHTML=e.html; el.classList.add('ed-changed'); live.add(String(i));}});
+  let dropped=0;
+  Object.keys(EDITS).forEach(k=>{if(!live.has(k)){delete EDITS[k]; dropped++;}});
+  if(dropped){try{localStorage.setItem(KEY,JSON.stringify(EDITS));}catch(e){}
+   console.log(`[고치기] 원본이 바뀌어 더 이상 적용되지 않는 수정 ${dropped}건을 지웠습니다.`);}
+ }
  function setMode(on){
   if(on){document.querySelectorAll('[data-ed]').forEach(el=>el.removeAttribute('data-ed')); collect(); apply();}
   document.body.classList.toggle('ed-on',on);
   nodes.forEach(el=>{if(on) el.setAttribute('contenteditable','true'); else el.removeAttribute('contenteditable');});
   btn.setAttribute('aria-pressed',on); bar.hidden=!on; count();
  }
- function count(){const n=Object.keys(EDITS).length; dl.hidden=!n; dl.textContent=`고친 글 ${n}곳 내려받기`; reset.hidden=!n;}
+ function count(){let t=null; try{t=localStorage.getItem(TKEY);}catch(e){}
+  const n=Object.keys(EDITS).length+(t?1:0);
+  dl.hidden=!n; dl.textContent=`고친 글 ${n}곳 내려받기`; cp.hidden=!n; reset.hidden=!n;}
  // 도구막대
  const bar=document.createElement('div'); bar.className='ed-bar'; bar.hidden=true;
- bar.innerHTML='<span>제목·메뉴 이름·설명·표 칸까지 눌러서 고칠 수 있습니다. 다른 곳을 누르면 저장되고 고친 곳은 노란 배경으로 남습니다. 고치기를 끄면 원래 동작으로 돌아갑니다.</span>'
+ bar.innerHTML='<span><b>이 브라우저에만 저장됩니다.</b> 원본 파일과 공개 사이트는 그대로입니다. 반영하려면 아래에서 내려받거나 복사해 전달하세요.</span>'
   +'<label class="ed-tl">탭 제목 <input type="text" class="ed-title"></label>';
  const dl=document.createElement('button'); dl.className='ed-dl'; dl.hidden=true;
+ const cp=document.createElement('button'); cp.className='ed-cp'; cp.textContent='고친 글 복사'; cp.hidden=true;
  const reset=document.createElement('button'); reset.className='ed-reset'; reset.textContent='모두 되돌리기'; reset.hidden=true;
- bar.append(dl,reset);
+ bar.append(dl,cp,reset);
  // 본문 너비 조절. 글줄이 너무 짧거나 길면 읽기 불편하므로 사용자가 고른다.
  const WKEY='pagewidth';
  const WIDTHS=[['좁게','780px','68ch'],['보통','1160px','86ch'],['넓게','1440px','110ch'],['가득','100%','none']];
@@ -65,7 +77,6 @@
  { let i=1; try{const v=localStorage.getItem(WKEY); if(v!==null) i=+v;}catch(e){} setWidth(i); }
 
  // 탭에 뜨는 제목도 따로 고칠 수 있게 한다.
- const TKEY='pagetitle:'+PAGE;
  function applyTitle(){try{const v=localStorage.getItem(TKEY); if(v) document.title=v;}catch(e){}}
  applyTitle();
 
@@ -76,6 +87,7 @@
  .ed-bar{position:fixed;left:0;right:0;bottom:0;z-index:49;background:#fffdf5;border-top:1px solid #eb6834;padding:9px 90px 9px 18px;font:13px "IBM Plex Sans KR",sans-serif;color:#4a5160;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
  .ed-bar button{font:600 12px inherit;padding:4px 12px;border-radius:999px;border:1px solid #1f6f5c;color:#1f6f5c;background:#fff;cursor:pointer}
  .ed-bar .ed-reset{border-color:#a3232b;color:#a3232b}
+ .ed-bar .ed-cp{border-color:#2a78d6;color:#2a78d6}
  .ed-bar .ed-tl{display:flex;gap:6px;align-items:center;font:12px inherit;color:#737c8c}
  .ed-bar .ed-title{font:13px "IBM Plex Sans KR",sans-serif;padding:4px 9px;border:1px solid #d5d9e2;border-radius:6px;min-width:260px;background:#fff;color:#16181d}
  body.ed-on nav.top [data-ed]{outline:1px dashed rgba(255,255,255,.55);outline-offset:2px;cursor:text}
@@ -119,6 +131,16 @@
   if(tt) rows.unshift({page:PAGE,index:'탭 제목',원본:'',고친글:tt,고친HTML:tt});
   const b=new Blob([JSON.stringify(rows,null,1)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=PAGE.replace('.html','')+'_글수정.json'; a.click();});
+ cp.addEventListener('click',async()=>{
+  const lines=[`[${PAGE}] 고친 글`];
+  let t=null; try{t=localStorage.getItem(TKEY);}catch(e){}
+  if(t) lines.push(`- 탭 제목: "${t}"`);
+  Object.values(EDITS).forEach(e=>lines.push(`- "${e.fp.trim()}" → "${e.text.trim()}"`));
+  const txt=lines.join('\n');
+  try{await navigator.clipboard.writeText(txt); cp.textContent='복사했습니다'; setTimeout(()=>cp.textContent='고친 글 복사',1600);}
+  catch(err){const ta=document.createElement('textarea'); ta.value=txt; document.body.append(ta); ta.select();
+   try{document.execCommand('copy'); cp.textContent='복사했습니다'; setTimeout(()=>cp.textContent='고친 글 복사',1600);}catch(e2){alert(txt);}
+   ta.remove();}});
  reset.addEventListener('click',()=>{if(!confirm('고친 글을 모두 되돌릴까요? 탭 제목도 함께 돌아갑니다.'))return;
   nodes.forEach(el=>{el.innerHTML=el.dataset.orig; el.classList.remove('ed-changed');});
   Object.keys(EDITS).forEach(k=>delete EDITS[k]); localStorage.setItem(KEY,'{}');
