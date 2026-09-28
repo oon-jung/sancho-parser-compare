@@ -136,8 +136,8 @@ document.getElementById('pipe').innerHTML=HOW.pipe.map((s,i)=>
 document.getElementById('effnote').innerHTML=`<b>절 이름 태그는 위를 올리고 아래를 깎는다</b>
 <ul class="pts" style="margin-top:4px">
 <li><b>정답 조각을 위쪽으로 끌어올린다.</b> 조각을 닮은 순서대로 줄 세웠을 때, 정답이 든 조각이 1등에 오는 문항이 절 단위에서 16개에서 18개로 는다. 고정 창에서도 12개에서 15개로 는다.</li>
-<li><b>그런데 6등까지 넓혀 보면 줄어든다.</b> 정답 조각이 6등 안에 드는 문항이 절 단위에서 31개에서 27개로 준다. 이름 태그 없음에서 절 이름 태그로 바꿨을 때 순위가 오른 문항 ${HOW.move.up}개, 내린 문항 ${HOW.move.down}개, 그대로 ${HOW.move.same}개다. 자르는 크기를 바꿨을 때의 수치와는 다른 비교다.</li>
-<li><b>새로 6등 안에 들어온 문항은 ${HOW.move.into}개다.</b> 밀려난 문항만 있고 얻은 문항은 없다.</li>
+<li><b>그런데 6등까지 넓혀 보면 줄어든다.</b> 정답 조각이 6등 안에 드는 문항이 골드 45문항에서 31개에서 27개로 준다. 그림 12문항까지 합치면 밖으로 밀린 문항이 5개다. 이름 태그 없음에서 절 이름 태그로 바꿨을 때 순위가 오른 문항 ${HOW.move.up}개, 내린 문항 ${HOW.move.down}개, 그대로 ${HOW.move.same}개다. 자르는 크기를 바꿨을 때의 수치와는 다른 비교다.</li>
+<li><b>새로 6등 안에 들어온 문항은 ${HOW.move.into}개다.</b> 문항마다 조각을 따로 줄 세우므로 한 문항이 밀린다고 다른 문항이 올라오지는 않는다. 태그를 붙여서 6등 안으로 들어온 문항은 하나도 없고, 밖으로 나간 문항만 5개다.</li>
 <li><b>대가는 토큰이다.</b> 절 이름 태그 조건은 본문보다 토큰이 ${(HOW.rules[1].st.extra/(HOW.rules[1].st.total-HOW.rules[1].st.extra)*100).toFixed(1)}% 많다. 그 늘어난 분량의 ${Math.round(HOW.rules[1].st.rep/HOW.rules[1].st.pre*100)}%는 같은 제목의 반복이다.</li>
 </ul>`;
 {const d=HOW.drop;
