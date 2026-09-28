@@ -119,7 +119,7 @@ svg{display:block;width:100%;height:auto}
 <div class="box"><ul class="pts">
 <li><b>B는 표를 통째로 한 청크에 둔다.</b> 4편 표 11개가 모두 독립 청크가 됐고, docling HTML을 <code>[셀|셀]</code> 행 텍스트로 바꿔 행·열 관계가 남는다. 상한 7,000토큰을 넘는 표가 없어 분할된 표는 없다.</li>
 <li><b>A는 표를 본문과 같은 흐름으로 취급한다.</b> 셀 텍스트가 5,000자 창 안에 섞여 들어가고, 창 경계에 걸리면 표가 둘로 잘린다(ko_01 1건, zh_02 2건). 잘린 표는 행 중간에서 끊겨 값과 머리글의 연결이 끊어진다.</li>
-<li><b>표 캡션은 표 청크에 붙였다.</b> 캡션은 표 청크 맨 앞에 존재한다.</li>
+<li><b>표 캡션은 표 청크에 붙였다.</b> "Table 1. …" 줄이 표 청크 맨 앞에 들어간다. 그림 캡션은 아직 그림 서술과 다른 청크에 남는다(A 5건·B 7건).</li>
 </ul></div>
 
 <h3>6-4. 그림의 처리</h3>
@@ -146,7 +146,7 @@ const $=s=>document.querySelector(s); const esc=s=>(s||'').replace(/&/g,'&amp;')
 const PAL=['#2a78d6','#1f6f5c','#eb6834','#4a3aa7','#0b7285','#a3232b','#2b8a3e','#e67700','#5c7cfa','#b4531c','#7a4fb5','#0c8599'];
 const KN={section_header:'제목',text:'본문',list_item:'목록',caption:'캡션',table:'표',picture:'그림',footnote:'각주',code:'코드'};
 const KC={section_header:'#1f6f5c',text:'#2a78d6',list_item:'#5c7cfa',caption:'#0b7285',table:'#7a4fb5',picture:'#eb6834',footnote:'#9aa3b3',code:'#b4531c'};
-const FD={head_mid:['제목이 청크 중간','제목이 청크 첫머리가 아닌 자리에 있어 앞 절 내용과 섞임','bad'],multi_section:['절 여러 개 섞임','한 청크에 둘 이상의 절이 들어감','bad'],sub_split:['부제·본문 분리','한 절의 본문이 둘 이상의 청크로 나뉨','warn'],table_cut:['표 잘림','표가 청크 경계에 걸려 나뉨','bad'],table_chunk:['표 독립 청크','표가 통째로 한 청크','ok'],caption_apart:['캡션 분리','표·그림과 그 캡션이 다른 청크에 있음','warn'],figure_cut:['그림 서술 잘림','그림 서술이 청크 경계에 걸려 나뉨','bad'],page_break_word:['쪽 넘김 단어 끊김','쪽 경계에서 문단이 두 항목으로 나뉘어 단어가 끊긴 채 이어짐','warn'],dup_text:['중복 텍스트','같은 문단이 두 번 저장되어 청크에 중복으로 들어감','bad'],running_head:['제목 중복','같은 제목 텍스트가 두 곳 이상에 나옴 (머리글 오검출 또는 반복 소제목)','warn']};
+const FD={head_mid:['제목이 청크 중간','제목이 청크 첫머리가 아닌 자리에 있어 앞 절 내용과 섞임','bad'],multi_section:['절 여러 개 섞임','한 청크에 둘 이상의 절이 들어감','bad'],sub_split:['부제·본문 분리','한 절의 본문이 둘 이상의 청크로 나뉨','warn'],table_cut:['표 잘림','표가 청크 경계에 걸려 나뉨','bad'],table_chunk:['표 독립 청크','표가 통째로 한 청크','ok'],caption_apart:['캡션 따로','"Fig. 4. …" 같은 캡션이 그 표·그림과 다른 청크에 담겨, 무엇을 나타낸 그림인지 알 수 없다','warn'],figure_cut:['그림 서술 잘림','그림 서술이 청크 경계에 걸려 나뉨','bad'],page_break_word:['쪽 넘김 단어 끊김','쪽 경계에서 문단이 두 항목으로 나뉘어 단어가 끊긴 채 이어짐','warn'],dup_text:['중복 텍스트','같은 문단이 두 번 저장되어 청크에 중복으로 들어감','bad'],running_head:['제목 중복','같은 제목 텍스트가 두 곳 이상에 나옴 (머리글 오검출 또는 반복 소제목)','warn']};
 const D=E1.docs; let di=0, cur=1, M='A', S='32b', FOCUS=null;
 const dsel=$('#doc'), psel=$('#page'); D.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=d.title;dsel.appendChild(o);});
 const doc=()=>D[di], DS=(id,s)=>CH.docs[id][s||S], chunks=()=>DS(doc().id)[M];
