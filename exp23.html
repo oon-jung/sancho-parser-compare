@@ -62,7 +62,7 @@ code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;
 <div class="wrap"><table class="t" id="exp2"></table></div>
 <div class="box warn" style="margin-top:12px"><b>절 이름 줄은 가설과 반대 방향이다</b>
 <ul class="pts" style="margin-top:4px">
-<li><b>상위 6위 안에 드는 문항은 줄었다.</b> 이름 줄 없음 31개에서 절 제목을 붙이면 27개가 된다. 대제목 경로까지 붙여도 27개로 같다.</li>
+<li><b>상위 6위 안에 드는 문항은 줄었다.</b> 이름 줄 없음 31개에서 절 이름 줄을 붙이면 27개가 된다. 대상위 절까지 이름 줄까지 붙여도 27개로 같다.</li>
 <li><b>대신 1위 적중과 순위는 올랐다.</b> 1위가 16개에서 18개로, MRR이 0.488에서 0.503으로 오른다. 제목이 질문의 단어와 겹치면 그 청크를 위로 끌어올린다.</li>
 <li><b>밀려난 문항은 모두 경계선에 있었다.</b> 절 이름 줄 때문에 6위 밖으로 나간 5문항은 원래 5~6위였고, 절 이름 줄을 붙여 6위 안으로 들어온 문항은 하나도 없다.</li>
 <li><b>설명.</b> 절 단위 청크는 중앙값이 140토큰으로 짧다. 여기에 제목 한 줄을 붙이면 본문이 차지하는 비중이 줄어, 제목과 상관없는 질문에서는 유사도가 내려간다.</li>
@@ -163,11 +163,11 @@ const best=(k,f)=>Math.max(...C.map(f));
 // 03 묶기와 절 이름 줄
 (function(){const names=['FIX5000','FIX5000H','SEC_none','SEC_sub','SEC_path'];
  let h=`<thead><tr><th>조건</th><th>묶는 방식</th><th>앞에 붙이는 제목</th><th>recall@6</th><th>1위</th><th>MRR</th><th>예산 6천</th></tr></thead><tbody>`;
- const info={FIX5000:['고정 5,000자','없음'],FIX5000H:['고정 5,000자','절 제목'],SEC_none:['절 단위','없음'],SEC_sub:['절 단위','절 제목 (현행)'],SEC_path:['절 단위','대제목 > 절 제목']};
+ const info={FIX5000:['고정 5,000자','없음'],FIX5000H:['고정 5,000자','절 이름 줄'],SEC_none:['절 단위','없음'],SEC_sub:['절 단위','절 이름 줄 (현행)'],SEC_path:['절 단위','대제목 > 절 이름 줄']};
  names.forEach(n=>{const c=C.find(x=>x.name===n); const G=c.gold;
   h+=`<tr><td class="k">${esc(c.label)}</td><td>${info[n][0]}</td><td>${info[n][1]}</td><td class="v">${G.r6}/45</td><td class="v">${G.r1}</td><td class="v">${G.mrr.toFixed(3)}</td><td class="v">${G.b6000}</td></tr>`;});
  $('#exp2').innerHTML=h+'</tbody>';
- let f=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>이름 줄 없음</th><th>절 제목 붙임</th></tr></thead><tbody>`;
+ let f=`<thead><tr><th>문항</th><th>문서</th><th>유형</th><th>이름 줄 없음</th><th>절 이름 줄 붙임</th></tr></thead><tbody>`;
  EX.flips.forEach(x=>{f+=`<tr><td class="v">${x.qid}</td><td class="v">${x.doc}</td><td>${TN[x.type]||x.type}</td><td class="v" style="color:var(--dl)">${x.none?x.none+'위':'미회수'}</td><td class="v" style="color:var(--bad)">${x.sub?x.sub+'위':'미회수'}</td></tr>`;});
  $('#flips').innerHTML=f+(EX.flips.length?'':'<tr><td colspan="5">바뀐 문항 없음</td></tr>')+'</tbody>';})();
 // 04 자르는 크기
@@ -190,8 +190,8 @@ const best=(k,f)=>Math.max(...C.map(f));
 (function(){const by=Object.fromEntries(EX.conds.map(c=>[c.name,c]));
  const ansB=Object.fromEntries((typeof AN!=='undefined'?AN.budget:[]).map(x=>[x.name,x['정답']]));
  const ansK=Object.fromEntries((typeof AN!=='undefined'?AN.k6:[]).map(x=>[x.name,x['정답']]));
- const cells=[['FIX5000','고정 5,000자 창','없음'],['FIX5000H','고정 5,000자 창','절 제목'],
-              ['SEC_none','절 단위로 묶음','없음'],['SEC_sub','절 단위로 묶음','절 제목 (현행)']];
+ const cells=[['FIX5000','고정 5,000자 창','없음'],['FIX5000H','고정 5,000자 창','절 이름 줄'],
+              ['SEC_none','절 단위로 묶음','없음'],['SEC_sub','절 단위로 묶음','절 이름 줄 (현행)']];
  const mx=f=>Math.max(...cells.map(([n])=>f(by[n],n)||0));
  const B=(v,m)=>v===m?`<span class="best">${v}</span>`:v;
  const m1=mx(c=>c.gold.r1),m6=mx(c=>c.gold.r6),mm=mx(c=>c.gold.mrr),
@@ -230,5 +230,5 @@ const best=(k,f)=>Math.max(...C.map(f));
  AN.budget.forEach(x=>{t+=`<tr><td class="k">${esc(x.label)}</td>`+types.map(k=>{const b=x.by_type[k]; return `<td class="v">${b?b[0]+'/'+b[1]:'-'}</td>`;}).join('')+`</tr>`;});
  document.getElementById('ansT').innerHTML=t+'</tbody>';})();
 </script>
-<script src="edit.js?v=4"></script>
+<script src="edit.js?v=5"></script>
 </body></html>

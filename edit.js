@@ -4,8 +4,13 @@
 (function(){
  const PAGE=location.pathname.split('/').pop()||'index.html';
  // 조작용 요소만 제외한다. 나머지 글은 전부 고칠 수 있다.
- const SKIP=['nav.top','.ctl','.ed-bar','.ed-btn','button','select','input','label','a','#doc','#page'];
- const SEL='h1,h2,h3,h4,h5,p,li,td,th,dt,dd,figcaption,footer,summary,blockquote,.lede,.sub,.editnote,.ttl,.dsc,.fil';
+ // 조작용 요소만 제외한다. 나머지 글은 전부 고칠 수 있다.
+ // 위쪽 메뉴의 이름과 링크 글자도 고칠 수 있게 넣는다(고치기를 켠 동안에는 눌러도 이동하지 않는다).
+ const SKIP=['.ctl','.ed-bar','.ed-btn','.ed-w','button','select','input','label','#doc','#page'];
+ const BLOCK='h1,h2,h3,h4,h5,p,li,td,th,dt,dd,figcaption,footer,summary,blockquote,.lede,.sub,.editnote,.ttl,.dsc,.fil';
+ // 링크와 메뉴 이름은 그 자체로 고칠 수 있지만, 문단이 링크를 품었다고 해서 문단이 빠지면 안 된다.
+ // 그래서 "자식이 또 대상이면 부모는 제외" 판단에는 BLOCK만 쓴다.
+ const SEL=BLOCK+',nav.top a,nav.top b';
  const KEY='pageedits:'+PAGE;
  const EDITS=JSON.parse(localStorage.getItem(KEY)||'{}');
  let nodes=[];
@@ -13,7 +18,7 @@
  function collect(){
   nodes=[...document.querySelectorAll(SEL)].filter(el=>{
    if(el.closest(SKIP.join(','))) return false;
-   if(el.querySelector(SEL)) return false;          // 자식이 또 대상이면 부모는 제외
+   if(el.querySelector(BLOCK)) return false;        // 자식이 또 대상이면 부모는 제외(링크·메뉴 이름은 제외 판단에서 뺀다)
    return (el.textContent||'').trim().length>1;});
   nodes.forEach((el,i)=>{el.dataset.ed=i; if(!el.dataset.orig) el.dataset.orig=el.innerHTML;});
   return nodes.length;
@@ -29,7 +34,8 @@
  function count(){const n=Object.keys(EDITS).length; dl.hidden=!n; dl.textContent=`고친 글 ${n}곳 내려받기`; reset.hidden=!n;}
  // 도구막대
  const bar=document.createElement('div'); bar.className='ed-bar'; bar.hidden=true;
- bar.innerHTML='<span>제목·설명·표 칸까지 눌러서 고칠 수 있습니다. 다른 곳을 누르면 저장되고 고친 곳은 노란 배경으로 남습니다. 고치기를 끄면 원래 동작으로 돌아갑니다.</span>';
+ bar.innerHTML='<span>제목·메뉴 이름·설명·표 칸까지 눌러서 고칠 수 있습니다. 다른 곳을 누르면 저장되고 고친 곳은 노란 배경으로 남습니다. 고치기를 끄면 원래 동작으로 돌아갑니다.</span>'
+  +'<label class="ed-tl">탭 제목 <input type="text" class="ed-title"></label>';
  const dl=document.createElement('button'); dl.className='ed-dl'; dl.hidden=true;
  const reset=document.createElement('button'); reset.className='ed-reset'; reset.textContent='모두 되돌리기'; reset.hidden=true;
  bar.append(dl,reset);
@@ -58,6 +64,11 @@
  document.head.append(wstyle); document.body.append(wbar);
  { let i=1; try{const v=localStorage.getItem(WKEY); if(v!==null) i=+v;}catch(e){} setWidth(i); }
 
+ // 탭에 뜨는 제목도 따로 고칠 수 있게 한다.
+ const TKEY='pagetitle:'+PAGE;
+ function applyTitle(){try{const v=localStorage.getItem(TKEY); if(v) document.title=v;}catch(e){}}
+ applyTitle();
+
  const btn=document.createElement('button'); btn.className='ed-btn'; btn.type='button'; btn.textContent='본문 고치기'; btn.setAttribute('aria-pressed','false');
  const style=document.createElement('style');
  style.textContent=`.ed-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:600 13px "IBM Plex Sans KR",sans-serif;padding:9px 16px;border-radius:999px;border:1px solid var(--rule,#d5d9e2);background:#fff;color:#4a5160;box-shadow:0 2px 8px rgba(0,0,0,.14);cursor:pointer}
@@ -65,11 +76,22 @@
  .ed-bar{position:fixed;left:0;right:0;bottom:0;z-index:49;background:#fffdf5;border-top:1px solid #eb6834;padding:9px 90px 9px 18px;font:13px "IBM Plex Sans KR",sans-serif;color:#4a5160;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
  .ed-bar button{font:600 12px inherit;padding:4px 12px;border-radius:999px;border:1px solid #1f6f5c;color:#1f6f5c;background:#fff;cursor:pointer}
  .ed-bar .ed-reset{border-color:#a3232b;color:#a3232b}
+ .ed-bar .ed-tl{display:flex;gap:6px;align-items:center;font:12px inherit;color:#737c8c}
+ .ed-bar .ed-title{font:13px "IBM Plex Sans KR",sans-serif;padding:4px 9px;border:1px solid #d5d9e2;border-radius:6px;min-width:260px;background:#fff;color:#16181d}
+ body.ed-on nav.top [data-ed]{outline:1px dashed rgba(255,255,255,.55);outline-offset:2px;cursor:text}
+ body.ed-on nav.top [data-ed]:focus{outline:2px solid #eb6834;background:rgba(255,255,255,.14)}
+ body.ed-on nav.top a[data-ed]{cursor:text}
  body.ed-on [data-ed]{outline:1px dashed rgba(235,104,52,.5);outline-offset:2px;cursor:text}
  body.ed-on [data-ed]:focus{outline:2px solid #eb6834;background:#fffdf5}
  .ed-changed{background:#fff9e6}`;
  document.head.append(style); document.body.append(btn,bar);
  btn.addEventListener('click',()=>setMode(btn.getAttribute('aria-pressed')!=='true'));
+ const tinput=bar.querySelector('.ed-title');
+ tinput.value=document.title;
+ tinput.addEventListener('input',()=>{
+  const v=tinput.value.trim();
+  document.title=v||PAGE;
+  try{ if(v) localStorage.setItem(TKEY,v); else localStorage.removeItem(TKEY); }catch(e){}});
  function save(el){
   if(!el||el.dataset.ed===undefined) return;
   const i=el.dataset.ed;
@@ -83,14 +105,22 @@
   const k=el.dataset.ed; clearTimeout(timers.get(k));
   timers.set(k,setTimeout(()=>{timers.delete(k); save(el);},400));});
  document.addEventListener('focusout',e=>{const el=e.target.closest&&e.target.closest('[data-ed]'); if(el) save(el);});
+ // 고치기를 켠 동안 링크를 누르면 이동하지 않고 글자에 커서가 놓인다.
+ document.addEventListener('click',e=>{
+  if(!document.body.classList.contains('ed-on')) return;
+  const a=e.target.closest&&e.target.closest('nav.top a[data-ed]'); if(a){e.preventDefault();}},true);
  window.__edSave=save;
  dl.addEventListener('click',()=>{
   const rows=Object.entries(EDITS).map(([i,e])=>({page:PAGE,index:+i,원본:e.fp,고친글:e.text,고친HTML:e.html}));
+  let tt=null; try{tt=localStorage.getItem(TKEY);}catch(e){}
+  if(tt) rows.unshift({page:PAGE,index:'탭 제목',원본:'',고친글:tt,고친HTML:tt});
   const b=new Blob([JSON.stringify(rows,null,1)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=PAGE.replace('.html','')+'_글수정.json'; a.click();});
- reset.addEventListener('click',()=>{if(!confirm('고친 글을 모두 되돌릴까요?'))return;
+ reset.addEventListener('click',()=>{if(!confirm('고친 글을 모두 되돌릴까요? 탭 제목도 함께 돌아갑니다.'))return;
   nodes.forEach(el=>{el.innerHTML=el.dataset.orig; el.classList.remove('ed-changed');});
-  Object.keys(EDITS).forEach(k=>delete EDITS[k]); localStorage.setItem(KEY,'{}'); count();});
+  Object.keys(EDITS).forEach(k=>delete EDITS[k]); localStorage.setItem(KEY,'{}');
+  try{localStorage.removeItem(TKEY);}catch(e){}
+  location.reload();});
  // 데이터 영역이 다시 그려져도 정적 본문은 그대로이므로 한 번만 수집
  // 고치기를 켤 때 다시 수집하므로, 데이터 영역이 나중에 그려져도 대상에 들어온다.
  window.addEventListener('load',()=>{collect(); apply(); count();});
