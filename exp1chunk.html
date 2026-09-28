@@ -49,7 +49,7 @@ button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule
 .hist .h{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:12px 14px}.hist h4{margin:0 0 6px;font-size:13px}
 svg{display:block;width:100%;height:auto}
 </style></head><body>
-<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html">방법 — 어떻게 쟀나</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html" class="on">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과</a><a href="exp23how.html">방법</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html" class="on">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>같은 지면을 두 방식이 어떻게 자르는가</h1>
 <p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">고정 5,000자 청킹은 글자 수만 세므로 문장과 표 중간에서 끊는다. <b>절 단위 청킹은 절 경계에서 끊어 항목을 자르지 않는다.</b></p>
@@ -261,5 +261,5 @@ $('#exportedits').addEventListener('click',()=>{
  a.href=URL.createObjectURL(blob); a.download='exp1_edits.json'; a.click();});
 const _renderAll=renderAll; renderAll=function(){_renderAll(); applyEdits(); setEditMode(document.body.classList.contains('editing'));};
 fillPages(); renderAll();
-</script><script src="edit.js?v=7"></script>
+</script><script src="edit.js?v=8"></script>
 </body></html>

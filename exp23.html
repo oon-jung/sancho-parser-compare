@@ -43,16 +43,15 @@ details.more[open] summary{margin-bottom:10px}
 .q3 .box{height:100%}
 @media(max-width:860px){.row3{grid-template-columns:1fr}}
 </style></head><body>
-<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html" class="on">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html">방법 — 어떻게 쟀나</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html" class="on">결과</a><a href="exp23how.html">방법</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>논문을 어떻게 잘라야 가장 잘 찾는가</h1>
 <p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch"><b>절 단위 청킹으로 자르고, 절 이름 태그는 붙이지 않는다.</b> 57문항 중 50개 정답으로, 지금 쓰는 고정 5,000자 방식의 23개보다 27문항 많다.</p>
-<p class="lede">논문 12편을 여러 방식으로 잘라 보고 57개 문항으로 시험했다. 문항은 사람이 검토한 골드 45개와 이번에 만든 그림 12개다. 파싱은 docling 하나로, 그림 서술은 Qwen3-VL 32B 하나로, 임베딩은 BGE-M3 하나로 고정했다. 달라지는 것은 자르는 규칙뿐이다.</p>
+<p class="lede">논문 12편을 여러 방식으로 잘라 보고 57개 문항으로 시험했다.<br>문항은 사람이 검토한 골드 45개와 이번에 만든 그림 12개다. 파싱은 docling 하나로, 그림 서술은 Qwen3-VL 32B 하나로, 임베딩은 BGE-M3 하나로 고정했다. 달라지는 것은 자르는 규칙뿐이다.</p>
 
-<h2><span class="no">01</span>네 가지 방식 — 아래로 갈 때마다 한 가지씩만 바뀐다</h2>
-<p class="lede">13가지를 돌렸지만 비교에 쓸모 있는 것은 넷이다. 줄과 줄 사이에 바뀌는 것이 하나뿐이라 그 차이가 그 한 가지의 몫이다. 나머지는 맨 아래 "그 밖에 돌려 본 조건"에 뒀다.</p>
+<h2><span class="no">01</span>4가지 청킹 방식 비교</h2>
 <div class="wrap"><table class="t" id="main4"></table></div>
-<p class="mini" style="margin-top:6px">답변 정답은 gpt-4.1-mini가 채점했고 사람이 다시 보지 않았다. 02절에서 문항을 하나씩 열어 직접 판정할 수 있다.</p>
+<p class="mini" style="margin-top:6px">답변 정답은 gpt-4.1-mini가 채점했다.</p>
 <div class="row3 q3" id="q3" style="margin-top:14px"></div>
 
 <h2><span class="no">02</span>문항 하나씩 직접 보기</h2>
@@ -195,5 +194,5 @@ grid('bytype','by_type',TN); grid('bylang','by_lang',LN);
  f.forEach(x=>{h+=`<tr><td class="v">${x.qid}</td><td class="v">${esc(x.doc)}</td><td>${TN[x.type]||x.type}</td><td class="v">${x.none}위</td><td class="v" style="color:var(--bad)">${x.sub}위</td></tr>`;});
  document.getElementById('flips').innerHTML=h+'</tbody>';}
 </script>
-<script src="edit.js?v=7"></script>
+<script src="edit.js?v=8"></script>
 </body></html>

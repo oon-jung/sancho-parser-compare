@@ -13,6 +13,8 @@
  const SEL=BLOCK+',nav.top a,nav.top b';
  const KEY='pageedits:'+PAGE;
  const TKEY='pagetitle:'+PAGE;
+ const SKEY='pagesizes:'+PAGE;
+ let SIZES={}; try{SIZES=JSON.parse(localStorage.getItem(SKEY)||'{}');}catch(e){}
  const EDITS=JSON.parse(localStorage.getItem(KEY)||'{}');
  let nodes=[];
  function fp(t){return (t||'').replace(/\s+/g,' ').trim().slice(0,40);}
@@ -34,10 +36,31 @@
   if(dropped){try{localStorage.setItem(KEY,JSON.stringify(EDITS));}catch(e){}
    console.log(`[고치기] 원본이 바뀌어 더 이상 적용되지 않는 수정 ${dropped}건을 지웠습니다.`);}
  }
+ // 고친 크기를 그대로 되살린다.
+ function applySizes(){nodes.forEach((el,i)=>{const z=SIZES[i];
+  if(z){if(z.w) el.style.width=z.w; if(z.h) el.style.height=z.h; el.classList.add('ed-sized');}});}
+ function saveSize(el){
+  const i=el.dataset.ed; if(i===undefined) return;
+  const w=el.style.width, h=el.style.height;
+  if(w||h){SIZES[i]={w,h}; el.classList.add('ed-sized');} else {delete SIZES[i]; el.classList.remove('ed-sized');}
+  try{localStorage.setItem(SKEY,JSON.stringify(SIZES));}catch(e){}
+  szn(); }
+ function szn(){const n=Object.keys(SIZES).length; szreset.hidden=!n; szreset.textContent=`크기 ${n}곳 되돌리기`;}
+ // 끌어서 크기를 바꾼 것을 알아채 저장한다.
+ let RO=null;
+ function watchSizes(){
+  if(!('ResizeObserver' in window)) return;
+  if(RO) RO.disconnect();
+  let t=null;
+  RO=new ResizeObserver(es=>{clearTimeout(t); t=setTimeout(()=>es.forEach(e=>saveSize(e.target)),250);});
+  nodes.forEach(el=>{if(!el.matches('td,th')) RO.observe(el);});
+ }
  function setMode(on){
-  if(on){document.querySelectorAll('[data-ed]').forEach(el=>el.removeAttribute('data-ed')); collect(); apply();}
+  if(on){document.querySelectorAll('[data-ed]').forEach(el=>el.removeAttribute('data-ed')); collect(); apply(); applySizes();}
   document.body.classList.toggle('ed-on',on);
   nodes.forEach(el=>{if(on) el.setAttribute('contenteditable','true'); else el.removeAttribute('contenteditable');});
+  document.body.classList.toggle('ed-resize',on&&szbtn.getAttribute('aria-pressed')==='true');
+  if(on) watchSizes(); else if(RO) RO.disconnect();
   btn.setAttribute('aria-pressed',on); bar.hidden=!on; count();
  }
  function count(){let t=null; try{t=localStorage.getItem(TKEY);}catch(e){}
@@ -48,9 +71,11 @@
  bar.innerHTML='<span><b>이 브라우저에만 저장됩니다.</b> 원본 파일과 공개 사이트는 그대로입니다. 반영하려면 아래에서 내려받거나 복사해 전달하세요.</span>'
   +'<label class="ed-tl">탭 제목 <input type="text" class="ed-title"></label>';
  const dl=document.createElement('button'); dl.className='ed-dl'; dl.hidden=true;
+ const szbtn=document.createElement('button'); szbtn.className='ed-sz'; szbtn.type='button'; szbtn.textContent='박스 크기 조절'; szbtn.setAttribute('aria-pressed','false');
+ const szreset=document.createElement('button'); szreset.className='ed-szreset'; szreset.hidden=true;
  const cp=document.createElement('button'); cp.className='ed-cp'; cp.textContent='고친 글 복사'; cp.hidden=true;
  const reset=document.createElement('button'); reset.className='ed-reset'; reset.textContent='모두 되돌리기'; reset.hidden=true;
- bar.append(dl,cp,reset);
+ bar.append(szbtn,szreset,dl,cp,reset);
  // 본문 너비 조절. 글줄이 너무 짧거나 길면 읽기 불편하므로 사용자가 고른다.
  const WKEY='pagewidth';
  const WIDTHS=[['좁게','780px','68ch'],['보통','1160px','86ch'],['넓게','1440px','110ch'],['가득','100%','none']];
@@ -88,6 +113,13 @@
  .ed-bar button{font:600 12px inherit;padding:4px 12px;border-radius:999px;border:1px solid #1f6f5c;color:#1f6f5c;background:#fff;cursor:pointer}
  .ed-bar .ed-reset{border-color:#a3232b;color:#a3232b}
  .ed-bar .ed-cp{border-color:#2a78d6;color:#2a78d6}
+ .ed-bar .ed-sz{border-color:#7a4fb5;color:#7a4fb5}
+ .ed-bar .ed-sz[aria-pressed="true"]{background:#7a4fb5;color:#fff}
+ .ed-bar .ed-szreset{border-color:#7a4fb5;color:#7a4fb5}
+ /* 끌어서 크기 바꾸기: 오른쪽 아래 모서리를 잡아당긴다. 표 칸은 브라우저가 지원하지 않아 제외한다. */
+ body.ed-resize [data-ed]:not(td):not(th):not(nav.top *){resize:both;overflow:auto;min-width:90px;min-height:1.7em}
+ body.ed-resize [data-ed]:not(td):not(th):not(nav.top *)::-webkit-resizer{background:#7a4fb5}
+ .ed-sized{box-shadow:inset 0 0 0 1px rgba(122,79,181,.35)}
  .ed-bar .ed-tl{display:flex;gap:6px;align-items:center;font:12px inherit;color:#737c8c}
  .ed-bar .ed-title{font:13px "IBM Plex Sans KR",sans-serif;padding:4px 9px;border:1px solid #d5d9e2;border-radius:6px;min-width:260px;background:#fff;color:#16181d}
  body.ed-on nav.top [data-ed]{outline:1px dashed rgba(255,255,255,.55);outline-offset:2px;cursor:text}
@@ -131,6 +163,13 @@
   if(tt) rows.unshift({page:PAGE,index:'탭 제목',원본:'',고친글:tt,고친HTML:tt});
   const b=new Blob([JSON.stringify(rows,null,1)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=PAGE.replace('.html','')+'_글수정.json'; a.click();});
+ szbtn.addEventListener('click',()=>{
+  const on=szbtn.getAttribute('aria-pressed')!=='true';
+  szbtn.setAttribute('aria-pressed',on);
+  document.body.classList.toggle('ed-resize',on&&document.body.classList.contains('ed-on'));});
+ szreset.addEventListener('click',()=>{
+  nodes.forEach(el=>{el.style.width='';el.style.height='';el.classList.remove('ed-sized');});
+  SIZES={}; try{localStorage.setItem(SKEY,'{}');}catch(e){} szn();});
  cp.addEventListener('click',async()=>{
   const lines=[`[${PAGE}] 고친 글`];
   let t=null; try{t=localStorage.getItem(TKEY);}catch(e){}
@@ -144,10 +183,11 @@
  reset.addEventListener('click',()=>{if(!confirm('고친 글을 모두 되돌릴까요? 탭 제목도 함께 돌아갑니다.'))return;
   nodes.forEach(el=>{el.innerHTML=el.dataset.orig; el.classList.remove('ed-changed');});
   Object.keys(EDITS).forEach(k=>delete EDITS[k]); localStorage.setItem(KEY,'{}');
-  try{localStorage.removeItem(TKEY);}catch(e){}
+  try{localStorage.removeItem(TKEY); localStorage.removeItem(SKEY);}catch(e){}
   location.reload();});
  // 데이터 영역이 다시 그려져도 정적 본문은 그대로이므로 한 번만 수집
  // 고치기를 켤 때 다시 수집하므로, 데이터 영역이 나중에 그려져도 대상에 들어온다.
- window.addEventListener('load',()=>{collect(); apply(); count();});
- if(document.readyState==='complete'){collect(); apply(); count();}
+ function boot(){collect(); apply(); applySizes(); count(); szn();}
+ window.addEventListener('load',boot);
+ if(document.readyState==='complete') boot();
 })();
