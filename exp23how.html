@@ -42,7 +42,7 @@ footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;paddi
 .barw{display:flex;height:13px;border-radius:3px;overflow:hidden;background:var(--sunk);min-width:120px}
 .barw i{display:block;height:100%}
 </style></head><body>
-<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과</a><a href="exp23how.html" class="on">방법</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp1.html">① 파싱</a><a href="exp1chunk.html">② 청크 경계</a><a href="exp1summary.html">③ 언어별 요약</a><a href="figq.html">④ 그림 문항</a><a href="exp23how.html" class="on">⑤ 측정 방법</a><a href="exp23.html">⑥ 결과</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>측정 방법 — 파이프라인과 절 이름 태그의 작동</h1>
 <p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">논문 12편을 파싱 후 청킹 방법 비교. 파싱·그림 서술·임베딩은 모두 동일, <b>청킹 방법만 변경</b>.</p>
@@ -149,5 +149,4 @@ document.getElementById('score').innerHTML=[
  ['답변 정확도','상위 청크를 발췌로 묶어 gpt-4.1-mini에 주고 두 문장 이내로 답하게 한 뒤, 같은 모델이 정답과 대조해 정답·부분·오답으로 채점한다.','같은 분량 6,000토큰 · 상위 6개 두 방식']
 ].map(([t,d,m])=>`<div class="box"><b>${t}</b><p style="margin:6px 0 0;color:var(--soft);font-size:13px">${d}</p><p class="mini" style="margin-top:6px">${m}</p></div>`).join('');
 </script>
-<script src="edit.js?v=18"></script>
 </body></html>

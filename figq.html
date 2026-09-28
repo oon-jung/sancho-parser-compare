@@ -19,7 +19,7 @@ main{max-width:1060px;margin:0 auto;padding:20px 18px 50px}h1{font-size:20px;mar
 .box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 18px;margin-bottom:16px}
 ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:6px;line-height:1.6}
 </style></head><body>
-<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과</a><a href="exp23how.html">방법</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html" class="on">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp1.html">① 파싱</a><a href="exp1chunk.html">② 청크 경계</a><a href="exp1summary.html">③ 언어별 요약</a><a href="figq.html" class="on">④ 그림 문항</a><a href="exp23how.html">⑤ 측정 방법</a><a href="exp23.html">⑥ 결과</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>그림 전용 평가 문항 12개</h1>
 <p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">그림을 해석해야 답할 수 있는 12문항. 값을 읽을 그래프가 있는 논문 8편에서 추출.</p>
@@ -40,5 +40,5 @@ document.getElementById('list').innerHTML=FQ.map(q=>`<div class="q">
  <div class="ask">${esc(q.q)}</div>
  ${q.draft?`<div class="ans">초안 정답 <b>${esc(q.draft)}</b> <span class="note">— 사용자 확정 필요</span></div>`:'<div class="wait">후보 선정 대기</div>'}
  ${q.note?`<div class="note">${esc(q.note)}</div>`:''}</div></div>`).join('');
-</script><script src="edit.js?v=18"></script>
+</script>
 </body></html>

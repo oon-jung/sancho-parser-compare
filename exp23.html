@@ -55,7 +55,7 @@ details.more[open] summary{margin-bottom:10px}
 .q3 .box{height:100%}
 @media(max-width:860px){.row3{grid-template-columns:1fr}}
 </style></head><body>
-<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html" class="on">결과</a><a href="exp23how.html">방법</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp1.html">① 파싱</a><a href="exp1chunk.html">② 청크 경계</a><a href="exp1summary.html">③ 언어별 요약</a><a href="figq.html">④ 그림 문항</a><a href="exp23how.html">⑤ 측정 방법</a><a href="exp23.html" class="on">⑥ 결과</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
 <h1>절 단위 청킹과 절 이름 태그 도입 검토</h1>
 <p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch"><b>절 단위 청킹 + '## 서 론' 같은 절 이름 태그는 넣지 않는 방법이 문항 정답률이 높았다.</b> 57문항 중 50개 정답으로, 고정 5,000자 방식의 23개보다 27문항 더 맞혔다.</p>
@@ -192,7 +192,6 @@ document.getElementById('qfilter').addEventListener('click',e=>{
  document.querySelectorAll('#qfilter button').forEach(x=>x.setAttribute('aria-pressed',x===b));
  drawQ();});
 document.getElementById('qtab').addEventListener('click',e=>{
- if(document.body.classList.contains('ed-on')) return;
  const tr=e.target.closest('tr.qr'); if(!tr) return;
  const d=document.querySelector(`tr.qd[data-d="${tr.dataset.q}"]`); if(d) d.hidden=!d.hidden;});
 // 03 분량
@@ -226,5 +225,4 @@ grid('bytype','by_type',TN); grid('bylang','by_lang',LN);
  f.forEach(x=>{h+=`<tr><td class="v">${x.qid}</td><td class="v">${esc(x.doc)}</td><td>${TN[x.type]||x.type}</td><td class="v">${x.none}위</td><td class="v" style="color:var(--bad)">${x.sub}위</td></tr>`;});
  document.getElementById('flips').innerHTML=h+'</tbody>';}
 </script>
-<script src="edit.js?v=18"></script>
 </body></html>
