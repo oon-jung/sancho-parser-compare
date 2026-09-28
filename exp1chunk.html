@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>같은 지면을 두 방식이 어떻게 자르는가</title>
+<title>청크 경계 대조 — 고정 5,000자 청킹과 절 단위 청킹</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--gray:#9aa3b3;--bad:#a3232b}
@@ -51,7 +51,7 @@ svg{display:block;width:100%;height:auto}
 </style></head><body>
 <nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과</a><a href="exp23how.html">방법</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html" class="on">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
-<h1>같은 지면을 두 방식이 어떻게 자르는가</h1>
+<h1>청크 경계 대조 — 고정 5,000자 청킹과 절 단위 청킹</h1>
 <p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch">고정 5,000자 청킹은 글자 수만 세므로 문장과 표 중간에서 끊는다. <b>절 단위 청킹은 절 경계에서 끊어 항목을 자르지 않는다.</b></p>
 <p class="lede">2단계의 docling 항목을 두 방식으로 청킹했다. <b>A 기본 5000자/250자</b>는 PaperQA2의 기본 청커(<code>chunk_pdf</code>, 5,000자·겹침 250자)를 그대로 호출한 것이다. 다만 입력은 원래 파이프라인의 파서 출력이 아니라 <b>B와 같은 docling 항목을 쪽별로 줄바꿈으로 이어 붙인 텍스트</b>다. 두 방식의 차이를 자르는 규칙 하나로 좁히기 위해서이며, 따라서 A는 "현행 RAG 기준선"이 아니라 "같은 입력에 기본 커터를 적용한 조건"이다. 제목·문단·표 경계를 보지 않으므로 항목 중간에서 잘린다. <b>B 절 단위(현행)</b>는 docling 제목마다 절을 나누고 절 안에서 문단 단위로 모아 목표 900토큰에서 끊으며, 표는 따로 한 청크로 둔다. 그림은 VLM 서술을 "[그림 서술] …" 텍스트로 항목에 넣은 뒤 청킹했으며, 서술 소스(32B 채택 · 8B 대안 · 없음)를 전환할 수 있다.</p>
 
@@ -82,7 +82,7 @@ svg{display:block;width:100%;height:auto}
   <aside class="panel" id="items"></aside>
 </div>
 
-<h2><span class="no">03</span>표본 대조 — 청크 텍스트가 지면 항목과 일치하는가</h2>
+<h2><span class="no">03</span>표본 대조 — 청크 텍스트와 지면 항목의 일치</h2>
 <p class="lede">문서마다 청크 3개(첫 청크, 표가 든 청크, 그림 서술이 든 청크)를 골라 청크 텍스트를 항목별 조각으로 나눠 보인다. 조각의 밑줄 색은 항목 종류이고, <span class="seg cut" style="border-color:var(--bad)">빨간 배경</span>은 항목이 청크 경계에서 잘린 조각, <span class="seg shared" style="border-color:var(--mu)">주황 배경</span>은 앞 청크와 겹치는(중복) 조각이다. B는 항목이 통째로 들어가므로 잘림이 없다.</p>
 <div id="samples"></div>
 
@@ -97,7 +97,7 @@ svg{display:block;width:100%;height:auto}
 <h2><span class="no">06</span>관찰 정리</h2>
 <p class="lede">아래 수치는 그림 서술 32B 기준이며, 소스를 바꾸면 "문서별 수치"만 다시 계산된다. 나머지 서술은 4편 전체를 보고 적은 것이다.</p>
 
-<h3>6-1. 제목·부제와 내용이 보존되는가</h3>
+<h3>6-1. 제목·부제와 내용의 보존</h3>
 <div class="box"><ul class="pts">
 <li><b>A 5000/250에서는 보존되지 않는다.</b> 4편 36개 청크 가운데 27개에 제목이 첫머리가 아닌 자리로 들어갔고, 같은 27개 청크에 절이 둘 이상 섞였다. 창이 글자 수만 세므로 제목 앞에서 끊을 이유가 없기 때문이다. 항목 32곳(본문 20·목록 7·표 2·그림 서술 3)이 경계에서 잘렸고, 앞 청크의 마지막 250자가 다음 청크 앞에 그대로 중복된다.</li>
 <li><b>B 절 단위에서는 절이 900토큰 이하일 때만 보존된다.</b> 한 절이 한 청크에 온전히 담긴 비율은 ja_01 69%(11/16), ko_01 63%(15/24), en_02 50%(10/20), zh_02 21%(3/14)다. 분모는 <b>본문이 있는 절</b>이며 본문 없는 제목 6개는 빠져 있다. 넘치면 문단 경계에서 끊기며 뒤 청크에도 같은 <code>## 부제</code>가 붙어 제목은 남지만 본문은 흩어진다. 4편에서 118개 청크가 이 경우다.</li>
@@ -117,14 +117,14 @@ svg{display:block;width:100%;height:auto}
 <tr><td class="k">머리글이 제목으로</td><td>B</td><td>zh_02의 저널명 "中国实验方剂学杂志"가 제목 3개로 잡혀 본문이 엉뚱한 절로 나뉜다</td><td>같은 제목 텍스트가 여러 쪽에 반복되면 머리글로 보고 제목에서 제외한다.</td></tr>
 </tbody></table></div>
 
-<h3>6-3. 표는 어떻게 들어갔나</h3>
+<h3>6-3. 표의 처리</h3>
 <div class="box"><ul class="pts">
 <li><b>B는 표를 통째로 한 청크에 둔다.</b> 4편 표 11개가 모두 독립 청크가 됐고, docling HTML을 <code>셀 | 셀</code> 행 텍스트로 바꿔 행·열 관계가 남는다. 상한 7,000토큰을 넘는 표가 없어 분할된 표는 없다.</li>
 <li><b>A는 표를 본문과 같은 흐름으로 취급한다.</b> 셀 텍스트가 5,000자 창 안에 섞여 들어가고, 창 경계에 걸리면 표가 둘로 잘린다(ko_01 1건, zh_02 2건). 잘린 표는 행 중간에서 끊겨 값과 머리글의 연결이 끊어진다.</li>
 <li><b>표 캡션은 표 청크에 붙였다.</b> 설계서대로 캡션을 표 청크 맨 앞에 넣도록 고쳤다. 남은 캡션 분리는 A 5건·B 7건이며 대부분 그림 캡션이다.</li>
 </ul></div>
 
-<h3>6-4. 그림은 어떻게 들어갔나</h3>
+<h3>6-4. 그림의 처리</h3>
 <div class="box"><ul class="pts">
 <li><b>서술이 없으면 그림은 청크에 들어가지 않는다.</b> docling은 그림의 위치만 주고 내용을 비우므로, 소스를 "없음"으로 두면 4편 30장이 모두 청크 밖이고 캡션 한 줄만 본문에 남는다.</li>
 <li><b>VLM 서술을 넣으면 본문 문단처럼 들어간다.</b> 32B 서술을 넣자 B 청크가 ko_01 86→96, ja_01 32→37, zh_02 43→50으로 늘었다. 청크에 들어간 글자가 ko_01 기준 37,277→43,243자로 약 6,000자 늘어 그림이 있는 절이 900토큰을 넘어 더 잘게 나뉜 결과다.</li>

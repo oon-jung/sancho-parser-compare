@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>논문을 어떻게 잘라야 가장 잘 찾는가</title>
+<title>절 단위 청킹과 절 이름 태그 도입 검토</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--bad:#a3232b}
@@ -45,8 +45,8 @@ details.more[open] summary{margin-bottom:10px}
 </style></head><body>
 <nav class="top"><b>청킹 방식 비교</b><a href="exp23.html" class="on">결과</a><a href="exp23how.html">방법</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
-<h1>논문을 어떻게 잘라야 가장 잘 찾는가</h1>
-<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch"><b>절 단위 청킹으로 자르고, 절 이름 태그는 붙이지 않는다.</b> 57문항 중 50개 정답으로, 지금 쓰는 고정 5,000자 방식의 23개보다 27문항 많다.</p>
+<h1>절 단위 청킹과 절 이름 태그 도입 검토</h1>
+<p class="lede" style="font-size:15px;color:var(--ink);max-width:78ch"><b>절 단위 청킹은 도입하고, 절 이름 태그는 넣지 않는다.</b> 57문항 중 50개 정답으로, 지금 쓰는 고정 5,000자 방식의 23개보다 27문항 많다.</p>
 <p class="lede">논문 12편을 여러 방식으로 잘라 보고 57개 문항으로 시험했다.<br>문항은 사람이 검토한 골드 45개와 이번에 만든 그림 12개다. 파싱은 docling 하나로, 그림 서술은 Qwen3-VL 32B 하나로, 임베딩은 BGE-M3 하나로 고정했다. 달라지는 것은 자르는 규칙뿐이다.</p>
 
 <h2><span class="no">01</span>4가지 청킹 방식 비교</h2>
@@ -54,12 +54,12 @@ details.more[open] summary{margin-bottom:10px}
 <p class="mini" style="margin-top:6px">답변 정답은 gpt-4.1-mini가 채점했다.</p>
 <div class="row3 q3" id="q3" style="margin-top:14px"></div>
 
-<h2><span class="no">02</span>문항 하나씩 직접 보기</h2>
+<h2><span class="no">02</span>문항별 답변 대조 57건</h2>
 <p class="lede">57문항에 네 방식이 각각 어떻게 답했는지 그대로 싣는다. 줄을 누르면 정답과 네 답변이 펼쳐진다. 채점이 맞는지, 어느 방식이 나은지 여기서 직접 판단하면 된다. 발췌는 모두 같은 토큰 예산 6,000으로 맞췄다.</p>
 <div class="ctl" id="qfilter"></div>
 <div class="wrap"><table class="t" id="qtab"></table></div>
 
-<h2><span class="no">03</span>왜 큰 조각이 답변에서 지는가</h2>
+<h2><span class="no">03</span>토큰 예산과 발췌 개수</h2>
 <p class="lede">검색 순위만 보면 고정 5,000자가 나쁘지 않다. 6위 안에 정답 청크가 드는 문항이 33개로 가장 많다. 그런데 답변을 만들게 하면 꼴찌가 된다. 이유는 답변에 넘길 수 있는 양이 정해져 있기 때문이다.</p>
 <div class="wrap"><table class="t" id="budget"></table></div>
 <div class="box key" style="margin-top:12px"><b>한 조각이 예산을 다 쓴다</b>
@@ -69,7 +69,7 @@ details.more[open] summary{margin-bottom:10px}
 <li><b>상위 6개를 그냥 주면 읽는 양이 갈린다.</b> 고정 5,000자는 중앙값 19,789토큰을 읽고 34개를 맞히고, 절 단위는 3,278토큰을 읽고 43개를 맞힌다.</li>
 </ul></div>
 
-<h2><span class="no">04</span>어떤 문항에서 갈리는가</h2>
+<h2><span class="no">04</span>유형별·언어별 정답 수</h2>
 <p class="lede">같은 예산 6,000토큰에서 유형별·언어별 정답 수다. 분모는 그 유형·언어의 문항 수다.</p>
 <h3>유형별</h3>
 <div class="wrap"><table class="t" id="bytype"></table></div>
@@ -123,11 +123,11 @@ const B=(v,m)=>v===m?`<span class="best">${v}</span>`:v;
  document.getElementById('main4').innerHTML=h+'</tbody>';}
 // 01 세 질문
 document.getElementById('q3').innerHTML=[
- ['절 단위 청킹으로 바꾸면 좋아지나','고정 5,000자 청킹 → 절 단위 청킹','같은 예산 답변 정답 <b>23 → 50</b><br>검색 6위 안 33 → 31',
+ ['① 절 단위 청킹의 효과','고정 5,000자 청킹 → 절 단위 청킹','같은 예산 답변 정답 <b>23 → 50</b><br>검색 6위 안 33 → 31',
   '좋아진다. 이것이 가장 큰 차이다. 검색 순위는 오히려 내려가지만 답변은 크게 오른다.','dl'],
- ['절 이름 태그를 붙이면 좋아지나','이름 태그 없음 → 있음','같은 예산 답변 정답 <b>50 → 46</b><br>상위 6개 답변 정답 43 → 45',
+ ['② 절 이름 태그의 효과','이름 태그 없음 → 있음','같은 예산 답변 정답 <b>50 → 46</b><br>상위 6개 답변 정답 43 → 45',
   '보는 각도에 따라 뒤집힌다. 예산이 정해져 있으면 손해다. 붙이지 않는 쪽을 권한다.','mu'],
- ['더 잘게 자르면 좋아지나','900토큰 → 600토큰','같은 예산 답변 정답 <b>50 → 47</b><br>상위 6개 답변 정답 43 → 40',
+ ['③ 조각 크기의 효과','900토큰 → 600토큰','같은 예산 답변 정답 <b>50 → 47</b><br>상위 6개 답변 정답 43 → 40',
   '좋아지지 않는다. 읽는 양은 19% 줄지만 답변이 나빠진다.','bad']
 ].map(([q,cond,num,ans,col])=>`<div class="box" style="border-left:4px solid var(--${col});border-radius:0 10px 10px 0">
  <b>${q}</b><p class="mini" style="margin:3px 0 7px">${cond}</p>
