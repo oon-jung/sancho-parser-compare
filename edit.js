@@ -10,7 +10,8 @@
  const BLOCK='h1,h2,h3,h4,h5,p,li,td,th,dt,dd,figcaption,footer,summary,blockquote,.lede,.sub,.editnote,.ttl,.dsc,.fil';
  // 링크와 메뉴 이름은 그 자체로 고칠 수 있지만, 문단이 링크를 품었다고 해서 문단이 빠지면 안 된다.
  // 그래서 "자식이 또 대상이면 부모는 제외" 판단에는 BLOCK만 쓴다.
- const SEL=BLOCK+',nav.top a,nav.top b';
+ // 상자·카드의 굵은 소제목과 정답 줄도 대상에 넣는다. 블록 요소가 아니므로 부모 제외 판단에는 넣지 않는다.
+ const SEL=BLOCK+',nav.top a,nav.top b,.box>b,.goldline,.ansbox h5,.lab,.big,.sum,.bar>span,span.v';
  const KEY='pageedits:'+PAGE;
  const TKEY='pagetitle:'+PAGE;
  const SKEY='pagesizes:'+PAGE;
