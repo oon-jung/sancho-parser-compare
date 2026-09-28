@@ -46,6 +46,11 @@
   try{localStorage.setItem(SKEY,JSON.stringify(SIZES));}catch(e){}
   szn(); }
  function szn(){const n=Object.keys(SIZES).length; szreset.hidden=!n; szreset.textContent=`크기 ${n}곳 되돌리기`;}
+ // 끌기가 끝나면 저장한다. ResizeObserver는 탭이 그려지지 않을 때 콜백이 멈추므로 이 경로를 함께 둔다.
+ document.addEventListener('pointerup',e=>{
+  if(!document.body.classList.contains('ed-resize')) return;
+  const el=e.target.closest&&e.target.closest('[data-ed]');
+  if(el) setTimeout(()=>saveSize(el),0);},true);
  // 끌어서 크기를 바꾼 것을 알아채 저장한다.
  let RO=null;
  function watchSizes(){
@@ -91,6 +96,7 @@
  wbar.querySelectorAll('button').forEach((b,i)=>b.addEventListener('click',()=>setWidth(i)));
  const wstyle=document.createElement('style');
  wstyle.textContent=`body main{max-width:var(--page-w,1160px)!important}
+body.ed-resize main{max-width:none!important;padding-right:40px}
  body p.lede,body .lede{max-width:var(--lede-w,86ch)!important}
  .ed-w{position:fixed;right:16px;bottom:58px;z-index:50;display:flex;gap:3px;align-items:center;background:#fff;border:1px solid var(--rule,#d5d9e2);border-radius:999px;padding:4px 10px 4px 12px;box-shadow:0 2px 8px rgba(0,0,0,.14);font:12px "IBM Plex Sans KR",sans-serif;color:#737c8c}
  .ed-w span{margin-right:4px}
@@ -117,9 +123,10 @@
  .ed-bar .ed-sz[aria-pressed="true"]{background:#7a4fb5;color:#fff}
  .ed-bar .ed-szreset{border-color:#7a4fb5;color:#7a4fb5}
  /* 끌어서 크기 바꾸기: 오른쪽 아래 모서리를 잡아당긴다. 표 칸은 브라우저가 지원하지 않아 제외한다. */
- body.ed-resize [data-ed]:not(td):not(th):not(nav.top *){resize:both;overflow:auto;min-width:90px;min-height:1.7em}
+ /* 최대 너비 제한이 걸려 있으면 끌어도 가로로 커지지 않는다. 조절 중에는 제한을 푼다. */
+ body.ed-resize [data-ed]:not(td):not(th):not(nav.top *){resize:both;overflow:auto;min-width:90px;min-height:1.7em;max-width:none!important}
  body.ed-resize [data-ed]:not(td):not(th):not(nav.top *)::-webkit-resizer{background:#7a4fb5}
- .ed-sized{box-shadow:inset 0 0 0 1px rgba(122,79,181,.35)}
+ body [data-ed].ed-sized{box-shadow:inset 0 0 0 1px rgba(122,79,181,.35);max-width:none!important}
  .ed-bar .ed-tl{display:flex;gap:6px;align-items:center;font:12px inherit;color:#737c8c}
  .ed-bar .ed-title{font:13px "IBM Plex Sans KR",sans-serif;padding:4px 9px;border:1px solid #d5d9e2;border-radius:6px;min-width:260px;background:#fff;color:#16181d}
  body.ed-on nav.top [data-ed]{outline:1px dashed rgba(255,255,255,.55);outline-offset:2px;cursor:text}
