@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>그림 문항 초안 검수</title>
+<title>그림에서만 답이 나오는 문항 12개</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--dl:#1f6f5c;--bad:#a3232b;--mu:#eb6834}
@@ -19,10 +19,10 @@ main{max-width:1060px;margin:0 auto;padding:20px 18px 50px}h1{font-size:20px;mar
 .box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 18px;margin-bottom:16px}
 ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:6px;line-height:1.6}
 </style></head><body>
-<nav class="top"><b>그림 문항 초안</b><a href="exp1summary.html">실험 1 요약</a><a href="exp1.html">파싱</a><a href="exp1chunk.html">청킹</a><a href="exp23.html">실험 2·3 결과</a><a href="exp23how.html">실험 2·3 과정</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html">방법 — 어떻게 쟀나</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html" class="on">그림에서만 답이 나오는 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
-<h1>그림 문항 12개 초안 — 검수 요청</h1>
-<p class="lede">실험 2·3에서 그림 서술의 효과를 재려면 그림에서만 답할 수 있는 문항이 필요하다. 아래는 제가 지면을 보고 만든 초안이며, <b>정답은 사용자가 그림을 확인한 뒤 확정합니다</b>. 기재한 값은 그림에서 읽은 추정치이며, 확정 전에는 측정에 쓰지 않습니다.</p>
+<h1>그림을 보지 않으면 답할 수 없는 문항 12개</h1>
+<p class="lede">청킹 방식 비교에서 그림 서술의 효과를 재려면 그림에서만 답할 수 있는 문항이 필요하다. 아래는 제가 지면을 보고 만든 초안이며, <b>정답은 사용자가 그림을 확인한 뒤 확정합니다</b>. 기재한 값은 그림에서 읽은 추정치이며, 확정 전에는 측정에 쓰지 않습니다.</p>
 <div class="box"><b>문항을 고른 기준</b>
 <ul class="pts">
 <li>값을 그래프에서만 읽을 수 있고 본문·표에 같은 값이 없는 것. 본문 대조로 확인했고, 본문에 답이 있던 문항 1개(zh_03)는 다른 값으로 바꿨습니다.</li>
@@ -46,5 +46,5 @@ document.getElementById('list').innerHTML=FQ.map(q=>`<div class="q">
  <div class="ask">${esc(q.q)}</div>
  ${q.draft?`<div class="ans">초안 정답 <b>${esc(q.draft)}</b> <span class="note">— 사용자 확정 필요</span></div>`:'<div class="wait">후보 선정 대기</div>'}
  ${q.note?`<div class="note">${esc(q.note)}</div>`:''}</div></div>`).join('');
-</script><script src="edit.js?v=3"></script>
+</script><script src="edit.js?v=4"></script>
 </body></html>

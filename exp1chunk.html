@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>실험 1 · 청킹 결과 — 3~6단계</title>
+<title>청크 경계 보기 — 두 방식이 지면을 어떻게 자르는가</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--gray:#9aa3b3;--bad:#a3232b}
@@ -49,9 +49,9 @@ button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule
 .hist .h{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:12px 14px}.hist h4{margin:0 0 6px;font-size:13px}
 svg{display:block;width:100%;height:auto}
 </style></head><body>
-<nav class="top"><b>실험 1 · 청킹 시각화</b><a href="exp1.html">1·2단계 파싱 확인</a><span>3~6단계 청킹 결과·검증·관찰</span><a href="exp1summary.html">요약</a><a href="exp23.html">실험 2·3 결과</a><a href="exp23how.html">실험 2·3 과정</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html">방법 — 어떻게 쟀나</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html" class="on">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림에서만 답이 나오는 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
-<h1>3~6단계 — 파서 결과가 실제로 어떻게 청크로 잘렸는가</h1>
+<h1>같은 지면을 두 방식이 어떻게 잘랐는가</h1>
 <p class="lede">2단계의 docling 항목을 두 방식으로 청킹했다. <b>A 기본 5000자/250자</b>는 PaperQA2의 기본 청커(<code>chunk_pdf</code>, 5,000자·겹침 250자)를 그대로 호출한 것이다. 다만 입력은 원래 파이프라인의 파서 출력이 아니라 <b>B와 같은 docling 항목을 쪽별로 줄바꿈으로 이어 붙인 텍스트</b>다. 두 방식의 차이를 자르는 규칙 하나로 좁히기 위해서이며, 따라서 A는 "현행 RAG 기준선"이 아니라 "같은 입력에 기본 커터를 적용한 조건"이다. 제목·문단·표 경계를 보지 않으므로 항목 중간에서 잘린다. <b>B 절 단위(현행)</b>는 docling 제목마다 절을 나누고 절 안에서 문단 단위로 모아 목표 900토큰에서 끊으며, 표는 따로 한 청크로 둔다. 그림은 VLM 서술을 "[그림 서술] …" 텍스트로 항목에 넣은 뒤 청킹했으며, 서술 소스(32B 채택 · 8B 대안 · 없음)를 전환할 수 있다.</p>
 
 <div class="ctl">
@@ -134,11 +134,11 @@ svg{display:block;width:100%;height:auto}
 <h3>6-5. 문서별 수치</h3>
 <div class="box"><ul class="pts" id="notes"></ul></div>
 
-<h3>6-6. 실험 2·3에 넘길 것</h3>
+<h3>6-6. 다음 비교로 넘길 것</h3>
 <div class="box"><ul class="pts">
-<li><b>실험 2 가설의 두 요소를 분리해 잰다.</b> "제목·부제를 앞에 붙인다"와 "제목 아래 내용을 묶는다"는 다른 변수다. A(붙이지 않고 묶지 않음) 대 B(붙이고 묶음)를 그대로 비교하면 둘이 섞이므로, 제목 접두만 뺀 조건을 하나 더 두어 각각의 몫을 본다.</li>
-<li><b>실험 3 후보는 네 가지다.</b> ① 절 단위 그대로 ② 절 단위 + 캡션을 표·그림 청크에 붙임 ③ 절 단위 + 짧은 절 병합(바닥 토큰 상향) ④ 고정 1000/100. 5000/250은 이번 관찰에서 구조를 가장 많이 깨뜨렸으므로 기준선으로만 둔다.</li>
-<li><b>언어별로 결과가 갈릴 수 있다.</b> zh_02는 제목 검출이 14개뿐이라 절 단위의 이점이 가장 적었다. 실험 2·3의 문항을 언어별로 나눠 집계해야 한다.</li>
+<li><b>가설의 두 요소를 분리해 잰다.</b> "제목·부제를 앞에 붙인다"와 "제목 아래 내용을 묶는다"는 다른 변수다. A(붙이지 않고 묶지 않음) 대 B(붙이고 묶음)를 그대로 비교하면 둘이 섞이므로, 절 이름 줄만 뺀 조건을 하나 더 두어 각각의 몫을 본다.</li>
+<li><b>자르는 규칙 후보는 네 가지다.</b> ① 절 단위 그대로 ② 절 단위 + 캡션을 표·그림 청크에 붙임 ③ 절 단위 + 짧은 절 병합(바닥 토큰 상향) ④ 고정 1000/100. 5000/250은 이번 관찰에서 구조를 가장 많이 깨뜨렸으므로 기준선으로만 둔다.</li>
+<li><b>언어별로 결과가 갈릴 수 있다.</b> zh_02는 제목 검출이 14개뿐이라 절 단위의 이점이 가장 적었다. 다음 비교의 문항을 언어별로 나눠 집계해야 한다.</li>
 <li><b>그림 서술 포함 여부도 조건으로 둔다.</b> 서술을 넣으면 청크 수와 길이가 달라지므로, 회수율 비교에서 같은 조건으로 맞추거나 별도 조건으로 분리해야 한다.</li>
 </ul></div>
 </main>
@@ -213,7 +213,7 @@ function renderSamples(){const d=doc(); const cs=chunks(); const picks=[]; const
  const byi={}; d.items.forEach(it=>byi[it.i]=it);
  $('#samples').innerHTML=picks.map(({label,ci})=>{const c=cs[ci]; let inner='';
   if(M==='A'&&c.segs){let pos=0; c.segs.forEach(sg=>{if(sg.a>pos) inner+=esc(c.text.slice(pos,sg.a)); const txt=c.text.slice(sg.a,sg.b); const x=c.items.find(y=>y.i===sg.i); inner+=`<span class="seg${(sg.cut_head||sg.cut_tail)?' cut':''}${x&&x.shared?' shared':''}" style="border-color:${KC[sg.k]||'#999'}" title="항목 ${sg.i} · ${KN[sg.k]||sg.k}${sg.cut_head?' · 앞 잘림':''}${sg.cut_tail?' · 뒤 잘림':''}${x&&x.shared?' · 앞 청크와 공유':''}">${esc(txt)}</span>`; pos=sg.b;}); inner+=esc(c.text.slice(pos));}
-  else {const prefix=c.section?`## ${c.section}\n`:''; inner+=`<span class="seg" style="border-color:${KC.section_header}" title="절 제목 접두">${esc(prefix)}</span>`; c.items.forEach(x=>{if(x.heading) return; const it=byi[x.i]; const t=it?(it.k==='table'?'(표 HTML → 셀 | 셀 텍스트)':it.t):''; inner+=`<span class="seg" style="border-color:${KC[x.k]||'#999'}" title="항목 ${x.i} · ${KN[x.k]||x.k}">${esc(t)}</span>\n`;});}
+  else {const prefix=c.section?`## ${c.section}\n`:''; inner+=`<span class="seg" style="border-color:${KC.section_header}" title="절 절 이름 줄">${esc(prefix)}</span>`; c.items.forEach(x=>{if(x.heading) return; const it=byi[x.i]; const t=it?(it.k==='table'?'(표 HTML → 셀 | 셀 텍스트)':it.t):''; inner+=`<span class="seg" style="border-color:${KC[x.k]||'#999'}" title="항목 ${x.i} · ${KN[x.k]||x.k}">${esc(t)}</span>\n`;});}
   const items=c.items.map(x=>`${x.i}${x.cut_head?'(앞 잘림)':''}${x.cut_tail?'(뒤 잘림)':''}${x.shared?'(공유)':''}`).join(', ');
   return `<div class="samp"><h4>${label} — 청크 ${ci} · ${c.kind} · ${c.chars.toLocaleString()}자 · ${c.pages.join('·')}쪽 · 항목 [${items}] <button type="button" style="padding:2px 9px;font-size:11.5px" onclick="goto(${ci},${c.pages[0]})">지면에서 보기</button></h4><div class="segtxt">${inner}</div></div>`;}).join('')||'<p class="lede">표본 없음</p>';}
 // 04 히스토그램
@@ -260,5 +260,5 @@ $('#exportedits').addEventListener('click',()=>{
  a.href=URL.createObjectURL(blob); a.download='exp1_edits.json'; a.click();});
 const _renderAll=renderAll; renderAll=function(){_renderAll(); applyEdits(); setEditMode(document.body.classList.contains('editing'));};
 fillPages(); renderAll();
-</script><script src="edit.js?v=3"></script>
+</script><script src="edit.js?v=4"></script>
 </body></html>

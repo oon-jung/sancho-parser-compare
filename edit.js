@@ -33,6 +33,31 @@
  const dl=document.createElement('button'); dl.className='ed-dl'; dl.hidden=true;
  const reset=document.createElement('button'); reset.className='ed-reset'; reset.textContent='모두 되돌리기'; reset.hidden=true;
  bar.append(dl,reset);
+ // 본문 너비 조절. 글줄이 너무 짧거나 길면 읽기 불편하므로 사용자가 고른다.
+ const WKEY='pagewidth';
+ const WIDTHS=[['좁게','780px','68ch'],['보통','1160px','86ch'],['넓게','1440px','110ch'],['가득','100%','none']];
+ function setWidth(i){
+  const [,w,l]=WIDTHS[i]||WIDTHS[1];
+  document.documentElement.style.setProperty('--page-w',w);
+  document.documentElement.style.setProperty('--lede-w',l);
+  try{localStorage.setItem(WKEY,i);}catch(e){}
+  wbar.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-pressed',j===i?'true':'false'));
+ }
+ const wbar=document.createElement('div'); wbar.className='ed-w';
+ wbar.innerHTML='<span>본문 너비</span>'+WIDTHS.map(([n])=>`<button type="button">${n}</button>`).join('');
+ wbar.querySelectorAll('button').forEach((b,i)=>b.addEventListener('click',()=>setWidth(i)));
+ const wstyle=document.createElement('style');
+ wstyle.textContent=`body main{max-width:var(--page-w,1160px)!important}
+ body p.lede,body .lede{max-width:var(--lede-w,86ch)!important}
+ .ed-w{position:fixed;right:16px;bottom:58px;z-index:50;display:flex;gap:3px;align-items:center;background:#fff;border:1px solid var(--rule,#d5d9e2);border-radius:999px;padding:4px 10px 4px 12px;box-shadow:0 2px 8px rgba(0,0,0,.14);font:12px "IBM Plex Sans KR",sans-serif;color:#737c8c}
+ .ed-w span{margin-right:4px}
+ .ed-w button{font:12px inherit;border:0;background:none;color:#4a5160;padding:2px 7px;border-radius:999px;cursor:pointer}
+ .ed-w button[aria-pressed="true"]{background:#16181d;color:#fff;font-weight:600}
+ body.ed-on .ed-w{bottom:96px}
+ @media(max-width:700px){.ed-w{left:16px;right:16px;bottom:58px;justify-content:center}}`;
+ document.head.append(wstyle); document.body.append(wbar);
+ { let i=1; try{const v=localStorage.getItem(WKEY); if(v!==null) i=+v;}catch(e){} setWidth(i); }
+
  const btn=document.createElement('button'); btn.className='ed-btn'; btn.type='button'; btn.textContent='본문 고치기'; btn.setAttribute('aria-pressed','false');
  const style=document.createElement('style');
  style.textContent=`.ed-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:600 13px "IBM Plex Sans KR",sans-serif;padding:9px 16px;border-radius:999px;border:1px solid var(--rule,#d5d9e2);background:#fff;color:#4a5160;box-shadow:0 2px 8px rgba(0,0,0,.14);cursor:pointer}

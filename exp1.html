@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>실험 1 · 청킹 시각화 — 1·2단계 파싱 확인</title>
+<title>논문 지면과 파싱 결과 — 4개 언어</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--gray:#9aa3b3;--bad:#a3232b}
@@ -47,9 +47,9 @@ button,select{font:600 13px inherit;padding:6px 12px;border:1px solid var(--rule
 .sum{font:12.5px "IBM Plex Mono",monospace;color:var(--faint)}
 .box{background:var(--lift);border:1px solid var(--rule);border-radius:10px;padding:14px 18px}ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:6px;line-height:1.6}
 </style></head><body>
-<nav class="top"><b>실험 1 · 청킹 시각화</b><span>1단계 대상 논문 확정 · 2단계 파싱 확인</span><a href="exp1summary.html">요약</a><a href="exp23.html">실험 2·3 결과</a><a href="exp23how.html">실험 2·3 과정</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html">방법 — 어떻게 쟀나</a><a href="exp1.html" class="on">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html">언어별 요약</a><a href="figq.html">그림에서만 답이 나오는 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
-<h1>1·2단계 — 대상 논문 4편과 docling 파싱 결과</h1>
+<h1>논문 4편을 파싱하면 무엇이 나오는가</h1>
 <p class="lede">언어별 1편씩 고른 4편을 docling으로 파싱한 항목을 지면 위에 그대로 놓았다. 오른쪽 목록은 저장된 그대로, 문서 전체 항목을 읽기 순번대로 한 줄로 늘어놓은 것이며 쪽은 그 안의 구분선일 뿐이다. 3단계부터 이 항목들이 어느 청크로 묶이는지를 같은 화면에 겹친다. 여기서는 청킹에 앞서 파서가 제목·본문·표·그림을 어떻게 나눴는지 확인한다.</p>
 
 <h2><span class="no">01</span>대상 논문</h2>
@@ -124,5 +124,5 @@ $('#notes').innerHTML=D.map(d=>{const heads=d.items.filter(i=>i.k==='section_hea
  return `<li><b>${d.id}</b>: 제목 ${heads.length}개 (앞부분: ${esc(first)}${heads.length>6?' …':''}). 표 ${d.counts.table||0}개${emptyT?` 중 HTML 없음 ${emptyT}개`:''}, 그림 ${d.counts.picture||0}개는 위치만 있고 내용은 비어 있다.</li>`;}).join('')+
  `<li><b>en_02의 쪽 넘김 중복</b>: 쪽을 넘는 문단 5개를 docling이 쪽마다 <b>통째로</b> 기록해 같은 번호·같은 텍스트 항목이 두 번 저장된다(4,994자, 본문의 7.5%). 상자에 빨간 테두리와 번호 뒤 *로 표시했다. 청킹 단계에서도 중복이 그대로 남는다.</li>
  <li><b>공통</b>: 제목의 계층이 없어 "2. Materials and Methods"와 "2.1 Preparation"이 같은 단계로 온다. 논문 첫 쪽의 저자·소속·초록 머리 줄이 제목으로 잡히는 경우가 있다. 이것이 3단계 이후 절 단위 청킹의 경계가 된다.</li>`;
-</script><script src="edit.js?v=3"></script>
+</script><script src="edit.js?v=4"></script>
 </body></html>

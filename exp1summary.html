@@ -1,10 +1,10 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>실험 1 요약 — docling 청킹 현황</title>
+<title>언어별 청킹 결과 요약 — 한국어·영어·일본어·중국어</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 :root{--ink:#16181d;--soft:#4a5160;--faint:#737c8c;--paper:#f2f3f6;--lift:#fff;--sunk:#e8ebf1;--rule:#d5d9e2;--rule2:#eef0f4;--pm:#2a78d6;--dl:#1f6f5c;--tbl:#7a4fb5;--mu:#eb6834;--bad:#a3232b}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.65 "IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo",sans-serif;font-variant-numeric:tabular-nums}
-nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}nav.top b{font-size:14px}nav.top a{color:#fff;opacity:.7;text-decoration:none}nav.top a:hover{opacity:1}nav.top span{opacity:.7}
+nav.top{background:var(--ink);color:#fff;padding:8px 18px;font-size:13px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}nav.top b{font-size:14px}nav.top a{color:#fff;opacity:.7;text-decoration:none}nav.top a:hover{opacity:1}nav.top a.on{opacity:1;font-weight:600;border-bottom:2px solid #fff;padding-bottom:1px}nav.top span{opacity:.7}
 main{max-width:1060px;margin:0 auto;padding:22px 18px 50px}
 h1{font-size:22px;margin:6px 0 4px}.sub{color:var(--soft);margin:0 0 18px}
 h2{font-size:16px;margin:30px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:10px}h2 .no{font:600 11px "IBM Plex Mono",monospace;color:var(--faint)}
@@ -25,9 +25,9 @@ ul.pts{margin:0;padding-left:20px}ul.pts li{margin-bottom:7px;line-height:1.65}
 footer{color:var(--faint);font-size:12.5px;line-height:1.7;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule)}
 code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;border-radius:4px}
 </style></head><body>
-<nav class="top"><b>실험 1 요약</b><a href="exp1.html">1·2단계 파싱 확인</a><a href="exp1chunk.html">3~6단계 청킹 결과</a><a href="exp23.html">실험 2·3 결과</a><a href="exp23how.html">실험 2·3 과정</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
+<nav class="top"><b>청킹 방식 비교</b><a href="exp23.html">결과 — 어떤 청킹이 나았나</a><a href="exp23how.html">방법 — 어떻게 쟀나</a><a href="exp1.html">지면과 파싱 결과</a><a href="exp1chunk.html">청크 경계 보기</a><a href="exp1summary.html" class="on">언어별 요약</a><a href="figq.html">그림에서만 답이 나오는 문항</a><a style="margin-left:auto" href="parsers.html">← 산초 파서 비교</a></nav>
 <main>
-<h1>docling 파싱 결과가 실제로 어떻게 청크로 잘리는가</h1>
+<h1>네 언어에서 절이 청크로 얼마나 온전히 남는가</h1>
 <p class="sub">논문 4편(한국어·영어·일본어·중국어 각 1편, 40쪽)을 docling으로 파싱한 뒤 두 방식으로 청킹해 지면 위에서 확인했다. 기준은 PaperQA2의 기본값인 5,000자/250자이고, 현행 절 단위와 나란히 놓았다. 두 방식 모두 입력은 같은 docling 항목이며, 차이는 자르는 규칙 하나다. 그림은 내용이 비어 있어 로컬 VLM(Qwen3-VL 32B)으로 서술을 채운 뒤 청킹했다.</p>
 
 <h2><span class="no">01</span>한눈에</h2>
@@ -116,10 +116,10 @@ code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;
 <div class="wrap"><table class="t">
 <thead><tr><th>문제</th><th>제안</th><th>확인 방법</th></tr></thead>
 <tbody>
-<tr><td class="k">상위 제목 유실</td><td>제목 번호 패턴(1. / 1.1 / Ⅰ. / 1))으로 계층을 복원해 청크에 경로를 붙인다</td><td>실험 2에서 접두 유무로 회수율 비교</td></tr>
+<tr><td class="k">상위 제목 유실</td><td>제목 번호 패턴(1. / 1.1 / Ⅰ. / 1))으로 계층을 복원해 청크에 경로를 붙인다</td><td>절 이름 줄을 넣은 조건과 넣지 않은 조건으로 회수율 비교</td></tr>
 <tr><td class="k">제목 오검출·미검출</td><td>초록 이전 항목은 제목에서 제외하고, 번호 패턴이 있는 본문 줄은 제목으로 승격한다</td><td>절 보존율과 제목 수의 변화</td></tr>
 <tr><td class="k">캡션 분리</td><td>캡션을 표·그림 청크의 첫 줄로 옮긴다</td><td>표 값·그림 읽기 문항의 회수율</td></tr>
-<tr><td class="k">긴 절 분할</td><td>바닥 토큰을 올려 짧은 절을 병합하거나, 절 안에서만 문단 겹침을 허용한다</td><td>실험 3의 청킹 조건 후보</td></tr>
+<tr><td class="k">긴 절 분할</td><td>바닥 토큰을 올려 짧은 절을 병합하거나, 절 안에서만 문단 겹침을 허용한다</td><td>자르는 크기를 바꾸는 조건의 후보</td></tr>
 <tr><td class="k">쪽 경계 분리</td><td>쪽을 넘는 인접 항목을 파싱 단계에서 병합한다</td><td>단어 끊김 건수</td></tr>
 <tr><td class="k">쪽 경계 중복</td><td>같은 번호·같은 텍스트 항목을 파싱 직후 하나로 합친다</td><td>중복 글자 수(en_02 4,994자)</td></tr>
 <tr><td class="k">머리글이 제목으로</td><td>같은 제목 텍스트가 여러 쪽에 반복되면 머리글로 보고 제목에서 제외한다</td><td>zh_02 절 수와 보존율</td></tr>
@@ -127,11 +127,11 @@ code{font:12px "IBM Plex Mono",monospace;background:var(--sunk);padding:1px 5px;
 
 <h2><span class="no">07</span>다음 실험</h2>
 <div class="box"><ul class="pts">
-<li><b>실험 2 (제목·부제 삽입)</b>: 가설의 두 요소인 "제목을 앞에 붙인다"와 "제목 아래 내용을 묶는다"를 분리해 잰다. A(둘 다 아님) · B(둘 다) · B에서 접두만 뺀 조건 세 가지로 비교한다.</li>
-<li><b>실험 3 (5000/250 대안)</b>: ① 절 단위 ② 절 단위 + 캡션 병합 ③ 절 단위 + 짧은 절 병합 ④ 고정 1000/100. 5000/250은 기준선으로만 둔다.</li>
+<li><b>묶기와 절 이름 줄</b>: 가설의 두 요소인 "제목을 앞에 붙인다"와 "제목 아래 내용을 묶는다"를 분리해 잰다. A(둘 다 아님) · B(둘 다) · B에서 절 이름 줄만 뺀 조건 세 가지로 비교한다.</li>
+<li><b>5,000자/250자를 대신할 방법</b>: ① 절 단위 ② 절 단위 + 캡션 병합 ③ 절 단위 + 짧은 절 병합 ④ 고정 1000/100. 5000/250은 기준선으로만 둔다.</li>
 <li><b>공통</b>: 문항을 언어별로 나눠 집계하고, 그림 서술 포함 여부를 조건으로 고정하거나 분리한다.</li>
 </ul></div>
 
 <footer>A는 PaperQA2 기본 커터를 같은 docling 입력에 적용한 조건이며, 원래 파이프라인의 파서 출력을 넣은 기준선은 아니다. 자료: <a href="exp1.html">1·2단계 파싱 확인 페이지</a>(4편 40쪽 지면 위 docling 항목, 그림 VLM 서술 비교) · <a href="exp1chunk.html">3~6단계 청킹 결과 페이지</a>(지면 위 청크 경계, 표본 대조, 길이 분포, 검증 플래그 8종). 수치는 그림 서술 Qwen3-VL 32B 기준이며 파서는 docling 2.118(OCR 끔)이다. 이 페이지는 논문 본문을 담지 않는다.</footer>
-</main><script src="edit.js?v=3"></script>
+</main><script src="edit.js?v=4"></script>
 </body></html>
