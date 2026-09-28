@@ -51,10 +51,12 @@
   if(el.innerHTML!==el.dataset.orig){EDITS[i]={html:el.innerHTML,fp:el.dataset.orig.replace(/<[^>]*>/g,''),text:el.textContent};
    el.classList.add('ed-changed');} else {delete EDITS[i]; el.classList.remove('ed-changed');}
   localStorage.setItem(KEY,JSON.stringify(EDITS)); count();}
- let timer=null;
+ // 요소마다 따로 타이머를 둔다. 하나를 고치다 다른 곳으로 옮겨도 앞의 저장이 취소되지 않는다.
+ const timers=new Map();
  document.addEventListener('input',e=>{
   const el=e.target.closest&&e.target.closest('[data-ed]'); if(!el) return;
-  clearTimeout(timer); timer=setTimeout(()=>save(el),400);});
+  const k=el.dataset.ed; clearTimeout(timers.get(k));
+  timers.set(k,setTimeout(()=>{timers.delete(k); save(el);},400));});
  document.addEventListener('focusout',e=>{const el=e.target.closest&&e.target.closest('[data-ed]'); if(el) save(el);});
  window.__edSave=save;
  dl.addEventListener('click',()=>{
