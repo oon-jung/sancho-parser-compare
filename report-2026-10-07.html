@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
 <title>1007_산초 RAG _ 김운정</title>
-<style>:root{color-scheme:light dark} body{margin:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif} img{max-width:100%} [hidden]{display:none!important}</style>
+<style>:root{color-scheme:light} html,body{background:#f5f6f9} body{margin:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif} img{max-width:100%} [hidden]{display:none!important}</style>
 </head>
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +13,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
   :root{
+    color-scheme: light;
     --paper:#f5f6f9; --surface:#ffffff; --raise:#eef1f5;
     --ink:#131925; --dim:#5a6474; --faint:#8b94a3;
     --line:#e0e4ec; --line-2:#cfd5e0;
@@ -22,26 +24,8 @@
     --sans:"IBM Plex Sans","Noto Sans KR",system-ui,-apple-system,sans-serif;
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --paper:#0e1218; --surface:#161c25; --raise:#1d242f;
-      --ink:#e6eaf2; --dim:#9aa5b5; --faint:#6e7888;
-      --line:#242c38; --line-2:#333d4c;
-      --accent:#6fa8dc; --accent-soft:#17293a;
-      --done:#6cc49a; --done-soft:#132a20;
-      --run:#6fa8dc; --run-soft:#17293a;
-      --wait:#d99a4e; --wait-soft:#2c2114;
-    }
-  }
-  :root[data-theme="dark"]{
-    --paper:#0e1218; --surface:#161c25; --raise:#1d242f;
-    --ink:#e6eaf2; --dim:#9aa5b5; --faint:#6e7888;
-    --line:#242c38; --line-2:#333d4c;
-    --accent:#6fa8dc; --accent-soft:#17293a;
-    --done:#6cc49a; --done-soft:#132a20;
-    --run:#6fa8dc; --run-soft:#17293a;
-    --wait:#d99a4e; --wait-soft:#2c2114;
-  }
+  
+  
   body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:900px;margin:0 auto;padding-block:34px 70px;padding-left:18px;padding-right:18px}
   .eyebrow{font-size:11.5px;letter-spacing:.08em;color:var(--faint);margin:0 0 6px}
@@ -93,8 +77,8 @@
   body.editing [data-edit]{box-shadow:inset 0 0 0 1px var(--line-2);border-radius:4px;cursor:text}
   /* 그래프 그림 */
   :root{--c-paper:#1b5a96;--c-section:#2f7d6d;--c-chunk:#8a93a6;--c-figure:#b8641c;--c-table:#8a5fbf;--c-ref:#c44b5a}
-  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-paper:#6fa8dc;--c-section:#5fbfa9;--c-chunk:#9aa3b5;--c-figure:#e39a52;--c-table:#b394e6;--c-ref:#ea7a88}}
-  :root[data-theme="dark"]{--c-paper:#6fa8dc;--c-section:#5fbfa9;--c-chunk:#9aa3b5;--c-figure:#e39a52;--c-table:#b394e6;--c-ref:#ea7a88}
+  
+  
   .mer{background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto;margin:6px 0 10px}
   .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--dim);margin:6px 0 8px}
   .legend span{display:inline-flex;align-items:center;gap:6px}
@@ -594,7 +578,7 @@ flowchart LR
 
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({ startOnLoad: true, theme: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default" });
+  mermaid.initialize({ startOnLoad: true, theme: "default" });
 </script>
 </body>
 </html>
