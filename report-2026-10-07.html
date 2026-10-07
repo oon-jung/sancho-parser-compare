@@ -68,13 +68,6 @@
   h3{font-size:13px;font-weight:700;margin:12px 0 5px;letter-spacing:.02em}
   .foot{color:var(--faint);font-size:12px;border-top:1px solid var(--line);padding-top:12px;margin-top:20px}
 
-  /* 편집 */
-  .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--paper);padding:8px 0 10px;border-bottom:1px solid var(--line);margin-bottom:18px}
-  .bar button{appearance:none;font:inherit;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);color:var(--dim);border-radius:7px;padding:6px 12px;cursor:pointer}
-  .bar button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
-  .bar .st{font-size:12px;color:var(--faint);margin-left:auto}
-  [data-edit]:focus{outline:2px dashed var(--accent);outline-offset:3px;border-radius:4px}
-  body.editing [data-edit]{box-shadow:inset 0 0 0 1px var(--line-2);border-radius:4px;cursor:text}
   /* 그래프 그림 */
   :root{--c-paper:#1b5a96;--c-section:#2f7d6d;--c-chunk:#8a93a6;--c-figure:#b8641c;--c-table:#8a5fbf;--c-ref:#c44b5a}
   
@@ -93,12 +86,7 @@
 </style>
 
 <div class="wrap">
-  <div class="bar">
-    <button type="button" id="edit" aria-pressed="false">편집</button>
-    <button type="button" id="reset">원본으로</button>
-    <span class="st" id="st"></span>
-  </div>
-    <h1 id="t0">1007_산초 RAG _ 김운정</h1>
+  <h1 id="t0">1007_산초 RAG _ 김운정</h1>
   
 
   <dl class="tiles">
@@ -115,15 +103,15 @@
     <h2>논문 적재 흐름 (현재 운용 중인 형태)</h2>
 <pre class="mermaid">
 flowchart LR
-  A[Europe PMC\nJATS XML 수집] --> B[docling 파싱\n절 계층 복원]
-  B --> C[절 단위 청킹\n900토큰 · 제목태그 없음]
+  A[Europe PMC<br/>JATS XML 수집] --> B[docling 파싱<br/>절 계층 복원]
+  B --> C[절 단위 청킹<br/>900토큰 · 제목태그 없음]
   C --> D[BGE-M3 임베딩]
-  B --> E[그림 서술\nqwen3-vl 32b]
+  B --> E[그림 서술<br/>qwen3-vl 32b]
   E --> C
-  B --> F[논문 속 그래프\nNeo4j]
+  B --> F[논문 속 그래프<br/>Neo4j]
   C --> F
-  G[Crossref · OpenAlex\nDOI 보강] --> F
-  D --> H[검색 · 답변\nPaperQA2]
+  G[Crossref · OpenAlex<br/>DOI 보강] --> F
+  D --> H[검색 · 답변<br/>PaperQA2]
   F --> H
   I[한국어 골드 37문항] -. 채점 .-> H
 </pre>
@@ -142,10 +130,10 @@ flowchart LR
     <h3 id="v1a">수집 경로</h3>
     <div class="mer"><pre class="mermaid">
 flowchart LR
-  A[원장 813편] -->|PMC에 전문 있음| X[Europe PMC\nXML 수집기]
-  N[새 논문 탐색\n고정 검색어 7개] --> X
-  X --> C[(XML 코퍼스\n579편)]
-  A -->|PMC에 없음·구독| M[수동 확보\n대기열]
+  A[원장 813편] -->|PMC에 전문 있음| X[Europe PMC<br/>XML 수집기]
+  N[새 논문 탐색<br/>고정 검색어 7개] --> X
+  X --> C[(XML 코퍼스<br/>579편)]
+  A -->|PMC에 없음·구독| M[수동 확보<br/>대기열]
   E[Elsevier API] -.403.-> M
   M -->|제목 선별| R[관련 138편]
   C --> P[파싱·청킹·그래프]
@@ -222,10 +210,10 @@ flowchart LR
     </table></div>
     <div class="mer"><pre class="mermaid">
 flowchart LR
-  A[① 수집\n고정 검색어 회차] --> B[② 탐지\n처리 기록에 없는 논문]
-  B --> C[③ 파싱·청킹\n절 계층 → 900토큰]
-  C --> D[④ 그래프 파일\n→ Neo4j MERGE]
-  D --> E[개수 대조\n파일 = DB]
+  A[① 수집<br/>고정 검색어 회차] --> B[② 탐지<br/>처리 기록에 없는 논문]
+  B --> C[③ 파싱·청킹<br/>절 계층 → 900토큰]
+  C --> D[④ 그래프 파일<br/>→ Neo4j MERGE]
+  D --> E[개수 대조<br/>파일 = DB]
   C -.같은 목록.-> F[그림 서술 루프]
   E --> A
 </pre></div>
@@ -358,13 +346,13 @@ RETURN a.doc_id AS 인용한논문, b.doc_id AS 인용된논문</pre>
     <p id="t38">기존 골드는 PDF 12편 기준이라 XML 코퍼스에는 12문항만 남아 한 문항이 8점을 움직였습니다. <br>논문 본문에서 초안을 뽑고(gpt-4.1-mini), <b>답이 본문에 그대로 있는지 기계 대조</b>, 절 제목 되묻기 탈락, 그다음 사람 검수를 거쳤습니다.</p>
     <div class="mer"><pre class="mermaid">
 flowchart LR
-  A[논문 본문\n방법·결과 절] --> B[초안 생성\ngpt-4.1-mini\n수백 개]
-  B --> C{답이 본문에\n그대로 있나}
+  A[논문 본문<br/>방법·결과 절] --> B[초안 생성<br/>gpt-4.1-mini<br/>수백 개]
+  B --> C{답이 본문에<br/>그대로 있나}
   C -->|없음| X1[탈락]
-  C -->|있음| D{절 제목을\n되묻나}
+  C -->|있음| D{절 제목을<br/>되묻나}
   D -->|예| X2[탈락]
   D -->|아니오| E[검수 대상 40]
-  E --> F[사람 검수] --> G[채택 37\n한국어 Q·A + 영어 근거]
+  E --> F[사람 검수] --> G[채택 37<br/>한국어 Q·A + 영어 근거]
 </pre></div>
     <div class="tbl"><table>
       <tr><th>항목</th><th class="num">값</th></tr>
@@ -449,50 +437,7 @@ flowchart LR
 <script>
 (function(){
   "use strict";
-  /* ---------- 편집 저장 ---------- */
-  var $ = function(id){ return document.getElementById(id); };
-  var editables = Array.prototype.slice.call(document.querySelectorAll("h1, .lede, section h2, section h3, section p, section li, .ask, .note, .cap, .foot"));
-  editables.forEach(function(e, i){ if (!e.id) e.id = "t" + i; e.setAttribute("data-edit", ""); });
-  var original = {}; editables.forEach(function(e){ original[e.id] = e.innerHTML; });
-  var db = null, writable = true, pending;
-  function say(m){ $("st").textContent = m; }
-  function apply(items){
-    editables.forEach(function(e){ if (items && items[e.id] != null) e.innerHTML = items[e.id]; else e.innerHTML = original[e.id]; });
-  }
-  function collect(){
-    var out = {};
-    editables.forEach(function(e){ if (e.innerHTML !== original[e.id]) out[e.id] = e.innerHTML; });
-    return out;
-  }
-  function persist(){
-    if (!db || !writable) return;
-    db.doc("edits/weekly").set({items: collect(), at: new Date().toISOString()})
-      .then(function(){ say("저장됨"); })
-      .catch(function(e){ writable = false; say(e && e.code === "not_granted" ? "" : "저장 실패 — 이 화면에서는 저장할 수 없습니다"); });
-  }
-  $("edit").addEventListener("click", function(){
-    var on = this.getAttribute("aria-pressed") !== "true";
-    this.setAttribute("aria-pressed", on ? "true" : "false");
-    document.body.classList.toggle("editing", on);
-    editables.forEach(function(e){ e.contentEditable = on ? "true" : "false"; });
-    say(on ? "클릭해서 고치세요. 벗어나면 저장됩니다." : "");
-    if (!on) persist();
-  });
-  editables.forEach(function(e){
-    e.addEventListener("blur", function(){ clearTimeout(pending); pending = setTimeout(persist, 200); });
-  });
-  $("reset").addEventListener("click", function(){ apply(null); persist(); say("원본으로 되돌렸습니다"); });
-  if (window.claude && window.claude.use){
-    claude.use("db").then(function(d){
-      if (!d) return;
-      db = d;
-      db.doc("edits/weekly").onSnapshot(function(snap){
-        var data = snap && snap.data;
-        if (data && data.items) { apply(data.items); say("고친 내용을 불러왔습니다"); }
-      }, function(){ writable = false; });
-    }).catch(function(){});
-  }
-
+    var $ = function(id){ return document.getElementById(id); };
   /* ---------- 실제 논문 그래프 그림 ---------- */
   var G = JSON.parse($("gdata").textContent);
   var SKIP = /Review Board|Conflicts|Funding|Availability|Acknowledg|Author Contributions|Supplementary|Abbreviations/i;
@@ -578,7 +523,7 @@ flowchart LR
 
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({ startOnLoad: true, theme: "default" });
+  mermaid.initialize({ startOnLoad: true, theme: "default", securityLevel: "loose" });
 </script>
 </body>
 </html>
