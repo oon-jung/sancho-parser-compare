@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>1007_산초 RAG _ 김운정</title>
+<style>:root{color-scheme:light dark} body{margin:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif} img{max-width:100%} [hidden]{display:none!important}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#f5f6f9; --surface:#ffffff; --raise:#eef1f5;
+    --ink:#131925; --dim:#5a6474; --faint:#8b94a3;
+    --line:#e0e4ec; --line-2:#cfd5e0;
+    --accent:#1b5a96; --accent-soft:#e8f0f8;
+    --done:#246b45; --done-soft:#e6f2ec;
+    --run:#1b5a96; --run-soft:#e8f0f8;
+    --wait:#95560f; --wait-soft:#fbf0e2;
+    --sans:"IBM Plex Sans","Noto Sans KR",system-ui,-apple-system,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0e1218; --surface:#161c25; --raise:#1d242f;
+      --ink:#e6eaf2; --dim:#9aa5b5; --faint:#6e7888;
+      --line:#242c38; --line-2:#333d4c;
+      --accent:#6fa8dc; --accent-soft:#17293a;
+      --done:#6cc49a; --done-soft:#132a20;
+      --run:#6fa8dc; --run-soft:#17293a;
+      --wait:#d99a4e; --wait-soft:#2c2114;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0e1218; --surface:#161c25; --raise:#1d242f;
+    --ink:#e6eaf2; --dim:#9aa5b5; --faint:#6e7888;
+    --line:#242c38; --line-2:#333d4c;
+    --accent:#6fa8dc; --accent-soft:#17293a;
+    --done:#6cc49a; --done-soft:#132a20;
+    --run:#6fa8dc; --run-soft:#17293a;
+    --wait:#d99a4e; --wait-soft:#2c2114;
+  }
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px;margin:0 auto;padding-block:34px 70px;padding-left:18px;padding-right:18px}
+  .eyebrow{font-size:11.5px;letter-spacing:.08em;color:var(--faint);margin:0 0 6px}
+  h1{font-size:clamp(23px,3.8vw,30px);font-weight:700;letter-spacing:-.015em;margin:0 0 8px;text-wrap:balance}
+  .lede{color:var(--dim);margin:0 0 22px;max-width:66ch}
+  .lede b{color:var(--ink);font-weight:600}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0 0 28px}
+  .tile{background:var(--surface);padding:13px 14px}
+  .tile dt{font-size:11px;color:var(--faint);letter-spacing:.05em;margin-bottom:3px}
+  .tile dd{margin:0;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.15}
+  .tile dd small{font-size:11.5px;font-weight:400;color:var(--dim);margin-left:4px}
+
+  .flow{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px 6px;margin:0 0 30px;overflow-x:auto}
+  .flow h2{font-size:12px;letter-spacing:.06em;color:var(--faint);font-weight:500;margin:0 0 6px;border:0;padding:0}
+
+  section.task{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:0 0 16px}
+  .thead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin:0 0 10px;padding-bottom:9px;border-bottom:1.5px solid var(--line-2)}
+  .thead .n{font-family:var(--mono);font-size:12px;color:var(--accent)}
+  .thead h2{font-size:17px;font-weight:700;margin:0;flex:1 1 auto;min-width:0}
+  .chip{font-size:11px;letter-spacing:.04em;padding:2px 9px;border-radius:999px;border:1px solid;white-space:nowrap;font-weight:600}
+  .chip.done{color:var(--done);border-color:var(--done);background:var(--done-soft)}
+  .chip.run{color:var(--run);border-color:var(--run);background:var(--run-soft)}
+  .chip.wait{color:var(--wait);border-color:var(--wait);background:var(--wait-soft)}
+  .ask{font-size:12.5px;color:var(--dim);margin:0 0 10px;padding:8px 11px;background:var(--raise);border-radius:7px}
+  .ask b{color:var(--ink);font-weight:600}
+  p{margin:0 0 9px}
+  ul{margin:4px 0 10px;padding-left:20px}
+  li{margin:3px 0}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0 10px}
+  th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--faint);font-weight:500;font-size:11.5px;letter-spacing:.04em}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  code{font-family:var(--mono);font-size:12px;background:var(--raise);padding:1px 6px;border-radius:4px}
+  .tbl{overflow-x:auto}
+  .note{border-left:3px solid var(--accent);padding:8px 12px;margin:8px 0 4px;font-size:13px;color:var(--dim);background:var(--accent-soft);border-radius:0 7px 7px 0}
+  .note b{color:var(--ink)}
+  .warn{border-left-color:var(--wait);background:var(--wait-soft)}
+  .warn b{color:var(--wait)}
+  h3{font-size:13px;font-weight:700;margin:12px 0 5px;letter-spacing:.02em}
+  .foot{color:var(--faint);font-size:12px;border-top:1px solid var(--line);padding-top:12px;margin-top:20px}
+
+  /* 편집 */
+  .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--paper);padding:8px 0 10px;border-bottom:1px solid var(--line);margin-bottom:18px}
+  .bar button{appearance:none;font:inherit;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);color:var(--dim);border-radius:7px;padding:6px 12px;cursor:pointer}
+  .bar button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .bar .st{font-size:12px;color:var(--faint);margin-left:auto}
+  [data-edit]:focus{outline:2px dashed var(--accent);outline-offset:3px;border-radius:4px}
+  body.editing [data-edit]{box-shadow:inset 0 0 0 1px var(--line-2);border-radius:4px;cursor:text}
+  /* 그래프 그림 */
+  :root{--c-paper:#1b5a96;--c-section:#2f7d6d;--c-chunk:#8a93a6;--c-figure:#b8641c;--c-table:#8a5fbf;--c-ref:#c44b5a}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-paper:#6fa8dc;--c-section:#5fbfa9;--c-chunk:#9aa3b5;--c-figure:#e39a52;--c-table:#b394e6;--c-ref:#ea7a88}}
+  :root[data-theme="dark"]{--c-paper:#6fa8dc;--c-section:#5fbfa9;--c-chunk:#9aa3b5;--c-figure:#e39a52;--c-table:#b394e6;--c-ref:#ea7a88}
+  .mer{background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto;margin:6px 0 10px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--dim);margin:6px 0 8px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  #net{width:100%;height:520px;background:var(--raise);border:1px solid var(--line);border-radius:8px;display:block;touch-action:none}
+  #net text{font-family:var(--sans);font-size:10.5px;fill:var(--ink);pointer-events:none}
+  #net line{stroke:var(--line-2);stroke-width:1.1}
+  #net circle{stroke:var(--surface);stroke-width:1.5;cursor:grab}
+  .cap{font-size:12.5px;color:var(--faint);margin:4px 0 0}
+  pre.cy{font-family:var(--mono);font-size:12px;background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:6px 0 10px;white-space:pre}
+  @media (max-width:560px){ #net{height:420px} }
+</style>
+
+<div class="wrap">
+  <div class="bar">
+    <button type="button" id="edit" aria-pressed="false">편집</button>
+    <button type="button" id="reset">원본으로</button>
+    <span class="st" id="st"></span>
+  </div>
+    <h1 id="t0">1007_산초 RAG _ 김운정</h1>
+  
+
+  <dl class="tiles">
+    <div class="tile"><dt>원장 논문</dt><dd>813<small>행</small></dd></div>
+    <div class="tile"><dt>XML 전문 확보</dt><dd>579<small>편</small></dd></div>
+    <div class="tile"><dt>청크</dt><dd>51,331</dd></div>
+    <div class="tile"><dt>그림 서술</dt><dd>1,824<small>/ 3,232</small></dd></div>
+    <div class="tile"><dt>그래프 노드·엣지</dt><dd>92.9k<small>· 143.5k</small></dd></div>
+    <div class="tile"><dt>한국어 골드</dt><dd>37<small>문항</small></dd></div>
+    <div class="tile"><dt>임상 비논문</dt><dd>37<small>건</small></dd></div>
+  </dl>
+
+  <div class="flow">
+    <h2>논문 적재 흐름 (현재 운용 중인 형태)</h2>
+<pre class="mermaid">
+flowchart LR
+  A[Europe PMC\nJATS XML 수집] --> B[docling 파싱\n절 계층 복원]
+  B --> C[절 단위 청킹\n900토큰 · 제목태그 없음]
+  C --> D[BGE-M3 임베딩]
+  B --> E[그림 서술\nqwen3-vl 32b]
+  E --> C
+  B --> F[논문 속 그래프\nNeo4j]
+  C --> F
+  G[Crossref · OpenAlex\nDOI 보강] --> F
+  D --> H[검색 · 답변\nPaperQA2]
+  F --> H
+  I[한국어 골드 37문항] -. 채점 .-> H
+</pre>
+  </div>
+
+  <section class="task">
+    <div class="thead"><span class="n">1</span><h2 id="t2">상위 저널 논문 자동 수집</h2><span class="chip done">완료 · 운용 중</span></div>
+    <p id="t3" class="ask">상위 저널 영어 논문을 1순위로 수집 진행</p>
+    <p id="t4">PDF 다운로드는 수동으로 진행 / <b>Europe PMC의 JATS XML</b>을 자동 다운로드 수집.<br>기존 논문 확보와 신규 상위 저널 논문 탐색을 한 수집기가 맡고, 서버에서 대기 질의 7개를 돌며 계속 모읍니다.</p>
+    <div class="tbl"><table>
+      <tr><th>항목</th><th>PDF 경로</th><th>XML 경로</th></tr>
+      <tr><td>전문 확보 성공률</td><td>논문마다 다름 (구독 벽)</td><td>100%</td></tr>
+      <tr><td>실제 절 계층 복원</td><td>전부 1단계로 뭉개짐</td><td>96~97%</td></tr>
+      <tr><td>논문 1편 처리</td><td>20.5초 (PDF+docling)</td><td>0.01~3초</td></tr>
+    </table></div>
+    
+    
+  </section>
+
+  <section class="task">
+    <div class="thead"><span class="n">2</span><h2 id="t7">파싱 · 청킹 파이프라인 확정과 계층 청킹 실험</h2><span class="chip done">완료</span></div>
+    <p id="t8" class="ask">파일럿에서 검증한 방식으로 확정하고, 과제 ②(계층 청킹이 더 나은가)를 실험.</p>
+    <p id="t9">확정안은 <b>절 단위 · 900토큰 · 제목 태그 없음</b>입니다. <br>파일럿 골드 57문항에서 50/57이었던 조건 그대로입니다. <br>계층 청킹 -&gt; XML - 절 계층을 살려 주니 계층 청킹 실험 진행 가능</p>
+    <div class="tbl"><table>
+      <tr><th>조건</th><th class="num">청크</th><th class="num">6등 안</th><th class="num">MRR</th><th>판정</th></tr>
+      <tr><td>절 단위 (확정안)</td><td class="num">11,299</td><td class="num">38.0%</td><td class="num">0.252</td><td>기준</td></tr>
+      <tr><td>계층 병합</td><td class="num">10,187</td><td class="num">29.4%</td><td class="num">0.183</td><td>−8.5%p, 채택 안 함</td></tr>
+      <tr><td>계층 경로 접두</td><td class="num">11,299</td><td class="num">69.8%</td><td class="num">0.542</td><td>비교 제외 (아래)</td></tr>
+    </table></div>
+    <h3 id="x1">설명</h3>
+    <p id="x2"><b>측정</b><br>논문 120편에서 소절 제목 1,651개를 질문으로 삼았습니다. <br><br>예를 들어 "4.3 Cell Viability Assay"를 넣고, 검색이 돌려준 상위 6개 청크 안에 <b>그 소절에 속한 청크</b>가 들어 있으면 정답으로 인식. -&gt; 그 비율이 상단 표의 "6등 안"을 의미함<br>MRR은 정답 청크가 몇 등에 나왔는지를 평균한 값으로, 1등이면 1, 2등이면 0.5, 늦게 나올수록 수치가 작아집니다.</p>
+    <p id="x3"><b>판정 : −8.5%p</b> <br>절 단위 청킹은 1,651개 질문 중 38.0%에서 정답 청크를 6등 안에 올렸고, 계층 병합은 29.4%였습니다. <br><br>같은 질문, 같은 임베딩 모델, 같은 논문인데 맞힌 비율이 8.5%p 낮다.<br>MRR도 0.252에서 0.183으로 함께 떨어졌으니 "정답이 6등 안엔 있는데 순위만 밀린" 것도 아니고 아예 소절 제목이 속한 청크를 뽑아내지 못함을 의미함.</p>
+    <p id="x4"><b>값이 낮은 이유</b><br>계층 병합은 "4. 재료와 방법" 아래 소절들을 한 덩어리로 보고 900토큰씩 자릅니다. <br>그러면 한 청크가 4.1의 끝과 4.2의 앞을 같이 담게 됩니다. -&gt; 세포 생존 실험과 통계 방법이 한 청크에 섞이면 그 청크의 임베딩은 둘의 중간이 되어 어느 쪽 질문에도 덜 비슷해집니다. <br><br>청크 수가 11,299개에서 10,187개로 줄어든 것이 그 증거이다. 덩어리가 커지고 섞인 만큼 정확도가 낮아졌다. <br>"이웃한 소절은 같이 두는 게 낫다"는 가설이 검색에서는 성립하지 않았습니다.</p>
+    <p id="x5"><b>결론</b><br>절 경계를 넘지 않는 절 단위 청킹을 그대로 사용. <br>다만 이 수치는 "논문의 맞는 부분을 찾는가"를 잰 것이지 답을 맞히는가를 잰 것은 아니라서, 골드 57문항의 50/57과는 다른 척도입니다.</p>
+    <p id="t10"><b>세 번째 줄(계층 경로 접두)을 비교에서 제외한 이유</b><br>이 조건은 청크 본문 앞에 그 청크의 절 제목 경로를 글자로 붙입니다. <br><br>예를 들어 어떤 청크가 "## 4. Materials and Methods &gt; 4.3 Cell Viability Assay"로 시작합니다. 그런데 이 실험의 질문이 바로 그 소절 제목("Cell Viability Assay")입니다. 정답 청크 안에 질문 문장이 글자 그대로 들어 있으니, 검색이 잘해서가 아니라 <b>시험지에 답을 적어 놓고 채점한 것</b>과 같음. -&gt; 69.8%는 그래서 나온 숫자이고, 다른 두 조건과 나란히 놓을 수 없습니다. <br><br>제대로 재려면 제목이 아니라 "MTT 시약의 농도는 얼마인가"처럼 본문 내용을 묻는 질문이 필요합니다. 그래서 그런 질문 37개(5번)를 만들었고, 이 조건은 그 문항으로 다시 잴 예정입니다.</p>
+    <h3 id="t11">적재 자동화 확인</h3>
+    <p id="t12">새 XML 수집 <br><b>파싱 → 청킹 → 그래프 파일 → Neo4j 적재 → 개수 대조</b><br>수집 회차까지 한 루프에 묶었고, 논문 단위로 처리 기록을 남겨 중간에 죽어도 그 논문부터 이어집니다.</p>
+    <div class="tbl"><table>
+      <tr><th>단계</th><th>이번 확인에서 실제로 한 것</th><th class="num">걸린 시간</th></tr>
+      <tr><td>① 수집</td><td>고정 검색어 회차 실행. 이번엔 새 논문 0편</td><td class="num">34초</td></tr>
+      <tr><td>② 탐지</td><td>처리 기록에 없는 논문 2편을 새 논문으로 잡음</td><td class="num">즉시</td></tr>
+      <tr><td>③ 파싱·청킹</td><td>2편 → 절 81개, 청크 247개</td><td class="num">8초</td></tr>
+      <tr><td>④ 그래프 · Neo4j</td><td>그래프 파일 재생성, MERGE 적재, 파일 대 DB 개수 대조 차이 0</td><td class="num">56초</td></tr>
+    </table></div>
+    
+  </section>
+
+  <section class="task">
+    <div class="thead"><span class="n">3</span><h2 id="t14">그림 서술 (논문 그림을 글로)</h2><span class="chip run">논문 305 / 559편 완료 · 그림 56%</span></div>
+    <p id="t15" class="ask"><b>요청</b> 논문 그림을 서술해 청크로 넣기.</p>
+    <p id="t16">맥의 <code>qwen3-vl 32b</code>로 돌립니다. 그림이 있는 논문은 579편 중 559편(3,232장)입니다. <br>10월 7일 기준으로 <b>305편을 끝냈고</b> 17편은 일부만 끝났으며 <b>237편이 남았습니다.</b> <br>그림으로는 <b>1,824장 완료, 1,405장 남았음.</b></p>
+    <div class="tbl"><table>
+      <tr><th>구분</th><th class="num">논문</th><th class="num">그림</th></tr>
+      <tr><td>완료</td><td class="num">305편</td><td class="num">1,824장</td></tr>
+      <tr><td>일부 진행</td><td class="num">17편</td><td class="num"></td></tr>
+      <tr><td>남음</td><td class="num">237편</td><td class="num">1,405장</td></tr>
+      <tr><td>합계</td><td class="num">559편</td><td class="num">3,232장</td></tr>
+    </table></div>
+    <p id="z1"><b>그림 서술이 늦어진 이유</b><br>서버 불가: 4090 4장을 vLLM이 97% 선점 (카드당 2.5GB 남음) -&gt; 21GB 비전 모델 올릴 자리 없음. vLLM 키는 root 소유 -&gt; 발급 못 받음<br>-&gt; 맥 Ollama(qwen3-vl 32b)로 진행</p>
+    <p id="z2"><b>서버에서 그림 서술 진행하는 방법</b><br>자료는 서버 ~/project/sancho 에 이미 있음 (XML 579편, 서술 1,905장, 스크립트, 서버용 루프)<br><br>방법 1 (키): vLLM API 키 발급 -&gt; .env 에 넣음 -&gt; vllm_vision_check.py 로 양자화 모델이 이미지를 받는지 1장 확인 -&gt; figure_loop_server.sh 실행. 모델이 달라 전수 재생성 (이어하기 기준이 모델별)<br><br>방법 2 (GPU): 4090 1장 비우기 (gpu-memory-utilization 0.97 -&gt; 0.70 또는 1장 제외) -&gt; Ollama 설치 -&gt; qwen3-vl 32b 그대로 -&gt; 맥과 같은 모델이라 1,905장에서 이어서 진행</p>
+  </section>
+
+  <section class="task">
+    <div class="thead"><span class="n">4</span><h2 id="t19">논문 그래프 DB (Neo4j)</h2><span class="chip done">논문 속 그래프 DB 완료 (맥)</span></div>
+    
+    <div class="note" id="z3"><b>대상 코퍼스 명시.</b> <br>지금 그래프 DB는 Europe PMC에서 전문 XML로 받은 <b>579편</b>으로 만든 것임. <br>서버에 올린 원장 논문(811편, 업로드 542편)과는 다른 묶음이며 겹치는 것은 85편.<br>-&gt; 서버에 올린 논문도 같은 파이프라인(PDF 파서 → 청킹 → 그래프 → Neo4j)으로 <b>진행 예정</b>. <br>PDF는 절 계층이 1단계로 뭉개져 소절 관계(SUBSECTION_OF)는 빠지고, 인용(CITES)은 Crossref로 붙음.</div>
+    <h3 id="t21">Neo4j가 무엇인가</h3>
+    <p id="t22">표가 아니라 <b>점(노드)과 선(관계)</b>으로 저장하는 데이터베이스입니다. 벡터 검색은 "비슷한 문장"을 찾고, 그래프는 "이 논문의 방법 절 밑에 소절이 몇 개인가", "서로를 인용하는 논문 쌍은 무엇인가"처럼 <b>구조를 따라가는 질문</b>에 답합니다. 둘을 합친 게 Graph RAG입니다.</p>
+    <h3 id="t23">만든 것</h3>
+    <div class="tbl"><table>
+      <tr><th>노드</th><th class="num">수</th><th>관계</th><th class="num">수</th></tr>
+      <tr><td>Chunk</td><td class="num">51,331</td><td>HAS_CHUNK</td><td class="num">51,331</td></tr>
+      <tr><td>Reference</td><td class="num">19,941</td><td>NEXT (청크 순서)</td><td class="num">36,441</td></tr>
+      <tr><td>Section</td><td class="num">17,208</td><td>CITES</td><td class="num">24,329</td></tr>
+      <tr><td>Figure · Table</td><td class="num">2,577 · 1,224</td><td>HAS_SECTION</td><td class="num">17,208</td></tr>
+      <tr><td>Paper</td><td class="num">579</td><td>SUBSECTION_OF</td><td class="num">10,339</td></tr>
+      <tr><td>Journal · Species</td><td class="num">15 · 7</td><td>전체 관계</td><td class="num">143,549</td></tr>
+    </table></div>
+    <p id="t24">적재는 MERGE 기반이라 다시 돌려도 중복이 안 생기고, 적재 후 파일과 DB의 개수를 대조하는 검증 단계를 둔다. <br>적재 전 무결성 검사에서 <b>끊어진 소절 관계 9,053개</b>를 잡았습니다. 상위 절 노드가 빠져 있던 것이라 보강해 0으로 만들었습니다. <br>Neo4j에서만 되는 질의 5종(절 계층, 방법론 소절, 상호 인용 쌍, 최다 인용 문헌, 그림 많은 논문)이 돕니다.</p>
+    <h3 id="t25">구조도</h3>
+    <p id="t26">점은 여덟 종류, 선은 열 종류입니다. <br>모든 논문이 같은 모양으로 들어갑니다.<br>  <br>읽는 법 <br>"논문이 절을 가진다(HAS_SECTION)", "소절은 절의 아래다(SUBSECTION_OF)", "절의 본문을 자른 것이 청크(HAS_CHUNK)", "청크는 순서대로 이어진다(NEXT)", "논문이 문헌을 인용한다(CITES)"</p>
+    <div class="mer">
+<pre class="mermaid">
+flowchart TB
+  P[Paper 논문]:::paper
+  S1[Section 절]:::section
+  S2[Section 소절]:::section
+  C1[Chunk 청크]:::chunk
+  C2[Chunk 다음 청크]:::chunk
+  F[Figure 그림]:::figure
+  T[Table 표]:::table
+  R[Reference 참조문헌]:::ref
+  SP[Species 종]:::species
+  J[Journal 저널]:::journal
+  P -- HAS_SECTION --> S1
+  S2 -- SUBSECTION_OF --> S1
+  S1 -- HAS_CHUNK --> C1
+  C1 -- NEXT --> C2
+  P -- HAS_FIGURE --> F
+  P -- HAS_TABLE --> T
+  F -. DESCRIBED_IN .-> C1
+  P -- CITES --> R
+  P -- ABOUT --> SP
+  P -- PUBLISHED_IN --> J
+  classDef paper fill:#1b5a96,color:#fff,stroke:none
+  classDef section fill:#2f7d6d,color:#fff,stroke:none
+  classDef chunk fill:#8a93a6,color:#fff,stroke:none
+  classDef figure fill:#b8641c,color:#fff,stroke:none
+  classDef table fill:#8a5fbf,color:#fff,stroke:none
+  classDef ref fill:#c44b5a,color:#fff,stroke:none
+  classDef species fill:#4c8c2b,color:#fff,stroke:none
+  classDef journal fill:#6c6c6c,color:#fff,stroke:none
+</pre>
+    </div>
+    <h3 id="t27">논문 한 편 구조도</h3>
+    <p id="t28">설계도가 아니라 실제 데이터입니다. 코퍼스의 논문 한 편(PMID:35050119)을 꺼내 점과 선을 그대로 그렸습니다. <br>빽빽해지지 않게 청크는 절마다 하나, 그림은 넷, 참조는 다섯만 보였습니다. 점을 끌어 볼 수 있습니다.</p>
+    <div class="legend">
+      <span><i style="background:var(--c-paper)"></i>논문</span>
+      <span><i style="background:var(--c-section)"></i>절·소절</span>
+      <span><i style="background:var(--c-chunk)"></i>청크</span>
+      <span><i style="background:var(--c-figure)"></i>그림</span>
+      <span><i style="background:var(--c-table)"></i>표</span>
+      <span><i style="background:var(--c-ref)"></i>참조문헌</span>
+    </div>
+    <svg id="net" viewBox="0 0 900 520" role="img" aria-label="논문 한 편의 그래프"></svg>
+    <p id="t29" class="cap">가운데 큰 점이 논문, 초록이 절과 소절, 회색이 청크, 주황이 그림, 보라가 표, 빨강이 참조문헌입니다. 이 한 편에만 선이 398개 있습니다.</p>
+    <h3 id="t30">그래프라서 답할 수 있는 질문</h3>
+    <p id="t31">벡터 검색으로는 나오지 않는 종류의 질문입니다. 실제로 던져서 받은 답입니다.</p>
+    <h3 id="t32">방법론 절에 소절이 가장 많은 논문은?</h3>
+    <pre class="cy">MATCH (p:Paper)-[:HAS_SECTION]->(parent:Section)<-[:SUBSECTION_OF]-(child:Section)
+WHERE toLower(parent.heading) CONTAINS 'method'
+RETURN p.doc_id, parent.heading, count(child) AS 소절수 ORDER BY 소절수 DESC</pre>
+    <div class="tbl"><table>
+      <tr><th>논문</th><th>절</th><th class="num">소절 수</th></tr>
+      <tr><td>PMID:36204228</td><td>Materials and methods</td><td class="num">22</td></tr>
+      <tr><td>PMID:42356433</td><td>4. Materials and Methods</td><td class="num">19</td></tr>
+      <tr><td>PMID:36582530</td><td>Materials and methods</td><td class="num">19</td></tr>
+    </table></div>
+    <h3 id="t33">코퍼스 안에서 서로를 인용하는 논문 쌍은?</h3>
+    <pre class="cy">MATCH (a:Paper)-[:CITES]->(r:Reference)
+MATCH (b:Paper) WHERE b.doi = r.doi AND a <> b
+RETURN a.doc_id AS 인용한논문, b.doc_id AS 인용된논문</pre>
+    <div class="tbl"><table>
+      <tr><th>인용한 논문</th><th>인용된 논문</th></tr>
+      <tr><td>PMID:42278046</td><td>PMID:38791638</td></tr>
+      <tr><td>PMID:42368517</td><td>PMID:29196697</td></tr>
+      <tr><td>PMID:41901319</td><td>PMID:37148518</td></tr>
+    </table></div>
+    <p id="t34">이런 쌍이 코퍼스 안에 302개 있습니다. 지은님의 인용 그래프는 이 302개 연결에서 시작합니다.</p>
+
+        <h3 id="z4">논문 간 그래프 (논문 DB 안에서 논문끼리)</h3>
+    <p id="z5">논문 속 구조만으로는 "이 근거를 인용한 다른 논문은 뭐라 했나"에 답할 수 없음 -&gt; 논문과 논문을 직접 잇는 선을 10/7 추가해 Neo4j에 적재<br><br><b>CITES_PAPER</b> 논문→논문 인용. 참조의 DOI가 코퍼스 안 논문 DOI와 맞는 경우. 907쌍 (인용받은 논문 302편, 인용한 논문 335편)<br><b>CO_CITES</b> 같은 참조를 3개 이상 공유하는 논문 쌍. 952쌍, 최대 40개 공유 -&gt; 주제가 같은 논문 묶음을 찾는 데 씀<br><b>SAME_SPECIES</b> 같은 종을 다루는 논문 쌍. 920쌍<br><br>실제 질의 결과<br>- 코퍼스 안에서 가장 많이 인용된 논문: PMID:29057808 (Z. bungeanum 체계적 고찰), 62편이 인용<br>- 참조를 가장 많이 공유하는 쌍: PMID:34209371 — PMID:34603027, 공유 참조 40개<br><br>-&gt; 검색 때 쓰는 법: 질문에 맞는 청크를 찾은 뒤, 그 논문을 인용한 논문·공인용 논문으로 한 칸 넓혀 근거를 모으는 것이 논문 간 Graph RAG. 선은 준비됐고 검색 단계 결합은 다음 일</p>
+  </section>
+
+  <section class="task">
+    <div class="thead"><span class="n">5</span><h2 id="t36">한국어 골드 문항 신규 제작</h2><span class="chip done">37문항 검수 완료</span></div>
+    <p id="t37" class="ask">새 골드 문항을 만들어 사용자가 확인한 뒤 외부에 전달 가능한 질문세트로. 질문도 답도 한국어로.</p>
+    <p id="t38">기존 골드는 PDF 12편 기준이라 XML 코퍼스에는 12문항만 남아 한 문항이 8점을 움직였습니다. <br>논문 본문에서 초안을 뽑고(gpt-4.1-mini), <b>답이 본문에 그대로 있는지 기계 대조</b>, 절 제목 되묻기 탈락, 그다음 사람 검수를 거쳤습니다.</p>
+    <div class="tbl"><table>
+      <tr><th>항목</th><th class="num">값</th></tr>
+      <tr><td>후보 → 검수 대상 → 채택</td><td class="num">수백 → 40 → 37</td></tr>
+      <tr><td>논문</td><td class="num">23편</td></tr>
+      <tr><td>형식</td><td>한국어 질문 · 한국어 답 · 영어 근거 구간(evidence_span)</td></tr>
+    </table></div>
+    <p id="t39">묶음(<code>gold_xml.json · csv · papers.json</code>)으로 내보냈고 지은님 인수 묶음에 포함했습니다. 전달은 파일 한 묶음(12KB)이면 됩니다. 기존 기준 자료(57문항)와 같이 팀 공개 저장소의 <code>benchmark/</code>에 올려 두는 것이 정해진 채널이고, 급하면 zip을 카톡으로 보내도 같은 파일입니다.</p>
+      <h3 id="z6">문항 예시 (37개 중 6개)</h3>
+    <div class="tbl"><table>
+      <tr><th>질문 (한국어)</th><th>정답 (한국어)</th><th>근거 원문 (영어)</th><th>논문</th></tr>
+      <tr><td>지질 내부 표준물질이 포함된 메탄올 용액의 농도는 얼마인가?</td><td>각 10 μg/mL</td><td>10 μg/mL each</td><td>PMID:41596970</td></tr>
+      <tr><td>Peltophorum africanum 추출물의 DPPH 소거 활성에 대한 IC50 값은 얼마인가?</td><td>4.67 ± 0.31 μg/mL</td><td>4.67 ± 0.31 μg/mL</td><td>PMID:26014115</td></tr>
+      <tr><td>토양 수분 함량 측정을 위해 사용된 건조 온도와 시간은 얼마인가?</td><td>105 °C에서 24시간</td><td>105 °C for 24 h</td><td>PMID:27874081</td></tr>
+      <tr><td>EAF 투여군 중 심근세포 손상 개선 효과가 관찰된 용량은 얼마인가?</td><td>EAF 75, 150, 그리고 300 mg/kg BW</td><td>EAF 75, 150, and 300 mg/kg BW</td><td>PMID:38543145</td></tr>
+      <tr><td>시료로 사용된 후이리 홍사천 고추의 무게는 얼마인가?</td><td>약 0.4 g</td><td>Approximately 0.4 g</td><td>PMID:40647036</td></tr>
+      <tr><td>분석 중 컬럼 온도는 얼마로 유지되었는가?</td><td>40 °C에서</td><td>40 °C</td><td>PMID:37048176</td></tr>
+    </table></div>
+    <p id="z7">질문과 정답은 한국어, 근거는 논문의 영어 원문 그대로 -&gt; 채점은 한국어 정답으로, 위치 확인은 영어 근거로</p>
+  </section>
+
+  <section class="task">
+    <div class="thead"><span class="n">6</span><h2 id="t40">임상 자료, 논문이 아닌 모든 형태</h2><span class="chip run">37건 수집 · 검수 대기</span></div>
+    
+    <p id="t42">CRIS 산초 등록 0건(재검색 금지), NTIS 산초 보고서 7건(전부 비공개), 일본 기능성표시식품 CSV 11,310행은 이미 수집된 자료. <br>그 위에 등록부 6종과 보고서·웹 자료원 10종을 조사했습니다.</p>
+    <div class="tbl"><table>
+      <tr><th>형태</th><th class="num">건</th><th>주요 내용</th></tr>
+      <tr><td>등록부 레코드</td><td class="num">28</td><td>ClinicalTrials.gov 종 중심 재검색 21건(기존은 질환 중심이라 못 잡음), 중국 ChiCTR 4건(브라우저로 직접 확인, 1건은 결과 파일까지 공개), 태국 1건, 일본 2건(번호 미확정)</td></tr>
+      <tr><td>특허 명세서</td><td class="num">5</td><td>1건에 건강한 성인 16명 뇌파 실시예</td></tr>
+      <tr><td>규제 통보</td><td class="num">2</td><td>FDA GRAS, 산초 향료 2025</td></tr>
+      <tr><td>학위논문</td><td class="num">1</td><td>안구건조 산초씨유 RCT의 학위논문판, BMI 하위군 분석 포함</td></tr>
+      <tr><td>국가R&D 보고서</td><td class="num">1</td><td>비공개, 목록만 기록</td></tr>
+    </table></div>
+    <p id="t43">37건 중 30건이 원장에 없고, 그중 사람 데이터 30건, 자료 자체에 결과가 공개된 것 4건입니다.</p>
+    
+    <h3 id="t45">수집된 자료 한눈에</h3>
+    <svg viewBox="0 0 720 150" role="img" aria-label="형태별 건수" style="width:100%;max-width:720px;display:block;margin:4px 0 6px">
+      <g font-family="var(--sans)" font-size="12" fill="var(--ink)">
+        <text x="0" y="22">등록부 레코드</text><rect x="110" y="10" width="504" height="16" rx="3" fill="var(--accent)"/><text x="620" y="22" font-variant-numeric="tabular-nums">28</text>
+        <text x="0" y="48">특허 명세서</text><rect x="110" y="36" width="90" height="16" rx="3" fill="var(--accent)" opacity=".75"/><text x="206" y="48">5</text>
+        <text x="0" y="74">규제 통보</text><rect x="110" y="62" width="36" height="16" rx="3" fill="var(--accent)" opacity=".6"/><text x="152" y="74">2</text>
+        <text x="0" y="100">학위논문</text><rect x="110" y="88" width="18" height="16" rx="3" fill="var(--accent)" opacity=".5"/><text x="134" y="100">1</text>
+        <text x="0" y="126">국가R&amp;D 보고서</text><rect x="110" y="114" width="18" height="16" rx="3" fill="var(--accent)" opacity=".5"/><text x="134" y="126">1</text>
+      </g>
+    </svg>
+    <div class="tbl"><table>
+      <tr><th>구분</th><th class="num">건</th><th>뜻</th></tr>
+      <tr><td>전체</td><td class="num">37</td><td>논문이 아닌 형태로 모은 임상 자료</td></tr>
+      <tr><td>원장에 없던 것</td><td class="num">30</td><td>새로 확보된 것</td></tr>
+      <tr><td>사람 대상 데이터 있음</td><td class="num">30</td><td>등록부·학위논문·특허 실시예</td></tr>
+      <tr><td>자료 자체에 결과 공개</td><td class="num">4</td><td>논문 없이 결과를 볼 수 있는 것</td></tr>
+      <tr><td>목표 3종 명시 + 사람 데이터</td><td class="num">5</td><td>아래 표</td></tr>
+    </table></div>
+    <div class="tbl"><table>
+      <tr><th>식별자</th><th>종</th><th>내용</th><th>형태</th></tr>
+      <tr><td>NCT02802150</td><td>Z. schinifolium</td><td>산초씨유 경구, 안구건조, 20명, 삼중맹검. 원장 논문(#107)의 등록부판</td><td>등록부</td></tr>
+      <tr><td>ChiCTR-INR-17012356</td><td>Z. bungeanum</td><td>산쇼올 추출물 외용, 눈가주름, 반얼굴 20+20. 결과 파일까지 공개</td><td>등록부</td></tr>
+      <tr><td>RISS 학위논문 (2016)</td><td>Z. schinifolium</td><td>같은 안구건조 시험의 학위논문판, 논문에 없는 BMI 하위군 분석</td><td>학위논문</td></tr>
+      <tr><td>UMIN (번호 미확정) 2017</td><td>Z. bungeanum</td><td>화자오 오일 캡슐, 구강건조, 9명. 번호 확정 필요</td><td>등록부</td></tr>
+      <tr><td>UMIN (번호 미확정) 2019</td><td>Z. piperitum</td><td>산초 포함 한방약 복용 편의성. 번호 확정 필요</td><td>등록부</td></tr>
+    </table></div>
+  </section>
+
+        <p id="t57" class="foot">자료 위치: 원장 sancho-data/collected/woon-jung-collected, 코퍼스·그래프·서술은 저장소 밖 ~/sancho-local-secure, 서버 ~/project/sancho. 계획 문서는 규칙에 따라 저장소에 두지 않았습니다.</p>
+</div>
+
+<script id="gdata" type="application/json">{"doc":"PMID:35050119","nodes":[{"id":"Section:PMID:35050119::3. Materials and Methods > 3.9. Ancestral Area Reconstruction of Toddalia","type":"Section","label":"3.9. Ancestral Area Reconstruction of To"},{"id":"Section:PMID:35050119::Institutional Review Board Statement","type":"Section","label":"Institutional Review Board Statement"},{"id":"Chunk:PMID:35050119:0012","type":"Chunk","label":"청크 459토큰"},{"id":"Section:PMID:35050119::3. Materials and Methods > 3.2. Plastome Annotation and Assembly","type":"Section","label":"3.2. Plastome Annotation and Assembly"},{"id":"Chunk:PMID:35050119:0025","type":"Chunk","label":"청크 375토큰"},{"id":"Section:PMID:35050119::4. Species Distribution Data","type":"Section","label":"4. Species Distribution Data"},{"id":"Section:PMID:35050119::1. Introduction","type":"Section","label":"1. Introduction"},{"id":"Chunk:PMID:35050119:0023","type":"Chunk","label":"청크 270토큰"},{"id":"Chunk:PMID:35050119:0037","type":"Chunk","label":"청크 21토큰"},{"id":"Section:PMID:35050119::3. Materials and Methods > 3.5. Selective Pressure Analysis","type":"Section","label":"3.5. Selective Pressure Analysis"},{"id":"Figure:PMID:35050119:picture:142","type":"Figure","label":"Figure"},{"id":"Chunk:PMID:35050119:0021","type":"Chunk","label":"청크 580토큰"},{"id":"Section:PMID:35050119::3. Materials and Methods > 3.7. Divergence Time Estimation","type":"Section","label":"3.7. Divergence Time Estimation"},{"id":"Section:PMID:35050119::3. Materials and Methods","type":"Section","label":"3. Materials and Methods"},{"id":"Section:PMID:35050119::2. Results","type":"Section","label":"2. Results"},{"id":"Section:PMID:35050119::2. Results > 2.1. Complete Chloroplast Genome","type":"Section","label":"2.1. Complete Chloroplast Genome"},{"id":"Chunk:PMID:35050119:0013","type":"Chunk","label":"청크 417토큰"},{"id":"Chunk:PMID:35050119:0028","type":"Chunk","label":"청크 391토큰"},{"id":"Reference:10.1111/boj.12385","type":"Reference","label":"10.1111/boj.12385"},{"id":"Reference:10.1007/978-3-642-14397-7","type":"Reference","label":"10.1007/978-3-642-14397-7"},{"id":"Section:PMID:35050119::2. Results > 2.4. Repeat Analysis","type":"Section","label":"2.4. Repeat Analysis"},{"id":"Section:PMID:35050119::Conflicts of Interest","type":"Section","label":"Conflicts of Interest"},{"id":"Chunk:PMID:35050119:0042","type":"Chunk","label":"청크 69토큰"},{"id":"Table:PMID:35050119:table:78","type":"Table","label":"Table"},{"id":"Chunk:PMID:35050119:0009","type":"Chunk","label":"청크 493토큰"},{"id":"Section:PMID:35050119::2. Results > 2.3. IR Contraction and Expansion","type":"Section","label":"2.3. IR Contraction and Expansion"},{"id":"Section:PMID:35050119::2. Results > 2.6. Sequence Divergence Analysis","type":"Section","label":"2.6. Sequence Divergence Analysis"},{"id":"Section:PMID:35050119::Associated Data","type":"Section","label":"Associated Data"},{"id":"Chunk:PMID:35050119:0031","type":"Chunk","label":"청크 547토큰"},{"id":"Figure:PMID:35050119:picture:62","type":"Figure","label":"Figure"},{"id":"Chunk:PMID:35050119:0010","type":"Chunk","label":"청크 681토큰"},{"id":"Section:PMID:35050119::3. Materials and Methods > 3.1. Plant Materials Collection, DNA Extraction, and Sequencing","type":"Section","label":"3.1. Plant Materials Collection, DNA Ext"},{"id":"Section:PMID:35050119::3. Materials and Methods > 3.6. Phylogenetic Analysis","type":"Section","label":"3.6. Phylogenetic Analysis"},{"id":"Section:PMID:35050119::Supplementary Materials","type":"Section","label":"Supplementary Materials"},{"id":"Chunk:PMID:35050119:0015","type":"Chunk","label":"청크 553토큰"},{"id":"Chunk:PMID:35050119:0017","type":"Chunk","label":"청크 132토큰"},{"id":"Chunk:PMID:35050119:0026","type":"Chunk","label":"청크 775토큰"},{"id":"Chunk:PMID:35050119:0133","type":"Chunk","label":"청크 935토큰"},{"id":"Figure:PMID:35050119:picture:153","type":"Figure","label":"Figure"},{"id":"Chunk:PMID:35050119:0038","type":"Chunk","label":"청크 17토큰"},{"id":"Chunk:PMID:35050119:0020","type":"Chunk","label":"청크 348토큰"},{"id":"Section:PMID:35050119::References > References","type":"Section","label":"References"},{"id":"Chunk:PMID:35050119:0029","type":"Chunk","label":"청크 291토큰"},{"id":"Chunk:PMID:35050119:0041","type":"Chunk","label":"청크 51토큰"},{"id":"Reference:10.3897/phytokeys.19.3912","type":"Reference","label":"10.3897/phytokeys.19.3912"},{"id":"Section:PMID:35050119::Acknowledgments","type":"Section","label":"Acknowledgments"},{"id":"Section:PMID:35050119::Footnotes > Footnotes","type":"Section","label":"Footnotes"},{"id":"Chunk:PMID:35050119:0008","type":"Chunk","label":"청크 595토큰"},{"id":"Section:PMID:35050119::4. Species Distribution Data > 4.2. MaxEnt Model","type":"Section","label":"4.2. MaxEnt Model"},{"id":"Chunk:PMID:35050119:0035","type":"Chunk","label":"청크 226토큰"},{"id":"Section:PMID:35050119::2. Results > 2.11. Climate Variables","type":"Section","label":"2.11. Climate Variables"},{"id":"Reference:10.1155/2021/3123476","type":"Reference","label":"10.1155/2021/3123476"},{"id":"Section:PMID:35050119::Associated Data > Supplementary Materials","type":"Section","label":"Supplementary Materials"},{"id":"Chunk:PMID:35050119:0027","type":"Chunk","label":"청크 82토큰"},{"id":"Section:PMID:35050119::2. Results > 2.10. Ancestral Area Reconstruction","type":"Section","label":"2.10. Ancestral Area Reconstruction"},{"id":"Section:PMID:35050119::3. Materials and Methods > 3.8. Diversification Rates Analyses","type":"Section","label":"3.8. Diversification Rates Analyses"},{"id":"Section:PMID:35050119::2. Results > 2.2. Codon Preference Analysis","type":"Section","label":"2.2. Codon Preference Analysis"},{"id":"Reference:10.3732/ajb.2007313","type":"Reference","label":"10.3732/ajb.2007313"},{"id":"Chunk:PMID:35050119:0032","type":"Chunk","label":"청크 597토큰"},{"id":"Section:PMID:35050119::3. Materials and Methods > 3.3. Repeat Analysis","type":"Section","label":"3.3. Repeat Analysis"},{"id":"Chunk:PMID:35050119:0036","type":"Chunk","label":"청크 99토큰"},{"id":"Chunk:PMID:35050119:0002","type":"Chunk","label":"청크 847토큰"},{"id":"Section:PMID:35050119::4. Species Distribution Data > 4.1. Environmental Factors Consideration","type":"Section","label":"4.1. Environmental Factors Consideration"},{"id":"Section:PMID:35050119::2. Results > 2.7. Phylogenetic Analysis","type":"Section","label":"2.7. Phylogenetic Analysis"},{"id":"Chunk:PMID:35050119:0001","type":"Chunk","label":"청크 36토큰"},{"id":"Chunk:PMID:35050119:0030","type":"Chunk","label":"청크 421토큰"},{"id":"Chunk:PMID:35050119:0040","type":"Chunk","label":"청크 26토큰"},{"id":"Section:PMID:35050119::Associated Data > Data Availability Statement","type":"Section","label":"Data Availability Statement"},{"id":"Figure:PMID:35050119:picture:80","type":"Figure","label":"Figure"},{"id":"Chunk:PMID:35050119:0016","type":"Chunk","label":"청크 79토큰"},{"id":"Chunk:PMID:35050119:0018","type":"Chunk","label":"청크 693토큰"},{"id":"Chunk:PMID:35050119:0024","type":"Chunk","label":"청크 118토큰"},{"id":"Chunk:PMID:35050119:0039","type":"Chunk","label":"청크 63토큰"},{"id":"Section:PMID:35050119::5. Conclusions","type":"Section","label":"5. Conclusions"},{"id":"Section:PMID:35050119::2. Results > 2.5. Comparative Analysis","type":"Section","label":"2.5. Comparative Analysis"},{"id":"Section:PMID:35050119::Informed Consent Statement","type":"Section","label":"Informed Consent Statement"},{"id":"Chunk:PMID:35050119:0033","type":"Chunk","label":"청크 52토큰"},{"id":"Chunk:PMID:35050119:0132","type":"Chunk","label":"청크 24토큰"},{"id":"Section:PMID:35050119::Footnotes","type":"Section","label":"Footnotes"},{"id":"Section:PMID:35050119::Author Contributions","type":"Section","label":"Author Contributions"},{"id":"Section:PMID:35050119::References","type":"Section","label":"References"},{"id":"Section:PMID:35050119::2. Results > 2.9. Diversification Rates Analyses","type":"Section","label":"2.9. Diversification Rates Analyses"},{"id":"Chunk:PMID:35050119:0014","type":"Chunk","label":"청크 613토큰"},{"id":"Table:PMID:35050119:table:79","type":"Table","label":"Table"},{"id":"Section:PMID:35050119::Abstract","type":"Section","label":"Abstract"},{"id":"Section:PMID:35050119::2. Results > 2.8. Divergence Time Estimation","type":"Section","label":"2.8. Divergence Time Estimation"},{"id":"Section:PMID:35050119::Funding","type":"Section","label":"Funding"},{"id":"Section:PMID:35050119::Data Availability Statement","type":"Section","label":"Data Availability Statement"},{"id":"Chunk:PMID:35050119:0022","type":"Chunk","label":"청크 354토큰"},{"id":"Chunk:PMID:35050119:0004","type":"Chunk","label":"청크 633토큰"},{"id":"Chunk:PMID:35050119:0034","type":"Chunk","label":"청크 327토큰"},{"id":"Paper:PMID:35050119","type":"Paper","label":"Comparative Genomics, Phylogenetics, Biogeography, and Effec"},{"id":"Section:PMID:35050119::3. Materials and Methods > 3.4. Comparative Analysis","type":"Section","label":"3.4. Comparative Analysis"}],"edges":[{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Abstract","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::1. Introduction","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.1. Complete Chloroplast Genome","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.1. Complete Chloroplast Genome","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.2. Codon Preference Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.2. Codon Preference Analysis","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.3. IR Contraction and Expansion","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.3. IR Contraction and Expansion","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.4. Repeat Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.4. Repeat Analysis","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.5. Comparative Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.5. Comparative Analysis","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.6. Sequence Divergence Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.6. Sequence Divergence Analysis","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.7. Phylogenetic Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.7. Phylogenetic Analysis","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.8. Divergence Time Estimation","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.8. Divergence Time Estimation","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.9. Diversification Rates Analyses","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.9. Diversification Rates Analyses","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.10. Ancestral Area Reconstruction","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.10. Ancestral Area Reconstruction","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::2. Results > 2.11. Climate Variables","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::2. Results > 2.11. Climate Variables","t":"Section:PMID:35050119::2. Results","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.1. Plant Materials Collection, DNA Extraction, and Sequencing","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.1. Plant Materials Collection, DNA Extraction, and Sequencing","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.2. Plastome Annotation and Assembly","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.2. Plastome Annotation and Assembly","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.3. Repeat Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.3. Repeat Analysis","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.4. Comparative Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.4. Comparative Analysis","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.5. Selective Pressure Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.5. Selective Pressure Analysis","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.6. Phylogenetic Analysis","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.6. Phylogenetic Analysis","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.7. Divergence Time Estimation","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.7. Divergence Time Estimation","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.8. Diversification Rates Analyses","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.8. Diversification Rates Analyses","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::3. Materials and Methods > 3.9. Ancestral Area Reconstruction of Toddalia","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.9. Ancestral Area Reconstruction of Toddalia","t":"Section:PMID:35050119::3. Materials and Methods","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::4. Species Distribution Data","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::4. Species Distribution Data > 4.1. Environmental Factors Consideration","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::4. Species Distribution Data > 4.1. Environmental Factors Consideration","t":"Section:PMID:35050119::4. Species Distribution Data","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::4. Species Distribution Data > 4.2. MaxEnt Model","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::4. Species Distribution Data > 4.2. MaxEnt Model","t":"Section:PMID:35050119::4. Species Distribution Data","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::5. Conclusions","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Acknowledgments","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Supplementary Materials","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Author Contributions","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Funding","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Institutional Review Board Statement","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Informed Consent Statement","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Data Availability Statement","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Conflicts of Interest","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Footnotes","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Footnotes > Footnotes","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::Footnotes > Footnotes","t":"Section:PMID:35050119::Footnotes","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::References","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::References > References","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::References > References","t":"Section:PMID:35050119::References","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Associated Data","type":"HAS_SECTION"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Associated Data > Supplementary Materials","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::Associated Data > Supplementary Materials","t":"Section:PMID:35050119::Associated Data","type":"SUBSECTION_OF"},{"s":"Paper:PMID:35050119","t":"Section:PMID:35050119::Associated Data > Data Availability Statement","type":"HAS_SECTION"},{"s":"Section:PMID:35050119::Associated Data > Data Availability Statement","t":"Section:PMID:35050119::Associated Data","type":"SUBSECTION_OF"},{"s":"Section:PMID:35050119::Abstract","t":"Chunk:PMID:35050119:0001","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::1. Introduction","t":"Chunk:PMID:35050119:0002","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.1. Complete Chloroplast Genome","t":"Chunk:PMID:35050119:0004","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.2. Codon Preference Analysis","t":"Chunk:PMID:35050119:0008","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.3. IR Contraction and Expansion","t":"Chunk:PMID:35050119:0009","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.4. Repeat Analysis","t":"Chunk:PMID:35050119:0010","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.5. Comparative Analysis","t":"Chunk:PMID:35050119:0012","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.6. Sequence Divergence Analysis","t":"Chunk:PMID:35050119:0013","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.7. Phylogenetic Analysis","t":"Chunk:PMID:35050119:0014","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.8. Divergence Time Estimation","t":"Chunk:PMID:35050119:0015","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.9. Diversification Rates Analyses","t":"Chunk:PMID:35050119:0016","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.10. Ancestral Area Reconstruction","t":"Chunk:PMID:35050119:0017","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::2. Results > 2.11. Climate Variables","t":"Chunk:PMID:35050119:0018","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.1. Plant Materials Collection, DNA Extraction, and Sequencing","t":"Chunk:PMID:35050119:0020","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.2. Plastome Annotation and Assembly","t":"Chunk:PMID:35050119:0021","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.3. Repeat Analysis","t":"Chunk:PMID:35050119:0022","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.4. Comparative Analysis","t":"Chunk:PMID:35050119:0023","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.5. Selective Pressure Analysis","t":"Chunk:PMID:35050119:0024","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.6. Phylogenetic Analysis","t":"Chunk:PMID:35050119:0025","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.7. Divergence Time Estimation","t":"Chunk:PMID:35050119:0026","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.8. Diversification Rates Analyses","t":"Chunk:PMID:35050119:0027","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::3. Materials and Methods > 3.9. Ancestral Area Reconstruction of Toddalia","t":"Chunk:PMID:35050119:0028","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::4. Species Distribution Data","t":"Chunk:PMID:35050119:0029","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::4. Species Distribution Data > 4.1. Environmental Factors Consideration","t":"Chunk:PMID:35050119:0030","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::4. Species Distribution Data > 4.2. MaxEnt Model","t":"Chunk:PMID:35050119:0031","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::5. Conclusions","t":"Chunk:PMID:35050119:0032","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Acknowledgments","t":"Chunk:PMID:35050119:0033","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Supplementary Materials","t":"Chunk:PMID:35050119:0034","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Author Contributions","t":"Chunk:PMID:35050119:0035","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Funding","t":"Chunk:PMID:35050119:0036","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Institutional Review Board Statement","t":"Chunk:PMID:35050119:0037","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Informed Consent Statement","t":"Chunk:PMID:35050119:0038","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Data Availability Statement","t":"Chunk:PMID:35050119:0039","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Conflicts of Interest","t":"Chunk:PMID:35050119:0040","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Footnotes > Footnotes","t":"Chunk:PMID:35050119:0041","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::References > References","t":"Chunk:PMID:35050119:0042","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Associated Data > Supplementary Materials","t":"Chunk:PMID:35050119:0132","type":"HAS_CHUNK"},{"s":"Section:PMID:35050119::Associated Data > Data Availability Statement","t":"Chunk:PMID:35050119:0133","type":"HAS_CHUNK"},{"s":"Paper:PMID:35050119","t":"Figure:PMID:35050119:picture:62","type":"HAS_FIGURE"},{"s":"Paper:PMID:35050119","t":"Table:PMID:35050119:table:78","type":"HAS_TABLE"},{"s":"Paper:PMID:35050119","t":"Table:PMID:35050119:table:79","type":"HAS_TABLE"},{"s":"Paper:PMID:35050119","t":"Figure:PMID:35050119:picture:80","type":"HAS_FIGURE"},{"s":"Paper:PMID:35050119","t":"Figure:PMID:35050119:picture:142","type":"HAS_FIGURE"},{"s":"Paper:PMID:35050119","t":"Figure:PMID:35050119:picture:153","type":"HAS_FIGURE"},{"s":"Paper:PMID:35050119","t":"Reference:10.3732/ajb.2007313","type":"CITES"},{"s":"Paper:PMID:35050119","t":"Reference:10.1007/978-3-642-14397-7","type":"CITES"},{"s":"Paper:PMID:35050119","t":"Reference:10.3897/phytokeys.19.3912","type":"CITES"},{"s":"Paper:PMID:35050119","t":"Reference:10.1111/boj.12385","type":"CITES"},{"s":"Paper:PMID:35050119","t":"Reference:10.1155/2021/3123476","type":"CITES"}]}</script>
+<script>
+(function(){
+  "use strict";
+  /* ---------- 편집 저장 ---------- */
+  var $ = function(id){ return document.getElementById(id); };
+  var editables = Array.prototype.slice.call(document.querySelectorAll("h1, .lede, section h2, section h3, section p, section li, .ask, .note, .cap, .foot"));
+  editables.forEach(function(e, i){ if (!e.id) e.id = "t" + i; e.setAttribute("data-edit", ""); });
+  var original = {}; editables.forEach(function(e){ original[e.id] = e.innerHTML; });
+  var db = null, writable = true, pending;
+  function say(m){ $("st").textContent = m; }
+  function apply(items){
+    editables.forEach(function(e){ if (items && items[e.id] != null) e.innerHTML = items[e.id]; else e.innerHTML = original[e.id]; });
+  }
+  function collect(){
+    var out = {};
+    editables.forEach(function(e){ if (e.innerHTML !== original[e.id]) out[e.id] = e.innerHTML; });
+    return out;
+  }
+  function persist(){
+    if (!db || !writable) return;
+    db.doc("edits/weekly").set({items: collect(), at: new Date().toISOString()})
+      .then(function(){ say("저장됨"); })
+      .catch(function(e){ writable = false; say(e && e.code === "not_granted" ? "" : "저장 실패 — 이 화면에서는 저장할 수 없습니다"); });
+  }
+  $("edit").addEventListener("click", function(){
+    var on = this.getAttribute("aria-pressed") !== "true";
+    this.setAttribute("aria-pressed", on ? "true" : "false");
+    document.body.classList.toggle("editing", on);
+    editables.forEach(function(e){ e.contentEditable = on ? "true" : "false"; });
+    say(on ? "클릭해서 고치세요. 벗어나면 저장됩니다." : "");
+    if (!on) persist();
+  });
+  editables.forEach(function(e){
+    e.addEventListener("blur", function(){ clearTimeout(pending); pending = setTimeout(persist, 200); });
+  });
+  $("reset").addEventListener("click", function(){ apply(null); persist(); say("원본으로 되돌렸습니다"); });
+  if (window.claude && window.claude.use){
+    claude.use("db").then(function(d){
+      if (!d) return;
+      db = d;
+      db.doc("edits/weekly").onSnapshot(function(snap){
+        var data = snap && snap.data;
+        if (data && data.items) { apply(data.items); say("고친 내용을 불러왔습니다"); }
+      }, function(){ writable = false; });
+    }).catch(function(){});
+  }
+
+  /* ---------- 실제 논문 그래프 그림 ---------- */
+  var G = JSON.parse($("gdata").textContent);
+  var SKIP = /Review Board|Conflicts|Funding|Availability|Acknowledg|Author Contributions|Supplementary|Abbreviations/i;
+  var nodes = G.nodes.filter(function(n){ return !(n.type === "Section" && SKIP.test(n.label)); });
+  var ids = {}; nodes.forEach(function(n){ ids[n.id] = n; });
+  var edges = G.edges.filter(function(e){ return ids[e.s] && ids[e.t]; });
+  // 떠 있는 청크(절이 걸러진 것)는 뺀다
+  var deg = {}; edges.forEach(function(e){ deg[e.s] = (deg[e.s]||0)+1; deg[e.t] = (deg[e.t]||0)+1; });
+  nodes = nodes.filter(function(n){ return n.type === "Paper" || deg[n.id]; });
+  ids = {}; nodes.forEach(function(n){ ids[n.id] = n; });
+  edges = edges.filter(function(e){ return ids[e.s] && ids[e.t]; });
+
+  var COLOR = {Paper:"--c-paper", Section:"--c-section", Chunk:"--c-chunk", Figure:"--c-figure", Table:"--c-table", Reference:"--c-ref", Species:"--c-species", Journal:"--c-journal"};
+  var R = {Paper:16, Section:8, Chunk:4.5, Figure:7, Table:7, Reference:5, Species:7, Journal:7};
+  var W = 900, H = 520, svg = $("net"), NS = "http://www.w3.org/2000/svg";
+  nodes.forEach(function(n, i){
+    var a = i / nodes.length * Math.PI * 2, r = n.type === "Paper" ? 0 : 140 + Math.random() * 120;
+    n.x = W/2 + Math.cos(a) * r; n.y = H/2 + Math.sin(a) * r; n.vx = 0; n.vy = 0;
+  });
+  var lines = edges.map(function(e){
+    var l = document.createElementNS(NS, "line");
+    if (e.type === "NEXT") l.setAttribute("class", "next");
+    svg.appendChild(l); return l;
+  });
+  var dots = nodes.map(function(n){
+    var g = document.createElementNS(NS, "g");
+    var c = document.createElementNS(NS, "circle");
+    c.setAttribute("r", R[n.type] || 5);
+    c.setAttribute("fill", "var(" + (COLOR[n.type] || "--c-chunk") + ")");
+    var t = document.createElementNS(NS, "text");
+    t.setAttribute("dy", (R[n.type] || 5) + 11);
+    t.setAttribute("text-anchor", "middle");
+    t.textContent = n.type === "Chunk" ? "" : (n.label.length > 26 ? n.label.slice(0, 25) + "…" : n.label);
+    var title = document.createElementNS(NS, "title"); title.textContent = n.type + " · " + n.label;
+    g.appendChild(c); g.appendChild(t); g.appendChild(title); svg.appendChild(g);
+    return g;
+  });
+  var L = {}; edges.forEach(function(e){ (L[e.s] = L[e.s] || []).push(e.t); (L[e.t] = L[e.t] || []).push(e.s); });
+  function step(){
+    var i, j, a, b, dx, dy, d, f;
+    for (i = 0; i < nodes.length; i++){
+      a = nodes[i];
+      for (j = i + 1; j < nodes.length; j++){
+        b = nodes[j]; dx = b.x - a.x; dy = b.y - a.y; d = Math.sqrt(dx*dx + dy*dy) || 1;
+        f = 900 / (d * d); if (d > 220) f = 0;
+        a.vx -= dx / d * f; a.vy -= dy / d * f; b.vx += dx / d * f; b.vy += dy / d * f;
+      }
+      a.vx += (W/2 - a.x) * 0.0025; a.vy += (H/2 - a.y) * 0.0025;
+    }
+    edges.forEach(function(e){
+      a = ids[e.s]; b = ids[e.t]; dx = b.x - a.x; dy = b.y - a.y; d = Math.sqrt(dx*dx + dy*dy) || 1;
+      var rest = (a.type === "Paper" || b.type === "Paper") ? 150 : (e.type === "HAS_CHUNK" ? 34 : 70);
+      f = (d - rest) * 0.02;
+      a.vx += dx / d * f; a.vy += dy / d * f; b.vx -= dx / d * f; b.vy -= dy / d * f;
+    });
+    nodes.forEach(function(n){
+      if (n.fixed) { n.vx = 0; n.vy = 0; return; }
+      n.vx *= 0.8; n.vy *= 0.8; n.x += n.vx; n.y += n.vy;
+      n.x = Math.max(24, Math.min(W - 24, n.x)); n.y = Math.max(20, Math.min(H - 26, n.y));
+    });
+  }
+  function draw(){
+    edges.forEach(function(e, k){
+      var a = ids[e.s], b = ids[e.t], l = lines[k];
+      l.setAttribute("x1", a.x); l.setAttribute("y1", a.y); l.setAttribute("x2", b.x); l.setAttribute("y2", b.y);
+    });
+    nodes.forEach(function(n, k){ dots[k].setAttribute("transform", "translate(" + n.x + "," + n.y + ")"); });
+  }
+  var ticks = 0, reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function loop(){ step(); draw(); if (++ticks < (reduce ? 400 : 260)) requestAnimationFrame(loop); }
+  if (reduce){ for (ticks = 0; ticks < 400; ticks++) step(); draw(); } else { loop(); }
+
+  // 끌기
+  var drag = null;
+  function pt(ev){ var p = svg.createSVGPoint(); p.x = ev.clientX; p.y = ev.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+  dots.forEach(function(g, k){
+    g.addEventListener("pointerdown", function(ev){ drag = nodes[k]; drag.fixed = true; g.setPointerCapture(ev.pointerId); ev.preventDefault(); });
+    g.addEventListener("pointermove", function(ev){ if (drag === nodes[k]){ var p = pt(ev); drag.x = p.x; drag.y = p.y; ticks = 0; if (reduce) { step(); draw(); } else { requestAnimationFrame(loop); } } });
+    g.addEventListener("pointerup", function(){ if (drag){ drag.fixed = false; drag = null; } });
+  });
+})();
+</script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default" });
+</script>
+</body>
+</html>
